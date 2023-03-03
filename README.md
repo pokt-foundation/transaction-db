@@ -1,14 +1,13 @@
 <div align="center">
     <img src=".github/banner.png" alt="Pocket Network logo" width="600"/>
     <!-- TODO Rename header -->
-    <h1>Backend Go Repo Template</h1>
-    <big>Template repository for creating a new backend Go repo</big>
+    <h1>Transaction DB</h1>
+    <big>Driver implementation for the Transaction Database</big>
     <div>
     <br/>
-    <!-- TODO Replace `backend-go-repo-template` with repo name -->
-        <a href="https://github.com/pokt-foundation/backend-go-repo-template/pulse"><img src="https://img.shields.io/github/last-commit/pokt-foundation/backend-go-repo-template.svg"/></a>
-        <a href="https://github.com/pokt-foundation/backend-go-repo-template/pulls"><img src="https://img.shields.io/github/issues-pr/pokt-foundation/backend-go-repo-template.svg"/></a>
-        <a href="https://github.com/pokt-foundation/backend-go-repo-template/issues"><img src="https://img.shields.io/github/issues-closed/pokt-foundation/backend-go-repo-template.svg"/></a>
+        <a href="https://github.com/pokt-foundation/transaction-db/pulse"><img src="https://img.shields.io/github/last-commit/pokt-foundation/transaction-db.svg"/></a>
+        <a href="https://github.com/pokt-foundation/transaction-db/pulls"><img src="https://img.shields.io/github/issues-pr/pokt-foundation/transaction-db.svg"/></a>
+        <a href="https://github.com/pokt-foundation/transaction-db/issues"><img src="https://img.shields.io/github/issues-closed/pokt-foundation/transaction-db.svg"/></a>
     </div>
 </div>
 <br/>
