@@ -1,22 +1,28 @@
 CREATE  TABLE error (
-	error_id             integer  NOT NULL GENERATED ALWAYS AS IDENTITY  ,
+	error_id             bigint  NOT NULL GENERATED ALWAYS AS IDENTITY  ,
 	error_code           integer  NOT NULL  ,
 	error_name           varchar  NOT NULL  ,
 	error_description    varchar  NOT NULL  ,
+	created_at			 date     NOT NULL  ,
+	updated_at			 date     NOT NULL  ,
 	CONSTRAINT pk_error PRIMARY KEY ( error_id )
  );
 
 CREATE  TABLE pocket_session (
-	pocket_session_id    integer  NOT NULL  GENERATED ALWAYS AS IDENTITY  ,
+	pocket_session_id    bigint  NOT NULL  GENERATED ALWAYS AS IDENTITY  ,
 	session_key          varchar  NOT NULL  ,
 	session_height       integer  NOT NULL  ,
 	protocol_application_id integer  NOT NULL  ,
+	created_at			 date     NOT NULL  ,
+	updated_at			 date     NOT NULL  ,
 	CONSTRAINT pk_tbl_0 PRIMARY KEY ( pocket_session_id )
  );
 
 CREATE  TABLE portal_region (
 	portal_region_id     integer  NOT NULL GENERATED ALWAYS AS IDENTITY  ,
 	portal_region_name   varchar  NOT NULL  ,
+	created_at			 date     NOT NULL  ,
+	updated_at			 date     NOT NULL  ,
 	CONSTRAINT pk_portal_region PRIMARY KEY ( portal_region_id )
  );
 
@@ -38,6 +44,8 @@ CREATE  TABLE relay (
 	relay_url_is_public_endpoint boolean  NOT NULL  ,
 	portal_origin_region_id integer  NOT NULL  ,
 	is_altruist_relay    boolean  NOT NULL  ,
+	created_at			 date     NOT NULL  ,
+	updated_at			 date     NOT NULL  ,
 	CONSTRAINT pk_relay PRIMARY KEY ( relay_id )
  );
 

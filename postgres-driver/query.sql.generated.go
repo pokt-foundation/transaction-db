@@ -11,50 +11,72 @@ import (
 )
 
 const insertError = `-- name: InsertError :exec
-INSERT INTO error (error_code, error_name, error_description)
-VALUES ($1, $2, $3)
+INSERT INTO error (error_code, error_name, error_description, created_at, updated_at)
+VALUES ($1, $2, $3, $4, $5)
 `
 
 type InsertErrorParams struct {
-	ErrorCode        int32  `json:"errorCode"`
-	ErrorName        string `json:"errorName"`
-	ErrorDescription string `json:"errorDescription"`
+	ErrorCode        int32     `json:"errorCode"`
+	ErrorName        string    `json:"errorName"`
+	ErrorDescription string    `json:"errorDescription"`
+	CreatedAt        time.Time `json:"createdAt"`
+	UpdatedAt        time.Time `json:"updatedAt"`
 }
 
 func (q *Queries) InsertError(ctx context.Context, arg InsertErrorParams) error {
-	_, err := q.db.ExecContext(ctx, insertError, arg.ErrorCode, arg.ErrorName, arg.ErrorDescription)
+	_, err := q.db.ExecContext(ctx, insertError,
+		arg.ErrorCode,
+		arg.ErrorName,
+		arg.ErrorDescription,
+		arg.CreatedAt,
+		arg.UpdatedAt,
+	)
 	return err
 }
 
 const insertPocketSession = `-- name: InsertPocketSession :exec
-INSERT INTO pocket_session (session_key, session_height, protocol_application_id)
-VALUES ($1, $2, $3)
+INSERT INTO pocket_session (session_key, session_height, protocol_application_id, created_at, updated_at)
+VALUES ($1, $2, $3, $4, $5)
 `
 
 type InsertPocketSessionParams struct {
-	SessionKey            string `json:"sessionKey"`
-	SessionHeight         int32  `json:"sessionHeight"`
-	ProtocolApplicationID int32  `json:"protocolApplicationID"`
+	SessionKey            string    `json:"sessionKey"`
+	SessionHeight         int32     `json:"sessionHeight"`
+	ProtocolApplicationID int32     `json:"protocolApplicationID"`
+	CreatedAt             time.Time `json:"createdAt"`
+	UpdatedAt             time.Time `json:"updatedAt"`
 }
 
 func (q *Queries) InsertPocketSession(ctx context.Context, arg InsertPocketSessionParams) error {
-	_, err := q.db.ExecContext(ctx, insertPocketSession, arg.SessionKey, arg.SessionHeight, arg.ProtocolApplicationID)
+	_, err := q.db.ExecContext(ctx, insertPocketSession,
+		arg.SessionKey,
+		arg.SessionHeight,
+		arg.ProtocolApplicationID,
+		arg.CreatedAt,
+		arg.UpdatedAt,
+	)
 	return err
 }
 
 const insertPortalRegion = `-- name: InsertPortalRegion :exec
-INSERT INTO portal_region (portal_region_name)
-VALUES ($1)
+INSERT INTO portal_region (portal_region_name, created_at, updated_at)
+VALUES ($1, $2, $3)
 `
 
-func (q *Queries) InsertPortalRegion(ctx context.Context, portalRegionName string) error {
-	_, err := q.db.ExecContext(ctx, insertPortalRegion, portalRegionName)
+type InsertPortalRegionParams struct {
+	PortalRegionName string    `json:"portalRegionName"`
+	CreatedAt        time.Time `json:"createdAt"`
+	UpdatedAt        time.Time `json:"updatedAt"`
+}
+
+func (q *Queries) InsertPortalRegion(ctx context.Context, arg InsertPortalRegionParams) error {
+	_, err := q.db.ExecContext(ctx, insertPortalRegion, arg.PortalRegionName, arg.CreatedAt, arg.UpdatedAt)
 	return err
 }
 
 const insertRelay = `-- name: InsertRelay :exec
-INSERT INTO relay (chain_id, endpoint_id, pocket_session_id, pokt_node_address, relay_start_datetime, relay_return_datetime, is_error, error_id, relay_roundtrip_time, relay_chain_method_id, relay_data_size, relay_portal_trip_time, relay_node_trip_time, relay_url_is_public_endpoint, portal_origin_region_id, is_altruist_relay)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+INSERT INTO relay (chain_id, endpoint_id, pocket_session_id, pokt_node_address, relay_start_datetime, relay_return_datetime, is_error, error_id, relay_roundtrip_time, relay_chain_method_id, relay_data_size, relay_portal_trip_time, relay_node_trip_time, relay_url_is_public_endpoint, portal_origin_region_id, is_altruist_relay, created_at, updated_at)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
 `
 
 type InsertRelayParams struct {
@@ -74,6 +96,8 @@ type InsertRelayParams struct {
 	RelayUrlIsPublicEndpoint bool      `json:"relayUrlIsPublicEndpoint"`
 	PortalOriginRegionID     int32     `json:"portalOriginRegionID"`
 	IsAltruistRelay          bool      `json:"isAltruistRelay"`
+	CreatedAt                time.Time `json:"createdAt"`
+	UpdatedAt                time.Time `json:"updatedAt"`
 }
 
 func (q *Queries) InsertRelay(ctx context.Context, arg InsertRelayParams) error {
@@ -94,12 +118,14 @@ func (q *Queries) InsertRelay(ctx context.Context, arg InsertRelayParams) error 
 		arg.RelayUrlIsPublicEndpoint,
 		arg.PortalOriginRegionID,
 		arg.IsAltruistRelay,
+		arg.CreatedAt,
+		arg.UpdatedAt,
 	)
 	return err
 }
 
 const selectRelay = `-- name: SelectRelay :one
-SELECT r.relay_id, r.chain_id, r.endpoint_id, r.pocket_session_id, r.pokt_node_address, r.relay_start_datetime, r.relay_return_datetime, r.is_error, r.error_id, r.relay_roundtrip_time, r.relay_chain_method_id, r.relay_data_size, r.relay_portal_trip_time, r.relay_node_trip_time, r.relay_url_is_public_endpoint, r.portal_origin_region_id, r.is_altruist_relay, ps.session_key, ps.session_height, ps.protocol_application_id, pr.portal_region_name, e.error_code, e.error_name, e.error_description
+SELECT r.relay_id, r.chain_id, r.endpoint_id, r.pocket_session_id, r.pokt_node_address, r.relay_start_datetime, r.relay_return_datetime, r.is_error, r.error_id, r.relay_roundtrip_time, r.relay_chain_method_id, r.relay_data_size, r.relay_portal_trip_time, r.relay_node_trip_time, r.relay_url_is_public_endpoint, r.portal_origin_region_id, r.is_altruist_relay, r.created_at, r.updated_at, ps.session_key, ps.session_height, ps.protocol_application_id, ps.created_at, ps.updated_at, pr.portal_region_name, pr.created_at, pr.updated_at, e.error_code, e.error_name, e.error_description, e.created_at, e.updated_at
 FROM relay r
 	INNER JOIN pocket_session ps ON ps.pocket_session_id = r.pocket_session_id
 	INNER JOIN portal_region pr ON pr.portal_region_id = r.portal_origin_region_id
@@ -125,13 +151,21 @@ type SelectRelayRow struct {
 	RelayUrlIsPublicEndpoint bool      `json:"relayUrlIsPublicEndpoint"`
 	PortalOriginRegionID     int32     `json:"portalOriginRegionID"`
 	IsAltruistRelay          bool      `json:"isAltruistRelay"`
+	CreatedAt                time.Time `json:"createdAt"`
+	UpdatedAt                time.Time `json:"updatedAt"`
 	SessionKey               string    `json:"sessionKey"`
 	SessionHeight            int32     `json:"sessionHeight"`
 	ProtocolApplicationID    int32     `json:"protocolApplicationID"`
+	CreatedAt_2              time.Time `json:"createdAt2"`
+	UpdatedAt_2              time.Time `json:"updatedAt2"`
 	PortalRegionName         string    `json:"portalRegionName"`
+	CreatedAt_3              time.Time `json:"createdAt3"`
+	UpdatedAt_3              time.Time `json:"updatedAt3"`
 	ErrorCode                int32     `json:"errorCode"`
 	ErrorName                string    `json:"errorName"`
 	ErrorDescription         string    `json:"errorDescription"`
+	CreatedAt_4              time.Time `json:"createdAt4"`
+	UpdatedAt_4              time.Time `json:"updatedAt4"`
 }
 
 func (q *Queries) SelectRelay(ctx context.Context, relayID int64) (SelectRelayRow, error) {
@@ -155,13 +189,21 @@ func (q *Queries) SelectRelay(ctx context.Context, relayID int64) (SelectRelayRo
 		&i.RelayUrlIsPublicEndpoint,
 		&i.PortalOriginRegionID,
 		&i.IsAltruistRelay,
+		&i.CreatedAt,
+		&i.UpdatedAt,
 		&i.SessionKey,
 		&i.SessionHeight,
 		&i.ProtocolApplicationID,
+		&i.CreatedAt_2,
+		&i.UpdatedAt_2,
 		&i.PortalRegionName,
+		&i.CreatedAt_3,
+		&i.UpdatedAt_3,
 		&i.ErrorCode,
 		&i.ErrorName,
 		&i.ErrorDescription,
+		&i.CreatedAt_4,
+		&i.UpdatedAt_4,
 	)
 	return i, err
 }

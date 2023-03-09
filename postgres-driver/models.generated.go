@@ -9,22 +9,28 @@ import (
 )
 
 type Error struct {
-	ErrorID          int32  `json:"errorID"`
-	ErrorCode        int32  `json:"errorCode"`
-	ErrorName        string `json:"errorName"`
-	ErrorDescription string `json:"errorDescription"`
+	ErrorID          int64     `json:"errorID"`
+	ErrorCode        int32     `json:"errorCode"`
+	ErrorName        string    `json:"errorName"`
+	ErrorDescription string    `json:"errorDescription"`
+	CreatedAt        time.Time `json:"createdAt"`
+	UpdatedAt        time.Time `json:"updatedAt"`
 }
 
 type PocketSession struct {
-	PocketSessionID       int32  `json:"pocketSessionID"`
-	SessionKey            string `json:"sessionKey"`
-	SessionHeight         int32  `json:"sessionHeight"`
-	ProtocolApplicationID int32  `json:"protocolApplicationID"`
+	PocketSessionID       int64     `json:"pocketSessionID"`
+	SessionKey            string    `json:"sessionKey"`
+	SessionHeight         int32     `json:"sessionHeight"`
+	ProtocolApplicationID int32     `json:"protocolApplicationID"`
+	CreatedAt             time.Time `json:"createdAt"`
+	UpdatedAt             time.Time `json:"updatedAt"`
 }
 
 type PortalRegion struct {
-	PortalRegionID   int32  `json:"portalRegionID"`
-	PortalRegionName string `json:"portalRegionName"`
+	PortalRegionID   int32     `json:"portalRegionID"`
+	PortalRegionName string    `json:"portalRegionName"`
+	CreatedAt        time.Time `json:"createdAt"`
+	UpdatedAt        time.Time `json:"updatedAt"`
 }
 
 type Relay struct {
@@ -45,4 +51,6 @@ type Relay struct {
 	RelayUrlIsPublicEndpoint bool      `json:"relayUrlIsPublicEndpoint"`
 	PortalOriginRegionID     int32     `json:"portalOriginRegionID"`
 	IsAltruistRelay          bool      `json:"isAltruistRelay"`
+	CreatedAt                time.Time `json:"createdAt"`
+	UpdatedAt                time.Time `json:"updatedAt"`
 }
