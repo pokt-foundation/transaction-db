@@ -41,6 +41,45 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteRelay() {
 	}
 }
 
+func (ts *PGDriverTestSuite) TestPostgresDriver_WriteRelays() {
+	var relays []types.Relay
+	for i := 0; i < 1000; i++ {
+		relays = append(relays, types.Relay{
+			ChainID:                  21,
+			EndpointID:               21,
+			PocketSessionID:          ts.firstRelay.PocketSessionID,
+			PoktNodeAddress:          "21",
+			RelayStartDatetime:       time.Now(),
+			RelayReturnDatetime:      time.Now(),
+			IsError:                  true,
+			ErrorID:                  ts.firstRelay.ErrorID,
+			RelayRoundtripTime:       1,
+			RelayChainMethodID:       21,
+			RelayDataSize:            21,
+			RelayPortalTripTime:      21,
+			RelayNodeTripTime:        21,
+			RelayURLIsPublicEndpoint: false,
+			PortalOriginRegionID:     ts.firstRelay.PortalOriginRegionID,
+			IsAltruistRelay:          false,
+		})
+	}
+
+	tests := []struct {
+		name   string
+		relays []types.Relay
+		err    error
+	}{
+		{
+			name:   "Success",
+			relays: relays,
+			err:    nil,
+		},
+	}
+	for _, tt := range tests {
+		ts.Equal(ts.driver.WriteRelays(context.Background(), tt.relays), tt.err)
+	}
+}
+
 func (ts *PGDriverTestSuite) TestPostgresDriver_ReadRelay() {
 	tests := []struct {
 		name     string
