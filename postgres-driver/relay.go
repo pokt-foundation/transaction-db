@@ -74,6 +74,7 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID int) (types.Rela
 			ErrorCode:        relay.ErrorCode,
 			ErrorName:        relay.ErrorName,
 			ErrorDescription: relay.ErrorDescription,
+			ErrorType:        types.ErrorType(relay.ErrorType),
 			CreatedAt:        relay.CreatedAt_4,
 			UpdatedAt:        relay.UpdatedAt_4,
 		},

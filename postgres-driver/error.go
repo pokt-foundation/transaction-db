@@ -14,6 +14,7 @@ func (d *PostgresDriver) WriteError(ctx context.Context, poktErr types.Error) er
 		ErrorCode:        poktErr.ErrorCode,
 		ErrorName:        poktErr.ErrorName,
 		ErrorDescription: poktErr.ErrorDescription,
+		ErrorType:        ErrorTypesEnum(poktErr.ErrorType),
 		CreatedAt:        now,
 		UpdatedAt:        now,
 	})

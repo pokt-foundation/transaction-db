@@ -1,8 +1,10 @@
+CREATE TYPE error_types_enum AS ENUM ('sync_check', 'chain_check', 'relay');
 CREATE  TABLE error (
 	error_id             bigint  NOT NULL GENERATED ALWAYS AS IDENTITY  ,
 	error_code           integer  NOT NULL  ,
 	error_name           varchar  NOT NULL  ,
 	error_description    varchar  NOT NULL  ,
+	error_type 			 error_types_enum NOT NULL,
 	created_at			 date     NOT NULL  ,
 	updated_at			 date     NOT NULL  ,
 	CONSTRAINT pk_error PRIMARY KEY ( error_id )
