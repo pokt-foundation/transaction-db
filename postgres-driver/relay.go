@@ -63,6 +63,8 @@ const insertRelays = `INSERT INTO relay (
   )`
 
 func (d *PostgresDriver) WriteRelay(ctx context.Context, relay types.Relay) error {
+	now := time.Now()
+
 	return d.InsertRelay(ctx, InsertRelayParams{
 		ChainID:                  relay.ChainID,
 		EndpointID:               relay.EndpointID,
@@ -80,6 +82,8 @@ func (d *PostgresDriver) WriteRelay(ctx context.Context, relay types.Relay) erro
 		RelayUrlIsPublicEndpoint: relay.RelayURLIsPublicEndpoint,
 		PortalOriginRegionID:     relay.PortalOriginRegionID,
 		IsAltruistRelay:          relay.IsAltruistRelay,
+		CreatedAt:                now,
+		UpdatedAt:                now,
 	})
 }
 
@@ -169,18 +173,27 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID int) (types.Rela
 		RelayURLIsPublicEndpoint: relay.RelayUrlIsPublicEndpoint,
 		PortalOriginRegionID:     relay.PortalOriginRegionID,
 		IsAltruistRelay:          relay.IsAltruistRelay,
-		Error: types.Error{
-			ErrorCode:        relay.ErrorCode,
-			ErrorName:        relay.ErrorName,
-			ErrorDescription: relay.ErrorDescription,
-		},
+		CreatedAt:                relay.CreatedAt,
+		UpdatedAt:                relay.UpdatedAt,
 		Session: types.PocketSession{
 			SessionKey:            relay.SessionKey,
 			SessionHeight:         relay.SessionHeight,
 			ProtocolApplicationID: relay.ProtocolApplicationID,
+			CreatedAt:             relay.CreatedAt_2,
+			UpdatedAt:             relay.UpdatedAt_2,
 		},
 		Region: types.PortalRegion{
 			PortalRegionName: relay.PortalRegionName,
+			CreatedAt:        relay.CreatedAt_3,
+			UpdatedAt:        relay.UpdatedAt_3,
+		},
+		Error: types.Error{
+			ErrorCode:        relay.ErrorCode,
+			ErrorName:        relay.ErrorName,
+			ErrorDescription: relay.ErrorDescription,
+			ErrorType:        types.ErrorType(relay.ErrorType),
+			CreatedAt:        relay.CreatedAt_4,
+			UpdatedAt:        relay.UpdatedAt_4,
 		},
 	}, nil
 }

@@ -5,26 +5,78 @@
 package postgresdriver
 
 import (
+	"database/sql/driver"
+	"fmt"
 	"time"
 )
 
+type ErrorTypesEnum string
+
+const (
+	ErrorTypesEnumSyncCheck  ErrorTypesEnum = "sync_check"
+	ErrorTypesEnumChainCheck ErrorTypesEnum = "chain_check"
+	ErrorTypesEnumRelay      ErrorTypesEnum = "relay"
+)
+
+func (e *ErrorTypesEnum) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = ErrorTypesEnum(s)
+	case string:
+		*e = ErrorTypesEnum(s)
+	default:
+		return fmt.Errorf("unsupported scan type for ErrorTypesEnum: %T", src)
+	}
+	return nil
+}
+
+type NullErrorTypesEnum struct {
+	ErrorTypesEnum ErrorTypesEnum
+	Valid          bool // Valid is true if ErrorTypesEnum is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullErrorTypesEnum) Scan(value interface{}) error {
+	if value == nil {
+		ns.ErrorTypesEnum, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.ErrorTypesEnum.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullErrorTypesEnum) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.ErrorTypesEnum), nil
+}
+
 type Error struct {
-	ErrorID          int32  `json:"errorID"`
-	ErrorCode        int32  `json:"errorCode"`
-	ErrorName        string `json:"errorName"`
-	ErrorDescription string `json:"errorDescription"`
+	ErrorID          int64          `json:"errorID"`
+	ErrorCode        int32          `json:"errorCode"`
+	ErrorName        string         `json:"errorName"`
+	ErrorDescription string         `json:"errorDescription"`
+	ErrorType        ErrorTypesEnum `json:"errorType"`
+	CreatedAt        time.Time      `json:"createdAt"`
+	UpdatedAt        time.Time      `json:"updatedAt"`
 }
 
 type PocketSession struct {
-	PocketSessionID       int32  `json:"pocketSessionID"`
-	SessionKey            string `json:"sessionKey"`
-	SessionHeight         int32  `json:"sessionHeight"`
-	ProtocolApplicationID int32  `json:"protocolApplicationID"`
+	PocketSessionID       int64     `json:"pocketSessionID"`
+	SessionKey            string    `json:"sessionKey"`
+	SessionHeight         int32     `json:"sessionHeight"`
+	ProtocolApplicationID int32     `json:"protocolApplicationID"`
+	CreatedAt             time.Time `json:"createdAt"`
+	UpdatedAt             time.Time `json:"updatedAt"`
 }
 
 type PortalRegion struct {
-	PortalRegionID   int32  `json:"portalRegionID"`
-	PortalRegionName string `json:"portalRegionName"`
+	PortalRegionID   int32     `json:"portalRegionID"`
+	PortalRegionName string    `json:"portalRegionName"`
+	CreatedAt        time.Time `json:"createdAt"`
+	UpdatedAt        time.Time `json:"updatedAt"`
 }
 
 type Relay struct {
@@ -45,4 +97,6 @@ type Relay struct {
 	RelayUrlIsPublicEndpoint bool      `json:"relayUrlIsPublicEndpoint"`
 	PortalOriginRegionID     int32     `json:"portalOriginRegionID"`
 	IsAltruistRelay          bool      `json:"isAltruistRelay"`
+	CreatedAt                time.Time `json:"createdAt"`
+	UpdatedAt                time.Time `json:"updatedAt"`
 }
