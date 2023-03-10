@@ -84,12 +84,12 @@ VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $
 type InsertRelayParams struct {
 	ChainID                  int32     `json:"chainID"`
 	EndpointID               int32     `json:"endpointID"`
-	PocketSessionID          int32     `json:"pocketSessionID"`
+	PocketSessionID          int64     `json:"pocketSessionID"`
 	PoktNodeAddress          string    `json:"poktNodeAddress"`
 	RelayStartDatetime       time.Time `json:"relayStartDatetime"`
 	RelayReturnDatetime      time.Time `json:"relayReturnDatetime"`
 	IsError                  bool      `json:"isError"`
-	ErrorID                  int32     `json:"errorID"`
+	ErrorID                  int64     `json:"errorID"`
 	RelayRoundtripTime       int32     `json:"relayRoundtripTime"`
 	RelayChainMethodID       int32     `json:"relayChainMethodID"`
 	RelayDataSize            int32     `json:"relayDataSize"`
@@ -139,12 +139,12 @@ type SelectRelayRow struct {
 	RelayID                  int64          `json:"relayID"`
 	ChainID                  int32          `json:"chainID"`
 	EndpointID               int32          `json:"endpointID"`
-	PocketSessionID          int32          `json:"pocketSessionID"`
+	PocketSessionID          int64          `json:"pocketSessionID"`
 	PoktNodeAddress          string         `json:"poktNodeAddress"`
 	RelayStartDatetime       time.Time      `json:"relayStartDatetime"`
 	RelayReturnDatetime      time.Time      `json:"relayReturnDatetime"`
 	IsError                  bool           `json:"isError"`
-	ErrorID                  int32          `json:"errorID"`
+	ErrorID                  int64          `json:"errorID"`
 	RelayRoundtripTime       int32          `json:"relayRoundtripTime"`
 	RelayChainMethodID       int32          `json:"relayChainMethodID"`
 	RelayDataSize            int32          `json:"relayDataSize"`
