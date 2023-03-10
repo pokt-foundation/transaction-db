@@ -23,4 +23,6 @@ type Relay struct {
 	Error                    Error         `json:"error"`
 	Session                  PocketSession `json:"session"`
 	Region                   PortalRegion  `json:"region"`
+	CreatedAt                time.Time     `json:"createdAt"`
+	UpdatedAt                time.Time     `json:"updatedAt"`
 }

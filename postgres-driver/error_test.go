@@ -18,6 +18,7 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteError() {
 				ErrorCode:        404,
 				ErrorName:        "not found",
 				ErrorDescription: "I guess we didn't find it",
+				ErrorType:        types.ErrorTypeRelay,
 			},
 			err: nil,
 		},

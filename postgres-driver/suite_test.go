@@ -38,6 +38,7 @@ func (ts *PGDriverTestSuite) SetupSuite() {
 		ErrorCode:        21,
 		ErrorName:        "favorite number",
 		ErrorDescription: "just Pablo can use it",
+		ErrorType:        types.ErrorTypeChainCheck,
 	}))
 
 	ts.NoError(ts.driver.WriteSession(context.Background(), types.PocketSession{
