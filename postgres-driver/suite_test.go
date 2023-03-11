@@ -34,13 +34,6 @@ func Test_RunPGDriverSuite(t *testing.T) {
 func (ts *PGDriverTestSuite) SetupSuite() {
 	ts.NoError(ts.initPostgresDriver())
 
-	ts.NoError(ts.driver.WriteError(context.Background(), types.Error{
-		ErrorCode:        21,
-		ErrorName:        "favorite number",
-		ErrorDescription: "just Pablo can use it",
-		ErrorType:        types.ErrorTypeChainCheck,
-	}))
-
 	ts.NoError(ts.driver.WriteSession(context.Background(), types.PocketSession{
 		SessionKey:            "22",
 		SessionHeight:         22,
@@ -54,12 +47,15 @@ func (ts *PGDriverTestSuite) SetupSuite() {
 	ts.NoError(ts.driver.WriteRelay(context.Background(), types.Relay{
 		ChainID:                  21,
 		EndpointID:               21,
-		PocketSessionID:          1,
+		SessionKey:               "22",
 		PoktNodeAddress:          "21",
 		RelayStartDatetime:       time.Date(199, time.July, 21, 0, 0, 0, 0, time.Local),
 		RelayReturnDatetime:      time.Date(199, time.July, 21, 0, 0, 0, 0, time.Local),
 		IsError:                  true,
-		ErrorID:                  1,
+		ErrorCode:                21,
+		ErrorName:                "favorite number",
+		ErrorMessage:             "just Pablo can use it",
+		ErrorType:                types.ErrorTypeChainCheck,
 		RelayRoundtripTime:       1,
 		RelayChainMethodID:       21,
 		RelayDataSize:            21,

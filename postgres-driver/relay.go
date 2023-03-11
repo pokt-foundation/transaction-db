@@ -2,6 +2,7 @@ package postgresdriver
 
 import (
 	"context"
+	"database/sql"
 	"time"
 
 	"github.com/lib/pq"
@@ -11,12 +12,15 @@ import (
 const insertRelays = `INSERT INTO relay (
 	chain_id,
 	endpoint_id,
-	pocket_session_id,
+	session_key,
 	pokt_node_address,
 	relay_start_datetime,
 	relay_return_datetime,
 	is_error,
-	error_id,
+	error_code,
+	error_name,
+	error_message,
+	error_type,
 	relay_roundtrip_time,
 	relay_chain_method_id,
 	relay_data_size,
@@ -31,31 +35,37 @@ const insertRelays = `INSERT INTO relay (
   SELECT * FROM unnest(
 	$1::integer[],
 	$2::integer[],
-	$3::bigint[],
+	$3::varchar[],
 	$4::varchar[],
 	$5::date[],
 	$6::date[],
 	$7::boolean[],
-	$8::bigint[],
-	$9::integer[],
-	$10::integer[],
-	$11::integer[],
+	$8::integer[],
+	$9::varchar[],
+	$10::varchar[],
+	$11::error_types_enum[],
 	$12::integer[],
 	$13::integer[],
-	$14::boolean[],
+	$14::integer[],
 	$15::integer[],
-	$16::boolean[],
-	$17::date[],
-	$18::date[]
+	$16::integer[],
+	$17::boolean[],
+	$18::integer[],
+	$19::boolean[],
+	$20::date[],
+	$21::date[]
   ) AS t(
 	chain_id,
 	endpoint_id,
-	pocket_session_id,
+	session_key,
 	pokt_node_address,
 	relay_start_datetime,
 	relay_return_datetime,
 	is_error,
-	error_id,
+	error_code,
+	error_name,
+	error_message,
+	error_type,
 	relay_roundtrip_time,
 	relay_chain_method_id,
 	relay_data_size,
@@ -74,12 +84,15 @@ func (d *PostgresDriver) WriteRelay(ctx context.Context, relay types.Relay) erro
 	return d.InsertRelay(ctx, InsertRelayParams{
 		ChainID:                  relay.ChainID,
 		EndpointID:               relay.EndpointID,
-		PocketSessionID:          relay.PocketSessionID,
+		SessionKey:               relay.SessionKey,
 		PoktNodeAddress:          relay.PoktNodeAddress,
 		RelayStartDatetime:       relay.RelayStartDatetime,
 		RelayReturnDatetime:      relay.RelayReturnDatetime,
 		IsError:                  relay.IsError,
-		ErrorID:                  relay.ErrorID,
+		ErrorCode:                newSQLNullInt32(relay.ErrorCode),
+		ErrorName:                newSQLNullString(relay.ErrorName),
+		ErrorMessage:             newSQLNullString(relay.ErrorMessage),
+		ErrorType:                newSQLNullErrorType(ErrorTypesEnum(relay.ErrorType)),
 		RelayRoundtripTime:       relay.RelayRoundtripTime,
 		RelayChainMethodID:       relay.RelayChainMethodID,
 		RelayDataSize:            relay.RelayDataSize,
@@ -99,12 +112,15 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 	var (
 		chainIDs                  []int32
 		endpointIDs               []int32
-		pocketSessionIDs          []int64
+		sessionKeys               []string
 		poktNodeAddresses         []string
 		relayStartDatetimes       []time.Time
 		relayReturnDatetimes      []time.Time
 		isErrors                  []bool
-		errorIDs                  []int64
+		errorCodes                []sql.NullInt32
+		errorNames                []sql.NullString
+		errorMessages             []sql.NullString
+		errorTypes                []NullErrorTypesEnum
 		relayRoundtripTimes       []int32
 		relayChainMethodIDs       []int32
 		relayDataSizes            []int32
@@ -120,12 +136,15 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 	for _, relay := range relays {
 		chainIDs = append(chainIDs, relay.ChainID)
 		endpointIDs = append(endpointIDs, relay.EndpointID)
-		pocketSessionIDs = append(pocketSessionIDs, relay.PocketSessionID)
+		sessionKeys = append(sessionKeys, relay.SessionKey)
 		poktNodeAddresses = append(poktNodeAddresses, relay.PoktNodeAddress)
 		relayStartDatetimes = append(relayStartDatetimes, relay.RelayStartDatetime)
 		relayReturnDatetimes = append(relayReturnDatetimes, relay.RelayReturnDatetime)
 		isErrors = append(isErrors, relay.IsError)
-		errorIDs = append(errorIDs, relay.ErrorID)
+		errorCodes = append(errorCodes, newSQLNullInt32(relay.ErrorCode))
+		errorNames = append(errorNames, newSQLNullString(relay.ErrorName))
+		errorMessages = append(errorMessages, newSQLNullString(relay.ErrorMessage))
+		errorTypes = append(errorTypes, newSQLNullErrorType(ErrorTypesEnum(relay.ErrorType)))
 		relayRoundtripTimes = append(relayRoundtripTimes, relay.RelayRoundtripTime)
 		relayChainMethodIDs = append(relayChainMethodIDs, relay.RelayChainMethodID)
 		relayDataSizes = append(relayDataSizes, relay.RelayDataSize)
@@ -140,12 +159,15 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 
 	_, err := d.db.Exec(insertRelays, pq.Int32Array(chainIDs),
 		pq.Int32Array(endpointIDs),
-		pq.Int64Array(pocketSessionIDs),
+		pq.StringArray(sessionKeys),
 		pq.StringArray(poktNodeAddresses),
 		pq.Array(relayStartDatetimes),
 		pq.Array(relayReturnDatetimes),
 		pq.BoolArray(isErrors),
-		pq.Int64Array(errorIDs),
+		pq.Array(errorCodes),
+		pq.Array(errorNames),
+		pq.Array(errorMessages),
+		pq.Array(errorTypes),
 		pq.Int32Array(relayRoundtripTimes),
 		pq.Int32Array(relayChainMethodIDs),
 		pq.Int32Array(relayDataSizes),
@@ -173,12 +195,15 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID int) (types.Rela
 		RelayID:                  relay.RelayID,
 		ChainID:                  relay.ChainID,
 		EndpointID:               relay.EndpointID,
-		PocketSessionID:          relay.PocketSessionID,
+		SessionKey:               relay.SessionKey,
 		PoktNodeAddress:          relay.PoktNodeAddress,
 		RelayStartDatetime:       relay.RelayStartDatetime,
 		RelayReturnDatetime:      relay.RelayReturnDatetime,
 		IsError:                  relay.IsError,
-		ErrorID:                  relay.ErrorID,
+		ErrorCode:                relay.ErrorCode.Int32,
+		ErrorName:                relay.ErrorName.String,
+		ErrorMessage:             relay.ErrorMessage.String,
+		ErrorType:                types.ErrorType(relay.ErrorType.ErrorTypesEnum),
 		RelayRoundtripTime:       relay.RelayRoundtripTime,
 		RelayChainMethodID:       relay.RelayChainMethodID,
 		RelayDataSize:            relay.RelayDataSize,
@@ -200,14 +225,6 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID int) (types.Rela
 			PortalRegionName: relay.PortalRegionName,
 			CreatedAt:        relay.CreatedAt_3,
 			UpdatedAt:        relay.UpdatedAt_3,
-		},
-		Error: types.Error{
-			ErrorCode:        relay.ErrorCode,
-			ErrorName:        relay.ErrorName,
-			ErrorDescription: relay.ErrorDescription,
-			ErrorType:        types.ErrorType(relay.ErrorType),
-			CreatedAt:        relay.CreatedAt_4,
-			UpdatedAt:        relay.UpdatedAt_4,
 		},
 	}, nil
 }
