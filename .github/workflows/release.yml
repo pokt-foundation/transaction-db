@@ -35,6 +35,10 @@ jobs:
           branches: |
             ['main']
           tag_format: "v${version}"
+          additional_packages: |
+            ['@semantic-release/commit-analyzer']
+          plugins: |
+            ['@semantic-release/commit-analyzer']
       - name: Go List
         if: steps.semantic.outputs.new-release-published == 'true'
         run: GOPROXY=proxy.golang.org go list -m github.com/pokt-foundation/transaction-db@v${{ steps.semantic.outputs.release-version }}
