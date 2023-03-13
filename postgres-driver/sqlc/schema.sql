@@ -1,18 +1,8 @@
 CREATE TYPE error_types_enum AS ENUM ('sync_check', 'chain_check', 'relay');
-CREATE  TABLE error (
-	error_id             bigint  NOT NULL GENERATED ALWAYS AS IDENTITY  ,
-	error_code           integer  NOT NULL  ,
-	error_name           varchar  NOT NULL  ,
-	error_description    varchar  NOT NULL  ,
-	error_type 			 error_types_enum NOT NULL,
-	created_at			 date     NOT NULL  ,
-	updated_at			 date     NOT NULL  ,
-	CONSTRAINT pk_error PRIMARY KEY ( error_id )
- );
 
 CREATE  TABLE pocket_session (
 	pocket_session_id    bigint  NOT NULL  GENERATED ALWAYS AS IDENTITY  ,
-	session_key          varchar  NOT NULL  ,
+	session_key          varchar  NOT NULL  UNIQUE,
 	session_height       integer  NOT NULL  ,
 	protocol_application_id integer  NOT NULL  ,
 	created_at			 date     NOT NULL  ,
@@ -32,12 +22,15 @@ CREATE  TABLE relay (
 	relay_id             bigint  NOT NULL GENERATED ALWAYS AS IDENTITY  ,
 	chain_id             integer  NOT NULL  ,
 	endpoint_id          integer  NOT NULL  ,
-	pocket_session_id    integer  NOT NULL  ,
+	session_key   		varchar  NOT NULL  ,
 	pokt_node_address    varchar  NOT NULL  ,
 	relay_start_datetime date  NOT NULL  ,
 	relay_return_datetime date  NOT NULL  ,
 	is_error             boolean  NOT NULL  ,
-	error_id             integer  NOT NULL  ,
+	error_code           integer,
+	error_name           varchar,
+	error_message    	 varchar,
+	error_type 			 error_types_enum,
 	relay_roundtrip_time integer  NOT NULL  ,
 	relay_chain_method_id integer  NOT NULL  ,
 	relay_data_size      integer  NOT NULL  ,
@@ -54,6 +47,4 @@ CREATE  TABLE relay (
 
 ALTER TABLE relay ADD CONSTRAINT fk_relay_portal_region FOREIGN KEY ( portal_origin_region_id ) REFERENCES portal_region( portal_region_id );
 
-ALTER TABLE relay ADD CONSTRAINT fk_relay_error FOREIGN KEY ( error_id ) REFERENCES error( error_id );
-
-ALTER TABLE relay ADD CONSTRAINT fk_relay_session FOREIGN KEY ( pocket_session_id ) REFERENCES pocket_session( pocket_session_id );
+ALTER TABLE relay ADD CONSTRAINT fk_relay_session FOREIGN KEY ( session_key ) REFERENCES pocket_session( session_key );

@@ -5,6 +5,7 @@
 package postgresdriver
 
 import (
+	"database/sql"
 	"database/sql/driver"
 	"fmt"
 	"time"
@@ -53,16 +54,6 @@ func (ns NullErrorTypesEnum) Value() (driver.Value, error) {
 	return string(ns.ErrorTypesEnum), nil
 }
 
-type Error struct {
-	ErrorID          int64          `json:"errorID"`
-	ErrorCode        int32          `json:"errorCode"`
-	ErrorName        string         `json:"errorName"`
-	ErrorDescription string         `json:"errorDescription"`
-	ErrorType        ErrorTypesEnum `json:"errorType"`
-	CreatedAt        time.Time      `json:"createdAt"`
-	UpdatedAt        time.Time      `json:"updatedAt"`
-}
-
 type PocketSession struct {
 	PocketSessionID       int64     `json:"pocketSessionID"`
 	SessionKey            string    `json:"sessionKey"`
@@ -80,23 +71,26 @@ type PortalRegion struct {
 }
 
 type Relay struct {
-	RelayID                  int64     `json:"relayID"`
-	ChainID                  int32     `json:"chainID"`
-	EndpointID               int32     `json:"endpointID"`
-	PocketSessionID          int32     `json:"pocketSessionID"`
-	PoktNodeAddress          string    `json:"poktNodeAddress"`
-	RelayStartDatetime       time.Time `json:"relayStartDatetime"`
-	RelayReturnDatetime      time.Time `json:"relayReturnDatetime"`
-	IsError                  bool      `json:"isError"`
-	ErrorID                  int32     `json:"errorID"`
-	RelayRoundtripTime       int32     `json:"relayRoundtripTime"`
-	RelayChainMethodID       int32     `json:"relayChainMethodID"`
-	RelayDataSize            int32     `json:"relayDataSize"`
-	RelayPortalTripTime      int32     `json:"relayPortalTripTime"`
-	RelayNodeTripTime        int32     `json:"relayNodeTripTime"`
-	RelayUrlIsPublicEndpoint bool      `json:"relayUrlIsPublicEndpoint"`
-	PortalOriginRegionID     int32     `json:"portalOriginRegionID"`
-	IsAltruistRelay          bool      `json:"isAltruistRelay"`
-	CreatedAt                time.Time `json:"createdAt"`
-	UpdatedAt                time.Time `json:"updatedAt"`
+	RelayID                  int64              `json:"relayID"`
+	ChainID                  int32              `json:"chainID"`
+	EndpointID               int32              `json:"endpointID"`
+	SessionKey               string             `json:"sessionKey"`
+	PoktNodeAddress          string             `json:"poktNodeAddress"`
+	RelayStartDatetime       time.Time          `json:"relayStartDatetime"`
+	RelayReturnDatetime      time.Time          `json:"relayReturnDatetime"`
+	IsError                  bool               `json:"isError"`
+	ErrorCode                sql.NullInt32      `json:"errorCode"`
+	ErrorName                sql.NullString     `json:"errorName"`
+	ErrorMessage             sql.NullString     `json:"errorMessage"`
+	ErrorType                NullErrorTypesEnum `json:"errorType"`
+	RelayRoundtripTime       int32              `json:"relayRoundtripTime"`
+	RelayChainMethodID       int32              `json:"relayChainMethodID"`
+	RelayDataSize            int32              `json:"relayDataSize"`
+	RelayPortalTripTime      int32              `json:"relayPortalTripTime"`
+	RelayNodeTripTime        int32              `json:"relayNodeTripTime"`
+	RelayUrlIsPublicEndpoint bool               `json:"relayUrlIsPublicEndpoint"`
+	PortalOriginRegionID     int32              `json:"portalOriginRegionID"`
+	IsAltruistRelay          bool               `json:"isAltruistRelay"`
+	CreatedAt                time.Time          `json:"createdAt"`
+	UpdatedAt                time.Time          `json:"updatedAt"`
 }
