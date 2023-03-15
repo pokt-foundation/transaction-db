@@ -79,15 +79,11 @@ func (r Relay) Validate() (err error) {
 		isSet := field.IsValid() && !field.IsZero()
 
 		if isSet {
-			if shouldBeEmptyField[fieldName] {
-				return fmt.Errorf("%s should not be set", fieldName)
-			}
-
 			if fieldName == "IsError" {
 				isError = true
 			}
 
-			if !isError && errorField[fieldName] {
+			if shouldBeEmptyField[fieldName] || (!isError && errorField[fieldName]) {
 				return fmt.Errorf("%s should not be set", fieldName)
 			}
 
@@ -97,15 +93,7 @@ func (r Relay) Validate() (err error) {
 		}
 
 		if !isSet {
-			if shouldBeEmptyField[fieldName] {
-				continue
-			}
-
-			if field.Kind() == reflect.Bool {
-				continue
-			}
-
-			if errorField[fieldName] && !isError {
+			if shouldBeEmptyField[fieldName] || field.Kind() == reflect.Bool || (!isError && errorField[fieldName]) {
 				continue
 			}
 
