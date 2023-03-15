@@ -72,6 +72,7 @@ func (r Relay) Validate() (err error) {
 
 	var isError bool
 
+	// fields are in the order they are declared on the struct
 	for i := 0; i < fieldNum; i++ {
 		field := structVal.Field(i)
 		fieldName := structType.Field(i).Name
@@ -79,24 +80,33 @@ func (r Relay) Validate() (err error) {
 		isSet := field.IsValid() && !field.IsZero()
 
 		if isSet {
+			// if isError is set it means it's true so it is an error relay
 			if fieldName == "IsError" {
 				isError = true
+				continue
 			}
 
+			// shouldBeEmptyFields should never be set
+			// error fields shoould just be set if is an error relay
 			if shouldBeEmptyField[fieldName] || (!isError && errorField[fieldName]) {
 				return fmt.Errorf("%s should not be set", fieldName)
 			}
 
+			// errorType field just has some valid error types
 			if fieldName == "ErrorType" && !validErrorTypes[field.String()] {
 				return fmt.Errorf("%s is not valid", fieldName)
 			}
 		}
 
 		if !isSet {
+			// shouldBeEmptyField can be empty
+			// bools zero value is false which is a valid value
+			// error fields can be empty if it is an error relay
 			if shouldBeEmptyField[fieldName] || field.Kind() == reflect.Bool || (!isError && errorField[fieldName]) {
 				continue
 			}
 
+			// if is not set and the field is none of the special cases it is an error
 			return fmt.Errorf("%s is not set", fieldName)
 		}
 	}
