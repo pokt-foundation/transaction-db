@@ -75,22 +75,28 @@ type Relay struct {
 	ChainID                  int32              `json:"chainID"`
 	EndpointID               int32              `json:"endpointID"`
 	SessionKey               string             `json:"sessionKey"`
+	RelaySourceUrl           string             `json:"relaySourceUrl"`
 	PoktNodeAddress          string             `json:"poktNodeAddress"`
+	PoktNodeDomain           string             `json:"poktNodeDomain"`
+	PoktNodePublicKey        string             `json:"poktNodePublicKey"`
 	RelayStartDatetime       time.Time          `json:"relayStartDatetime"`
 	RelayReturnDatetime      time.Time          `json:"relayReturnDatetime"`
 	IsError                  bool               `json:"isError"`
 	ErrorCode                sql.NullInt32      `json:"errorCode"`
 	ErrorName                sql.NullString     `json:"errorName"`
 	ErrorMessage             sql.NullString     `json:"errorMessage"`
+	ErrorSource              sql.NullString     `json:"errorSource"`
 	ErrorType                NullErrorTypesEnum `json:"errorType"`
 	RelayRoundtripTime       int32              `json:"relayRoundtripTime"`
-	RelayChainMethodID       int32              `json:"relayChainMethodID"`
+	RelayChainMethodIds      string             `json:"relayChainMethodIds"`
 	RelayDataSize            int32              `json:"relayDataSize"`
 	RelayPortalTripTime      int32              `json:"relayPortalTripTime"`
 	RelayNodeTripTime        int32              `json:"relayNodeTripTime"`
 	RelayUrlIsPublicEndpoint bool               `json:"relayUrlIsPublicEndpoint"`
 	PortalOriginRegionID     int32              `json:"portalOriginRegionID"`
 	IsAltruistRelay          bool               `json:"isAltruistRelay"`
+	IsUserRelay              bool               `json:"isUserRelay"`
+	RequestID                string             `json:"requestID"`
 	CreatedAt                time.Time          `json:"createdAt"`
 	UpdatedAt                time.Time          `json:"updatedAt"`
 }

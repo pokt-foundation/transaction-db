@@ -29,6 +29,7 @@ var (
 		"ErrorName":    true,
 		"ErrorMessage": true,
 		"ErrorType":    true,
+		"ErrorSource":  true,
 	}
 
 	validErrorTypes = map[string]bool{
@@ -43,7 +44,10 @@ type Relay struct {
 	ChainID                  int32         `json:"chainID"`
 	EndpointID               int32         `json:"endpointID"`
 	SessionKey               string        `json:"sessionKey"`
+	RelaySourceURL           string        `json:"relaySourceUrl"`
 	PoktNodeAddress          string        `json:"poktNodeAddress"`
+	PoktNodeDomain           string        `json:"poktNodeDomain"`
+	PoktNodePublicKey        string        `json:"poktNodePublicKey"`
 	RelayStartDatetime       time.Time     `json:"relayStartDatetime"`
 	RelayReturnDatetime      time.Time     `json:"relayReturnDatetime"`
 	IsError                  bool          `json:"isError"` // this field must be before the other error fields for validation to work
@@ -51,14 +55,17 @@ type Relay struct {
 	ErrorName                string        `json:"errorName,omitempty"`
 	ErrorMessage             string        `json:"errorMessage,omitempty"`
 	ErrorType                ErrorType     `json:"errorType,omitempty"`
+	ErrorSource              string        `json:"errorSource"`
 	RelayRoundtripTime       int32         `json:"relayRoundtripTime"`
-	RelayChainMethodID       int32         `json:"relayChainMethodID"`
+	RelayChainMethodIDs      []string      `json:"relayChainMethodID"`
 	RelayDataSize            int32         `json:"relayDataSize"`
 	RelayPortalTripTime      int32         `json:"relayPortalTripTime"`
 	RelayNodeTripTime        int32         `json:"relayNodeTripTime"`
 	RelayURLIsPublicEndpoint bool          `json:"relayUrlIsPublicEndpoint"`
 	PortalOriginRegionID     int32         `json:"portalOriginRegionID"`
 	IsAltruistRelay          bool          `json:"isAltruistRelay"`
+	IsUserRelay              bool          `json:"isUserRelay"`
+	RequestID                string        `json:"requestID"`
 	Session                  PocketSession `json:"session"`
 	Region                   PortalRegion  `json:"region"`
 	CreatedAt                time.Time     `json:"createdAt"`
