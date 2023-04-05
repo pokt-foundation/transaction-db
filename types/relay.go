@@ -66,6 +66,7 @@ type Relay struct {
 	IsAltruistRelay          bool          `json:"isAltruistRelay"`
 	IsUserRelay              bool          `json:"isUserRelay"`
 	RequestID                string        `json:"requestID"`
+	PoktTxID                 string        `json:"poktTxID"`
 	Session                  PocketSession `json:"session"`
 	Region                   PortalRegion  `json:"region"`
 	CreatedAt                time.Time     `json:"createdAt"`

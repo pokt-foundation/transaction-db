@@ -97,6 +97,7 @@ type Relay struct {
 	IsAltruistRelay          bool               `json:"isAltruistRelay"`
 	IsUserRelay              bool               `json:"isUserRelay"`
 	RequestID                string             `json:"requestID"`
+	PoktTxID                 string             `json:"poktTxID"`
 	CreatedAt                time.Time          `json:"createdAt"`
 	UpdatedAt                time.Time          `json:"updatedAt"`
 }

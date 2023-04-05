@@ -45,6 +45,7 @@ CREATE  TABLE relay (
 	is_altruist_relay    boolean  NOT NULL  ,
 	is_user_relay 		boolean NOT NULL ,
 	request_id			varchar   NOT NULL  ,
+	pokt_tx_id 			varchar	  NOT NULL  ,
 	created_at			 date     NOT NULL  ,
 	updated_at			 date     NOT NULL  ,
 	CONSTRAINT pk_relay PRIMARY KEY ( relay_id )
