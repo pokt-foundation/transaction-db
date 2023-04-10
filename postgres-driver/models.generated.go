@@ -11,54 +11,54 @@ import (
 	"time"
 )
 
-type ErrorTypesEnum string
+type ErrorSourcesEnum string
 
 const (
-	ErrorTypesEnumSyncCheck  ErrorTypesEnum = "sync_check"
-	ErrorTypesEnumChainCheck ErrorTypesEnum = "chain_check"
-	ErrorTypesEnumRelay      ErrorTypesEnum = "relay"
+	ErrorSourcesEnumInternal ErrorSourcesEnum = "internal"
+	ErrorSourcesEnumExternal ErrorSourcesEnum = "external"
 )
 
-func (e *ErrorTypesEnum) Scan(src interface{}) error {
+func (e *ErrorSourcesEnum) Scan(src interface{}) error {
 	switch s := src.(type) {
 	case []byte:
-		*e = ErrorTypesEnum(s)
+		*e = ErrorSourcesEnum(s)
 	case string:
-		*e = ErrorTypesEnum(s)
+		*e = ErrorSourcesEnum(s)
 	default:
-		return fmt.Errorf("unsupported scan type for ErrorTypesEnum: %T", src)
+		return fmt.Errorf("unsupported scan type for ErrorSourcesEnum: %T", src)
 	}
 	return nil
 }
 
-type NullErrorTypesEnum struct {
-	ErrorTypesEnum ErrorTypesEnum
-	Valid          bool // Valid is true if ErrorTypesEnum is not NULL
+type NullErrorSourcesEnum struct {
+	ErrorSourcesEnum ErrorSourcesEnum
+	Valid            bool // Valid is true if ErrorSourcesEnum is not NULL
 }
 
 // Scan implements the Scanner interface.
-func (ns *NullErrorTypesEnum) Scan(value interface{}) error {
+func (ns *NullErrorSourcesEnum) Scan(value interface{}) error {
 	if value == nil {
-		ns.ErrorTypesEnum, ns.Valid = "", false
+		ns.ErrorSourcesEnum, ns.Valid = "", false
 		return nil
 	}
 	ns.Valid = true
-	return ns.ErrorTypesEnum.Scan(value)
+	return ns.ErrorSourcesEnum.Scan(value)
 }
 
 // Value implements the driver Valuer interface.
-func (ns NullErrorTypesEnum) Value() (driver.Value, error) {
+func (ns NullErrorSourcesEnum) Value() (driver.Value, error) {
 	if !ns.Valid {
 		return nil, nil
 	}
-	return string(ns.ErrorTypesEnum), nil
+	return string(ns.ErrorSourcesEnum), nil
 }
 
 type PocketSession struct {
-	PocketSessionID       int64     `json:"pocketSessionID"`
+	ID                    int64     `json:"id"`
 	SessionKey            string    `json:"sessionKey"`
 	SessionHeight         int32     `json:"sessionHeight"`
-	ProtocolApplicationID int32     `json:"protocolApplicationID"`
+	ProtocolApplicationID string    `json:"protocolApplicationID"`
+	ProtocolPublicKey     string    `json:"protocolPublicKey"`
 	CreatedAt             time.Time `json:"createdAt"`
 	UpdatedAt             time.Time `json:"updatedAt"`
 }
@@ -71,33 +71,34 @@ type PortalRegion struct {
 }
 
 type Relay struct {
-	RelayID                  int64              `json:"relayID"`
-	ChainID                  int32              `json:"chainID"`
-	EndpointID               int32              `json:"endpointID"`
-	SessionKey               string             `json:"sessionKey"`
-	RelaySourceUrl           string             `json:"relaySourceUrl"`
-	PoktNodeAddress          string             `json:"poktNodeAddress"`
-	PoktNodeDomain           string             `json:"poktNodeDomain"`
-	PoktNodePublicKey        string             `json:"poktNodePublicKey"`
-	RelayStartDatetime       time.Time          `json:"relayStartDatetime"`
-	RelayReturnDatetime      time.Time          `json:"relayReturnDatetime"`
-	IsError                  bool               `json:"isError"`
-	ErrorCode                sql.NullInt32      `json:"errorCode"`
-	ErrorName                sql.NullString     `json:"errorName"`
-	ErrorMessage             sql.NullString     `json:"errorMessage"`
-	ErrorSource              sql.NullString     `json:"errorSource"`
-	ErrorType                NullErrorTypesEnum `json:"errorType"`
-	RelayRoundtripTime       int32              `json:"relayRoundtripTime"`
-	RelayChainMethodIds      string             `json:"relayChainMethodIds"`
-	RelayDataSize            int32              `json:"relayDataSize"`
-	RelayPortalTripTime      int32              `json:"relayPortalTripTime"`
-	RelayNodeTripTime        int32              `json:"relayNodeTripTime"`
-	RelayUrlIsPublicEndpoint bool               `json:"relayUrlIsPublicEndpoint"`
-	PortalOriginRegionID     int32              `json:"portalOriginRegionID"`
-	IsAltruistRelay          bool               `json:"isAltruistRelay"`
-	IsUserRelay              bool               `json:"isUserRelay"`
-	RequestID                string             `json:"requestID"`
-	PoktTxID                 string             `json:"poktTxID"`
-	CreatedAt                time.Time          `json:"createdAt"`
-	UpdatedAt                time.Time          `json:"updatedAt"`
+	ID                       int64                `json:"id"`
+	RelayID                  string               `json:"relayID"`
+	PoktChainID              string               `json:"poktChainID"`
+	EndpointID               string               `json:"endpointID"`
+	SessionKey               string               `json:"sessionKey"`
+	RelaySourceUrl           string               `json:"relaySourceUrl"`
+	PoktNodeAddress          string               `json:"poktNodeAddress"`
+	PoktNodeDomain           string               `json:"poktNodeDomain"`
+	PoktNodePublicKey        string               `json:"poktNodePublicKey"`
+	RelayStartDatetime       time.Time            `json:"relayStartDatetime"`
+	RelayReturnDatetime      time.Time            `json:"relayReturnDatetime"`
+	IsError                  bool                 `json:"isError"`
+	ErrorCode                sql.NullInt32        `json:"errorCode"`
+	ErrorName                sql.NullString       `json:"errorName"`
+	ErrorMessage             sql.NullString       `json:"errorMessage"`
+	ErrorSource              NullErrorSourcesEnum `json:"errorSource"`
+	ErrorType                sql.NullString       `json:"errorType"`
+	RelayRoundtripTime       int32                `json:"relayRoundtripTime"`
+	RelayChainMethodIds      string               `json:"relayChainMethodIds"`
+	RelayDataSize            int32                `json:"relayDataSize"`
+	RelayPortalTripTime      int32                `json:"relayPortalTripTime"`
+	RelayNodeTripTime        int32                `json:"relayNodeTripTime"`
+	RelayUrlIsPublicEndpoint bool                 `json:"relayUrlIsPublicEndpoint"`
+	PortalOriginRegionID     int32                `json:"portalOriginRegionID"`
+	IsAltruistRelay          bool                 `json:"isAltruistRelay"`
+	IsUserRelay              bool                 `json:"isUserRelay"`
+	RequestID                string               `json:"requestID"`
+	PoktTxID                 string               `json:"poktTxID"`
+	CreatedAt                time.Time            `json:"createdAt"`
+	UpdatedAt                time.Time            `json:"updatedAt"`
 }

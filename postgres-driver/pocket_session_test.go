@@ -17,7 +17,8 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteSession() {
 			session: types.PocketSession{
 				SessionKey:            "21",
 				SessionHeight:         21,
-				ProtocolApplicationID: 21,
+				ProtocolApplicationID: "21",
+				ProtocolPublicKey:     "211",
 			},
 			err: nil,
 		},

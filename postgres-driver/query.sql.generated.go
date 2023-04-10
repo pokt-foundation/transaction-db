@@ -12,14 +12,15 @@ import (
 )
 
 const insertPocketSession = `-- name: InsertPocketSession :exec
-INSERT INTO pocket_session (session_key, session_height, protocol_application_id, created_at, updated_at)
-VALUES ($1, $2, $3, $4, $5)
+INSERT INTO pocket_session (session_key, session_height, protocol_application_id, protocol_public_key, created_at, updated_at)
+VALUES ($1, $2, $3, $4, $5, $6)
 `
 
 type InsertPocketSessionParams struct {
 	SessionKey            string    `json:"sessionKey"`
 	SessionHeight         int32     `json:"sessionHeight"`
-	ProtocolApplicationID int32     `json:"protocolApplicationID"`
+	ProtocolApplicationID string    `json:"protocolApplicationID"`
+	ProtocolPublicKey     string    `json:"protocolPublicKey"`
 	CreatedAt             time.Time `json:"createdAt"`
 	UpdatedAt             time.Time `json:"updatedAt"`
 }
@@ -29,6 +30,7 @@ func (q *Queries) InsertPocketSession(ctx context.Context, arg InsertPocketSessi
 		arg.SessionKey,
 		arg.SessionHeight,
 		arg.ProtocolApplicationID,
+		arg.ProtocolPublicKey,
 		arg.CreatedAt,
 		arg.UpdatedAt,
 	)
@@ -53,7 +55,8 @@ func (q *Queries) InsertPortalRegion(ctx context.Context, arg InsertPortalRegion
 
 const insertRelay = `-- name: InsertRelay :exec
 INSERT INTO relay (
-  chain_id,
+  relay_id,
+  pokt_chain_id,
   endpoint_id,
   session_key,
   relay_source_url,
@@ -82,44 +85,46 @@ INSERT INTO relay (
   created_at,
   updated_at
 ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29
 )
 `
 
 type InsertRelayParams struct {
-	ChainID                  int32              `json:"chainID"`
-	EndpointID               int32              `json:"endpointID"`
-	SessionKey               string             `json:"sessionKey"`
-	RelaySourceUrl           string             `json:"relaySourceUrl"`
-	PoktNodeAddress          string             `json:"poktNodeAddress"`
-	PoktNodeDomain           string             `json:"poktNodeDomain"`
-	PoktNodePublicKey        string             `json:"poktNodePublicKey"`
-	RelayStartDatetime       time.Time          `json:"relayStartDatetime"`
-	RelayReturnDatetime      time.Time          `json:"relayReturnDatetime"`
-	IsError                  bool               `json:"isError"`
-	ErrorCode                sql.NullInt32      `json:"errorCode"`
-	ErrorName                sql.NullString     `json:"errorName"`
-	ErrorMessage             sql.NullString     `json:"errorMessage"`
-	ErrorSource              sql.NullString     `json:"errorSource"`
-	ErrorType                NullErrorTypesEnum `json:"errorType"`
-	RelayRoundtripTime       int32              `json:"relayRoundtripTime"`
-	RelayChainMethodIds      string             `json:"relayChainMethodIds"`
-	RelayDataSize            int32              `json:"relayDataSize"`
-	RelayPortalTripTime      int32              `json:"relayPortalTripTime"`
-	RelayNodeTripTime        int32              `json:"relayNodeTripTime"`
-	RelayUrlIsPublicEndpoint bool               `json:"relayUrlIsPublicEndpoint"`
-	PortalOriginRegionID     int32              `json:"portalOriginRegionID"`
-	IsAltruistRelay          bool               `json:"isAltruistRelay"`
-	IsUserRelay              bool               `json:"isUserRelay"`
-	RequestID                string             `json:"requestID"`
-	PoktTxID                 string             `json:"poktTxID"`
-	CreatedAt                time.Time          `json:"createdAt"`
-	UpdatedAt                time.Time          `json:"updatedAt"`
+	RelayID                  string               `json:"relayID"`
+	PoktChainID              string               `json:"poktChainID"`
+	EndpointID               string               `json:"endpointID"`
+	SessionKey               string               `json:"sessionKey"`
+	RelaySourceUrl           string               `json:"relaySourceUrl"`
+	PoktNodeAddress          string               `json:"poktNodeAddress"`
+	PoktNodeDomain           string               `json:"poktNodeDomain"`
+	PoktNodePublicKey        string               `json:"poktNodePublicKey"`
+	RelayStartDatetime       time.Time            `json:"relayStartDatetime"`
+	RelayReturnDatetime      time.Time            `json:"relayReturnDatetime"`
+	IsError                  bool                 `json:"isError"`
+	ErrorCode                sql.NullInt32        `json:"errorCode"`
+	ErrorName                sql.NullString       `json:"errorName"`
+	ErrorMessage             sql.NullString       `json:"errorMessage"`
+	ErrorSource              NullErrorSourcesEnum `json:"errorSource"`
+	ErrorType                sql.NullString       `json:"errorType"`
+	RelayRoundtripTime       int32                `json:"relayRoundtripTime"`
+	RelayChainMethodIds      string               `json:"relayChainMethodIds"`
+	RelayDataSize            int32                `json:"relayDataSize"`
+	RelayPortalTripTime      int32                `json:"relayPortalTripTime"`
+	RelayNodeTripTime        int32                `json:"relayNodeTripTime"`
+	RelayUrlIsPublicEndpoint bool                 `json:"relayUrlIsPublicEndpoint"`
+	PortalOriginRegionID     int32                `json:"portalOriginRegionID"`
+	IsAltruistRelay          bool                 `json:"isAltruistRelay"`
+	IsUserRelay              bool                 `json:"isUserRelay"`
+	RequestID                string               `json:"requestID"`
+	PoktTxID                 string               `json:"poktTxID"`
+	CreatedAt                time.Time            `json:"createdAt"`
+	UpdatedAt                time.Time            `json:"updatedAt"`
 }
 
 func (q *Queries) InsertRelay(ctx context.Context, arg InsertRelayParams) error {
 	_, err := q.db.ExecContext(ctx, insertRelay,
-		arg.ChainID,
+		arg.RelayID,
+		arg.PoktChainID,
 		arg.EndpointID,
 		arg.SessionKey,
 		arg.RelaySourceUrl,
@@ -152,7 +157,7 @@ func (q *Queries) InsertRelay(ctx context.Context, arg InsertRelayParams) error 
 }
 
 const selectRelay = `-- name: SelectRelay :one
-SELECT r.relay_id, r.chain_id, r.endpoint_id, r.session_key, r.relay_source_url, r.pokt_node_address, r.pokt_node_domain, r.pokt_node_public_key, r.relay_start_datetime, r.relay_return_datetime, r.is_error, r.error_code, r.error_name, r.error_message, r.error_source, r.error_type, r.relay_roundtrip_time, r.relay_chain_method_ids, r.relay_data_size, r.relay_portal_trip_time, r.relay_node_trip_time, r.relay_url_is_public_endpoint, r.portal_origin_region_id, r.is_altruist_relay, r.is_user_relay, r.request_id, r.pokt_tx_id, r.created_at, r.updated_at, ps.session_key, ps.session_height, ps.protocol_application_id, ps.created_at, ps.updated_at, pr.portal_region_name, pr.created_at, pr.updated_at
+SELECT r.relay_id, r.pokt_chain_id, r.endpoint_id, r.session_key, r.relay_source_url, r.pokt_node_address, r.pokt_node_domain, r.pokt_node_public_key, r.relay_start_datetime, r.relay_return_datetime, r.is_error, r.error_code, r.error_name, r.error_message, r.error_source, r.error_type, r.relay_roundtrip_time, r.relay_chain_method_ids, r.relay_data_size, r.relay_portal_trip_time, r.relay_node_trip_time, r.relay_url_is_public_endpoint, r.portal_origin_region_id, r.is_altruist_relay, r.is_user_relay, r.request_id, r.pokt_tx_id, r.created_at, r.updated_at, ps.session_key, ps.session_height, ps.protocol_application_id, ps.protocol_public_key, ps.created_at, ps.updated_at, pr.portal_region_name, pr.created_at, pr.updated_at
 FROM relay r
 	INNER JOIN pocket_session ps ON ps.session_key = r.session_key
 	INNER JOIN portal_region pr ON pr.portal_region_id = r.portal_origin_region_id
@@ -160,51 +165,52 @@ WHERE r.relay_id = $1
 `
 
 type SelectRelayRow struct {
-	RelayID                  int64              `json:"relayID"`
-	ChainID                  int32              `json:"chainID"`
-	EndpointID               int32              `json:"endpointID"`
-	SessionKey               string             `json:"sessionKey"`
-	RelaySourceUrl           string             `json:"relaySourceUrl"`
-	PoktNodeAddress          string             `json:"poktNodeAddress"`
-	PoktNodeDomain           string             `json:"poktNodeDomain"`
-	PoktNodePublicKey        string             `json:"poktNodePublicKey"`
-	RelayStartDatetime       time.Time          `json:"relayStartDatetime"`
-	RelayReturnDatetime      time.Time          `json:"relayReturnDatetime"`
-	IsError                  bool               `json:"isError"`
-	ErrorCode                sql.NullInt32      `json:"errorCode"`
-	ErrorName                sql.NullString     `json:"errorName"`
-	ErrorMessage             sql.NullString     `json:"errorMessage"`
-	ErrorSource              sql.NullString     `json:"errorSource"`
-	ErrorType                NullErrorTypesEnum `json:"errorType"`
-	RelayRoundtripTime       int32              `json:"relayRoundtripTime"`
-	RelayChainMethodIds      string             `json:"relayChainMethodIds"`
-	RelayDataSize            int32              `json:"relayDataSize"`
-	RelayPortalTripTime      int32              `json:"relayPortalTripTime"`
-	RelayNodeTripTime        int32              `json:"relayNodeTripTime"`
-	RelayUrlIsPublicEndpoint bool               `json:"relayUrlIsPublicEndpoint"`
-	PortalOriginRegionID     int32              `json:"portalOriginRegionID"`
-	IsAltruistRelay          bool               `json:"isAltruistRelay"`
-	IsUserRelay              bool               `json:"isUserRelay"`
-	RequestID                string             `json:"requestID"`
-	PoktTxID                 string             `json:"poktTxID"`
-	CreatedAt                time.Time          `json:"createdAt"`
-	UpdatedAt                time.Time          `json:"updatedAt"`
-	SessionKey_2             string             `json:"sessionKey2"`
-	SessionHeight            int32              `json:"sessionHeight"`
-	ProtocolApplicationID    int32              `json:"protocolApplicationID"`
-	CreatedAt_2              time.Time          `json:"createdAt2"`
-	UpdatedAt_2              time.Time          `json:"updatedAt2"`
-	PortalRegionName         string             `json:"portalRegionName"`
-	CreatedAt_3              time.Time          `json:"createdAt3"`
-	UpdatedAt_3              time.Time          `json:"updatedAt3"`
+	RelayID                  string               `json:"relayID"`
+	PoktChainID              string               `json:"poktChainID"`
+	EndpointID               string               `json:"endpointID"`
+	SessionKey               string               `json:"sessionKey"`
+	RelaySourceUrl           string               `json:"relaySourceUrl"`
+	PoktNodeAddress          string               `json:"poktNodeAddress"`
+	PoktNodeDomain           string               `json:"poktNodeDomain"`
+	PoktNodePublicKey        string               `json:"poktNodePublicKey"`
+	RelayStartDatetime       time.Time            `json:"relayStartDatetime"`
+	RelayReturnDatetime      time.Time            `json:"relayReturnDatetime"`
+	IsError                  bool                 `json:"isError"`
+	ErrorCode                sql.NullInt32        `json:"errorCode"`
+	ErrorName                sql.NullString       `json:"errorName"`
+	ErrorMessage             sql.NullString       `json:"errorMessage"`
+	ErrorSource              NullErrorSourcesEnum `json:"errorSource"`
+	ErrorType                sql.NullString       `json:"errorType"`
+	RelayRoundtripTime       int32                `json:"relayRoundtripTime"`
+	RelayChainMethodIds      string               `json:"relayChainMethodIds"`
+	RelayDataSize            int32                `json:"relayDataSize"`
+	RelayPortalTripTime      int32                `json:"relayPortalTripTime"`
+	RelayNodeTripTime        int32                `json:"relayNodeTripTime"`
+	RelayUrlIsPublicEndpoint bool                 `json:"relayUrlIsPublicEndpoint"`
+	PortalOriginRegionID     int32                `json:"portalOriginRegionID"`
+	IsAltruistRelay          bool                 `json:"isAltruistRelay"`
+	IsUserRelay              bool                 `json:"isUserRelay"`
+	RequestID                string               `json:"requestID"`
+	PoktTxID                 string               `json:"poktTxID"`
+	CreatedAt                time.Time            `json:"createdAt"`
+	UpdatedAt                time.Time            `json:"updatedAt"`
+	SessionKey_2             string               `json:"sessionKey2"`
+	SessionHeight            int32                `json:"sessionHeight"`
+	ProtocolApplicationID    string               `json:"protocolApplicationID"`
+	ProtocolPublicKey        string               `json:"protocolPublicKey"`
+	CreatedAt_2              time.Time            `json:"createdAt2"`
+	UpdatedAt_2              time.Time            `json:"updatedAt2"`
+	PortalRegionName         string               `json:"portalRegionName"`
+	CreatedAt_3              time.Time            `json:"createdAt3"`
+	UpdatedAt_3              time.Time            `json:"updatedAt3"`
 }
 
-func (q *Queries) SelectRelay(ctx context.Context, relayID int64) (SelectRelayRow, error) {
+func (q *Queries) SelectRelay(ctx context.Context, relayID string) (SelectRelayRow, error) {
 	row := q.db.QueryRowContext(ctx, selectRelay, relayID)
 	var i SelectRelayRow
 	err := row.Scan(
 		&i.RelayID,
-		&i.ChainID,
+		&i.PoktChainID,
 		&i.EndpointID,
 		&i.SessionKey,
 		&i.RelaySourceUrl,
@@ -235,6 +241,7 @@ func (q *Queries) SelectRelay(ctx context.Context, relayID int64) (SelectRelayRo
 		&i.SessionKey_2,
 		&i.SessionHeight,
 		&i.ProtocolApplicationID,
+		&i.ProtocolPublicKey,
 		&i.CreatedAt_2,
 		&i.UpdatedAt_2,
 		&i.PortalRegionName,

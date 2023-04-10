@@ -1,13 +1,14 @@
-CREATE TYPE error_types_enum AS ENUM ('sync_check', 'chain_check', 'relay');
+CREATE TYPE error_sources_enum AS ENUM ('internal', 'external');
 
 CREATE  TABLE pocket_session (
-	pocket_session_id    bigint  NOT NULL  GENERATED ALWAYS AS IDENTITY  ,
+	id    				 bigint  NOT NULL  GENERATED ALWAYS AS IDENTITY  ,
 	session_key          varchar  NOT NULL  UNIQUE,
 	session_height       integer  NOT NULL  ,
-	protocol_application_id integer  NOT NULL  ,
+	protocol_application_id varchar  NOT NULL  ,
+	protocol_public_key	 varchar NOT NULL ,
 	created_at			 date     NOT NULL  ,
 	updated_at			 date     NOT NULL  ,
-	CONSTRAINT pk_tbl_0 PRIMARY KEY ( pocket_session_id )
+	CONSTRAINT pk_tbl_0 PRIMARY KEY ( id )
  );
 
 CREATE  TABLE portal_region (
@@ -19,9 +20,10 @@ CREATE  TABLE portal_region (
  );
 
 CREATE  TABLE relay (
-	relay_id             bigint  NOT NULL GENERATED ALWAYS AS IDENTITY  ,
-	chain_id             integer  NOT NULL  ,
-	endpoint_id          integer  NOT NULL  ,
+	id             		bigint  NOT NULL GENERATED ALWAYS AS IDENTITY  ,
+	relay_id 			varchar NOT NULL UNIQUE ,
+	pokt_chain_id       varchar  NOT NULL  ,
+	endpoint_id          varchar  NOT NULL  ,
 	session_key   		varchar  NOT NULL  ,
 	relay_source_url 	varchar  NOT NULL  ,
 	pokt_node_address    varchar  NOT NULL  ,
@@ -33,8 +35,8 @@ CREATE  TABLE relay (
 	error_code           integer,
 	error_name           varchar,
 	error_message    	 varchar,
-	error_source		 varchar,
-	error_type 			 error_types_enum,
+	error_source		 error_sources_enum,
+	error_type 			 varchar,
 	relay_roundtrip_time integer  NOT NULL  ,
 	relay_chain_method_ids varchar  NOT NULL  ,
 	relay_data_size      integer  NOT NULL  ,
@@ -48,7 +50,7 @@ CREATE  TABLE relay (
 	pokt_tx_id 			varchar	  NOT NULL  ,
 	created_at			 date     NOT NULL  ,
 	updated_at			 date     NOT NULL  ,
-	CONSTRAINT pk_relay PRIMARY KEY ( relay_id )
+	CONSTRAINT pk_relay PRIMARY KEY ( id )
  );
 
 

@@ -14,6 +14,7 @@ func (d *PostgresDriver) WriteSession(ctx context.Context, session types.PocketS
 		SessionKey:            session.SessionKey,
 		SessionHeight:         session.SessionHeight,
 		ProtocolApplicationID: session.ProtocolApplicationID,
+		ProtocolPublicKey:     session.ProtocolPublicKey,
 		CreatedAt:             now,
 		UpdatedAt:             now,
 	})

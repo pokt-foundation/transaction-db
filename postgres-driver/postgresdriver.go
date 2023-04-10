@@ -99,13 +99,13 @@ func newSQLNullString(value string) sql.NullString {
 	}
 }
 
-func newSQLNullErrorType(value ErrorTypesEnum) NullErrorTypesEnum {
+func newSQLNullErrorSource(value ErrorSourcesEnum) NullErrorSourcesEnum {
 	if value == "" {
-		return NullErrorTypesEnum{}
+		return NullErrorSourcesEnum{}
 	}
 
-	return NullErrorTypesEnum{
-		ErrorTypesEnum: value,
-		Valid:          true,
+	return NullErrorSourcesEnum{
+		ErrorSourcesEnum: value,
+		Valid:            true,
 	}
 }

@@ -6,18 +6,16 @@ import (
 	"time"
 )
 
-type ErrorType string
+type ErrorSource string
 
 const (
-	ErrorTypeSyncCheck  ErrorType = "sync_check"
-	ErrorTypeChainCheck ErrorType = "chain_check"
-	ErrorTypeRelay      ErrorType = "relay"
+	ErrorSourceInternal ErrorSource = "internal"
+	ErrorSourceExternal ErrorSource = "external"
 )
 
 var (
 	// this fields shpould be empty because they are set after db record is created
 	shouldBeEmptyField = map[string]bool{
-		"RelayID":   true,
 		"Session":   true,
 		"Region":    true,
 		"CreatedAt": true,
@@ -32,17 +30,16 @@ var (
 		"ErrorSource":  true,
 	}
 
-	validErrorTypes = map[string]bool{
-		string(ErrorTypeSyncCheck):  true,
-		string(ErrorTypeChainCheck): true,
-		string(ErrorTypeRelay):      true,
+	validErrorSources = map[string]bool{
+		string(ErrorSourceExternal): true,
+		string(ErrorSourceInternal): true,
 	}
 )
 
 type Relay struct {
-	RelayID                  int64         `json:"relayID"`
-	ChainID                  int32         `json:"chainID"`
-	EndpointID               int32         `json:"endpointID"`
+	RelayID                  string        `json:"relayID"`
+	PoktChainID              string        `json:"poktChainID"`
+	EndpointID               string        `json:"endpointID"`
 	SessionKey               string        `json:"sessionKey"`
 	RelaySourceURL           string        `json:"relaySourceUrl"`
 	PoktNodeAddress          string        `json:"poktNodeAddress"`
@@ -54,8 +51,8 @@ type Relay struct {
 	ErrorCode                int32         `json:"errorCode,omitempty"`
 	ErrorName                string        `json:"errorName,omitempty"`
 	ErrorMessage             string        `json:"errorMessage,omitempty"`
-	ErrorType                ErrorType     `json:"errorType,omitempty"`
-	ErrorSource              string        `json:"errorSource"`
+	ErrorType                string        `json:"errorType,omitempty"`
+	ErrorSource              ErrorSource   `json:"errorSource,omitempty"`
 	RelayRoundtripTime       int32         `json:"relayRoundtripTime"`
 	RelayChainMethodIDs      []string      `json:"relayChainMethodID"`
 	RelayDataSize            int32         `json:"relayDataSize"`
@@ -100,8 +97,8 @@ func (r Relay) Validate() (err error) {
 				return fmt.Errorf("%s should not be set", fieldName)
 			}
 
-			// errorType field just has some valid error types
-			if fieldName == "ErrorType" && !validErrorTypes[field.String()] {
+			// errorSource field just has some valid error sources
+			if fieldName == "ErrorSource" && !validErrorSources[field.String()] {
 				return fmt.Errorf("%s is not valid", fieldName)
 			}
 		}

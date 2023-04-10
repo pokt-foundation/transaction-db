@@ -19,8 +19,9 @@ func TestRelay_ValidateStruct(t *testing.T) {
 		{
 			name: "Success no error relay",
 			relay: Relay{
-				ChainID:                  21,
-				EndpointID:               21,
+				RelayID:                  "21",
+				PoktChainID:              "21",
+				EndpointID:               "21",
 				SessionKey:               "21",
 				RelaySourceURL:           "pablo.com",
 				PoktNodeAddress:          "21",
@@ -45,8 +46,9 @@ func TestRelay_ValidateStruct(t *testing.T) {
 		{
 			name: "Success no error relay",
 			relay: Relay{
-				ChainID:                  21,
-				EndpointID:               21,
+				RelayID:                  "21",
+				PoktChainID:              "21",
+				EndpointID:               "21",
 				SessionKey:               "21",
 				RelaySourceURL:           "pablo.com",
 				PoktNodeAddress:          "21",
@@ -58,7 +60,7 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				ErrorCode:                21,
 				ErrorName:                "favorite number",
 				ErrorMessage:             "just Pablo can use it",
-				ErrorType:                ErrorTypeChainCheck,
+				ErrorType:                "chain_check",
 				ErrorSource:              "internal",
 				RelayRoundtripTime:       1,
 				RelayChainMethodIDs:      []string{"get_height"},
@@ -77,8 +79,9 @@ func TestRelay_ValidateStruct(t *testing.T) {
 		{
 			name: "Failure no erro relay with error fields",
 			relay: Relay{
-				ChainID:                  21,
-				EndpointID:               21,
+				RelayID:                  "21",
+				PoktChainID:              "21",
+				EndpointID:               "21",
 				SessionKey:               "21",
 				RelaySourceURL:           "pablo.com",
 				PoktNodeAddress:          "21",
@@ -90,7 +93,7 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				ErrorCode:                21,
 				ErrorName:                "favorite number",
 				ErrorMessage:             "just Pablo can use it",
-				ErrorType:                ErrorTypeChainCheck,
+				ErrorType:                "chain_check",
 				ErrorSource:              "internal",
 				RelayRoundtripTime:       1,
 				RelayChainMethodIDs:      []string{"get_height"},
@@ -109,8 +112,9 @@ func TestRelay_ValidateStruct(t *testing.T) {
 		{
 			name: "Failure invalid error type",
 			relay: Relay{
-				ChainID:                  21,
-				EndpointID:               21,
+				RelayID:                  "21",
+				PoktChainID:              "21",
+				EndpointID:               "21",
 				SessionKey:               "21",
 				RelaySourceURL:           "pablo.com",
 				PoktNodeAddress:          "21",
@@ -122,8 +126,8 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				ErrorCode:                21,
 				ErrorName:                "favorite number",
 				ErrorMessage:             "just Pablo can use it",
-				ErrorType:                "pablito",
-				ErrorSource:              "internal",
+				ErrorType:                "chain_check",
+				ErrorSource:              "pablito",
 				RelayRoundtripTime:       1,
 				RelayChainMethodIDs:      []string{"get_height"},
 				RelayDataSize:            21,
@@ -136,13 +140,14 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				RequestID:                "21",
 				PoktTxID:                 "21",
 			},
-			err: errors.New("ErrorType is not valid"),
+			err: errors.New("ErrorSource is not valid"),
 		},
 		{
 			name: "Failure error relay without error fields",
 			relay: Relay{
-				ChainID:                  21,
-				EndpointID:               21,
+				RelayID:                  "21",
+				PoktChainID:              "21",
+				EndpointID:               "21",
 				SessionKey:               "21",
 				RelaySourceURL:           "pablo.com",
 				PoktNodeAddress:          "21",
@@ -172,7 +177,8 @@ func TestRelay_ValidateStruct(t *testing.T) {
 		{
 			name: "Failure not set field",
 			relay: Relay{
-				EndpointID:               21,
+				RelayID:                  "21",
+				EndpointID:               "21",
 				SessionKey:               "21",
 				RelaySourceURL:           "pablo.com",
 				PoktNodeAddress:          "21",
@@ -192,13 +198,14 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				RequestID:                "21",
 				PoktTxID:                 "21",
 			},
-			err: errors.New("ChainID is not set"),
+			err: errors.New("PoktChainID is not set"),
 		},
 		{
 			name: "Failure set field should not be set",
 			relay: Relay{
-				RelayID:                  21,
-				EndpointID:               21,
+				RelayID:                  "21",
+				PoktChainID:              "21",
+				EndpointID:               "21",
 				SessionKey:               "21",
 				RelaySourceURL:           "pablo.com",
 				PoktNodeAddress:          "21",
@@ -217,8 +224,9 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				IsUserRelay:              false,
 				RequestID:                "21",
 				PoktTxID:                 "21",
+				Session:                  PocketSession{SessionKey: "21"},
 			},
-			err: errors.New("RelayID should not be set"),
+			err: errors.New("Session should not be set"),
 		},
 	}
 

@@ -2,6 +2,7 @@ package postgresdriver
 
 import (
 	"context"
+	"strconv"
 	"time"
 
 	"github.com/pokt-foundation/transaction-db/types"
@@ -16,8 +17,8 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteRelay() {
 		{
 			name: "Success",
 			relay: types.Relay{
-				ChainID:                  21,
-				EndpointID:               21,
+				PoktChainID:              "21",
+				EndpointID:               "21",
 				SessionKey:               ts.firstRelay.SessionKey,
 				RelaySourceURL:           "pablo.com",
 				PoktNodeAddress:          "21",
@@ -29,7 +30,7 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteRelay() {
 				ErrorCode:                21,
 				ErrorName:                "favorite number",
 				ErrorMessage:             "just Pablo can use it",
-				ErrorType:                types.ErrorTypeChainCheck,
+				ErrorType:                "chain_check",
 				ErrorSource:              "internal",
 				RelayRoundtripTime:       1,
 				RelayChainMethodIDs:      []string{"get_height"},
@@ -54,8 +55,9 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteRelays() {
 	var relays []types.Relay
 	for i := 0; i < 1000; i++ {
 		relays = append(relays, types.Relay{
-			ChainID:                  21,
-			EndpointID:               21,
+			RelayID:                  strconv.FormatInt(int64(i), 10),
+			PoktChainID:              "21",
+			EndpointID:               "21",
 			SessionKey:               ts.firstRelay.SessionKey,
 			RelaySourceURL:           "pablo.com",
 			PoktNodeAddress:          "21",
@@ -67,7 +69,7 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteRelays() {
 			ErrorCode:                21,
 			ErrorName:                "favorite number",
 			ErrorMessage:             "just Pablo can use it",
-			ErrorType:                types.ErrorTypeChainCheck,
+			ErrorType:                "chain_check",
 			ErrorSource:              "internal",
 			RelayRoundtripTime:       1,
 			RelayChainMethodIDs:      []string{"get_height", "get_balance"},
@@ -101,13 +103,13 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteRelays() {
 func (ts *PGDriverTestSuite) TestPostgresDriver_ReadRelay() {
 	tests := []struct {
 		name     string
-		relayID  int
+		relayID  string
 		expRelay types.Relay
 		err      error
 	}{
 		{
 			name:     "Success",
-			relayID:  int(ts.firstRelay.RelayID),
+			relayID:  ts.firstRelay.RelayID,
 			expRelay: ts.firstRelay,
 			err:      nil,
 		},
