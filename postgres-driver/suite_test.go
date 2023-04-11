@@ -35,9 +35,9 @@ func (ts *PGDriverTestSuite) SetupSuite() {
 	ts.NoError(ts.initPostgresDriver())
 
 	ts.NoError(ts.driver.WriteSession(context.Background(), types.PocketSession{
-		SessionKey:            "22",
-		SessionHeight:         22,
-		ProtocolApplicationID: 22,
+		SessionKey:        "22",
+		SessionHeight:     22,
+		ProtocolPublicKey: "222",
 	}))
 
 	ts.NoError(ts.driver.WriteRegion(context.Background(), types.PortalRegion{
@@ -45,25 +45,25 @@ func (ts *PGDriverTestSuite) SetupSuite() {
 	}))
 
 	ts.NoError(ts.driver.WriteRelay(context.Background(), types.Relay{
-		ChainID:                  21,
-		EndpointID:               21,
+		PoktChainID:              "21",
+		EndpointID:               "21",
 		SessionKey:               "22",
+		RelaySourceURL:           "pablo.com",
 		PoktNodeAddress:          "21",
-		RelayStartDatetime:       time.Date(199, time.July, 21, 0, 0, 0, 0, time.Local),
-		RelayReturnDatetime:      time.Date(199, time.July, 21, 0, 0, 0, 0, time.Local),
-		IsError:                  true,
-		ErrorCode:                21,
-		ErrorName:                "favorite number",
-		ErrorMessage:             "just Pablo can use it",
-		ErrorType:                types.ErrorTypeChainCheck,
+		PoktNodeDomain:           "pablos.com",
+		PoktNodePublicKey:        "aaa",
+		RelayStartDatetime:       time.Now(),
+		RelayReturnDatetime:      time.Now(),
 		RelayRoundtripTime:       1,
-		RelayChainMethodID:       21,
+		RelayChainMethodIDs:      []string{"get_height"},
 		RelayDataSize:            21,
 		RelayPortalTripTime:      21,
 		RelayNodeTripTime:        21,
 		RelayURLIsPublicEndpoint: false,
-		PortalOriginRegionID:     1,
+		PortalRegionName:         "La Colombia",
 		IsAltruistRelay:          false,
+		IsUserRelay:              false,
+		RequestID:                "21",
 	}))
 
 	firstRelay, err := ts.driver.ReadRelay(context.Background(), 1)
