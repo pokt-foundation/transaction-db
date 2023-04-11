@@ -35,10 +35,9 @@ func (ts *PGDriverTestSuite) SetupSuite() {
 	ts.NoError(ts.initPostgresDriver())
 
 	ts.NoError(ts.driver.WriteSession(context.Background(), types.PocketSession{
-		SessionKey:            "22",
-		SessionHeight:         22,
-		ProtocolApplicationID: "22",
-		ProtocolPublicKey:     "222",
+		SessionKey:        "22",
+		SessionHeight:     22,
+		ProtocolPublicKey: "222",
 	}))
 
 	ts.NoError(ts.driver.WriteRegion(context.Background(), types.PortalRegion{
@@ -46,7 +45,6 @@ func (ts *PGDriverTestSuite) SetupSuite() {
 	}))
 
 	ts.NoError(ts.driver.WriteRelay(context.Background(), types.Relay{
-		RelayID:                  "-1",
 		PoktChainID:              "21",
 		EndpointID:               "21",
 		SessionKey:               "22",
@@ -62,13 +60,13 @@ func (ts *PGDriverTestSuite) SetupSuite() {
 		RelayPortalTripTime:      21,
 		RelayNodeTripTime:        21,
 		RelayURLIsPublicEndpoint: false,
-		PortalOriginRegionID:     1,
+		PortalRegionName:         "La Colombia",
 		IsAltruistRelay:          false,
 		IsUserRelay:              false,
 		RequestID:                "21",
 	}))
 
-	firstRelay, err := ts.driver.ReadRelay(context.Background(), "-1")
+	firstRelay, err := ts.driver.ReadRelay(context.Background(), 1)
 	ts.NoError(err)
 
 	ts.firstRelay = firstRelay

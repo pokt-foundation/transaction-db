@@ -19,7 +19,6 @@ func TestRelay_ValidateStruct(t *testing.T) {
 		{
 			name: "Success no error relay",
 			relay: Relay{
-				RelayID:                  "21",
 				PoktChainID:              "21",
 				EndpointID:               "21",
 				SessionKey:               "21",
@@ -35,7 +34,7 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				RelayPortalTripTime:      21,
 				RelayNodeTripTime:        21,
 				RelayURLIsPublicEndpoint: false,
-				PortalOriginRegionID:     12,
+				PortalRegionName:         "La Colombia",
 				IsAltruistRelay:          false,
 				IsUserRelay:              false,
 				RequestID:                "21",
@@ -46,7 +45,6 @@ func TestRelay_ValidateStruct(t *testing.T) {
 		{
 			name: "Success no error relay",
 			relay: Relay{
-				RelayID:                  "21",
 				PoktChainID:              "21",
 				EndpointID:               "21",
 				SessionKey:               "21",
@@ -68,7 +66,7 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				RelayPortalTripTime:      21,
 				RelayNodeTripTime:        21,
 				RelayURLIsPublicEndpoint: false,
-				PortalOriginRegionID:     12,
+				PortalRegionName:         "La Colombia",
 				IsAltruistRelay:          false,
 				IsUserRelay:              false,
 				RequestID:                "21",
@@ -79,7 +77,6 @@ func TestRelay_ValidateStruct(t *testing.T) {
 		{
 			name: "Failure no erro relay with error fields",
 			relay: Relay{
-				RelayID:                  "21",
 				PoktChainID:              "21",
 				EndpointID:               "21",
 				SessionKey:               "21",
@@ -101,7 +98,7 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				RelayPortalTripTime:      21,
 				RelayNodeTripTime:        21,
 				RelayURLIsPublicEndpoint: false,
-				PortalOriginRegionID:     12,
+				PortalRegionName:         "La Colombia",
 				IsAltruistRelay:          false,
 				IsUserRelay:              false,
 				RequestID:                "21",
@@ -112,7 +109,6 @@ func TestRelay_ValidateStruct(t *testing.T) {
 		{
 			name: "Failure invalid error type",
 			relay: Relay{
-				RelayID:                  "21",
 				PoktChainID:              "21",
 				EndpointID:               "21",
 				SessionKey:               "21",
@@ -134,7 +130,7 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				RelayPortalTripTime:      21,
 				RelayNodeTripTime:        21,
 				RelayURLIsPublicEndpoint: false,
-				PortalOriginRegionID:     12,
+				PortalRegionName:         "La Colombia",
 				IsAltruistRelay:          false,
 				IsUserRelay:              false,
 				RequestID:                "21",
@@ -145,7 +141,6 @@ func TestRelay_ValidateStruct(t *testing.T) {
 		{
 			name: "Failure error relay without error fields",
 			relay: Relay{
-				RelayID:                  "21",
 				PoktChainID:              "21",
 				EndpointID:               "21",
 				SessionKey:               "21",
@@ -166,7 +161,7 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				RelayPortalTripTime:      21,
 				RelayNodeTripTime:        21,
 				RelayURLIsPublicEndpoint: false,
-				PortalOriginRegionID:     12,
+				PortalRegionName:         "La Colombia",
 				IsAltruistRelay:          false,
 				IsUserRelay:              false,
 				RequestID:                "21",
@@ -177,7 +172,6 @@ func TestRelay_ValidateStruct(t *testing.T) {
 		{
 			name: "Failure not set field",
 			relay: Relay{
-				RelayID:                  "21",
 				EndpointID:               "21",
 				SessionKey:               "21",
 				RelaySourceURL:           "pablo.com",
@@ -192,7 +186,7 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				RelayPortalTripTime:      21,
 				RelayNodeTripTime:        21,
 				RelayURLIsPublicEndpoint: false,
-				PortalOriginRegionID:     12,
+				PortalRegionName:         "La Colombia",
 				IsAltruistRelay:          false,
 				IsUserRelay:              false,
 				RequestID:                "21",
@@ -203,7 +197,6 @@ func TestRelay_ValidateStruct(t *testing.T) {
 		{
 			name: "Failure set field should not be set",
 			relay: Relay{
-				RelayID:                  "21",
 				PoktChainID:              "21",
 				EndpointID:               "21",
 				SessionKey:               "21",
@@ -219,7 +212,7 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				RelayPortalTripTime:      21,
 				RelayNodeTripTime:        21,
 				RelayURLIsPublicEndpoint: false,
-				PortalOriginRegionID:     12,
+				PortalRegionName:         "La Colombia",
 				IsAltruistRelay:          false,
 				IsUserRelay:              false,
 				RequestID:                "21",

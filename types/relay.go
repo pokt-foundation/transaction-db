@@ -37,7 +37,6 @@ var (
 )
 
 type Relay struct {
-	RelayID                  string        `json:"relayID"`
 	PoktChainID              string        `json:"poktChainID"`
 	EndpointID               string        `json:"endpointID"`
 	SessionKey               string        `json:"sessionKey"`
@@ -59,7 +58,7 @@ type Relay struct {
 	RelayPortalTripTime      int           `json:"relayPortalTripTime"`
 	RelayNodeTripTime        int           `json:"relayNodeTripTime"`
 	RelayURLIsPublicEndpoint bool          `json:"relayUrlIsPublicEndpoint"`
-	PortalOriginRegionID     int           `json:"portalOriginRegionID"`
+	PortalRegionName         string        `json:"portalRegionName"`
 	IsAltruistRelay          bool          `json:"isAltruistRelay"`
 	IsUserRelay              bool          `json:"isUserRelay"`
 	RequestID                string        `json:"requestID"`

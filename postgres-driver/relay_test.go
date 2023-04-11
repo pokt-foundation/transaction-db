@@ -2,7 +2,6 @@ package postgresdriver
 
 import (
 	"context"
-	"strconv"
 	"time"
 
 	"github.com/pokt-foundation/transaction-db/types"
@@ -38,7 +37,7 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteRelay() {
 				RelayPortalTripTime:      21,
 				RelayNodeTripTime:        21,
 				RelayURLIsPublicEndpoint: false,
-				PortalOriginRegionID:     ts.firstRelay.PortalOriginRegionID,
+				PortalRegionName:         ts.firstRelay.PortalRegionName,
 				IsAltruistRelay:          false,
 				IsUserRelay:              false,
 				RequestID:                "21",
@@ -55,7 +54,6 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteRelays() {
 	var relays []types.Relay
 	for i := 0; i < 1000; i++ {
 		relays = append(relays, types.Relay{
-			RelayID:                  strconv.FormatInt(int64(i), 10),
 			PoktChainID:              "21",
 			EndpointID:               "21",
 			SessionKey:               ts.firstRelay.SessionKey,
@@ -77,7 +75,7 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteRelays() {
 			RelayPortalTripTime:      21,
 			RelayNodeTripTime:        21,
 			RelayURLIsPublicEndpoint: false,
-			PortalOriginRegionID:     ts.firstRelay.PortalOriginRegionID,
+			PortalRegionName:         ts.firstRelay.PortalRegionName,
 			IsAltruistRelay:          false,
 			IsUserRelay:              false,
 			RequestID:                "21",
@@ -103,13 +101,13 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteRelays() {
 func (ts *PGDriverTestSuite) TestPostgresDriver_ReadRelay() {
 	tests := []struct {
 		name     string
-		relayID  string
+		relayID  int
 		expRelay types.Relay
 		err      error
 	}{
 		{
 			name:     "Success",
-			relayID:  ts.firstRelay.RelayID,
+			relayID:  1,
 			expRelay: ts.firstRelay,
 			err:      nil,
 		},

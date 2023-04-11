@@ -54,17 +54,15 @@ func (ns NullErrorSourcesEnum) Value() (driver.Value, error) {
 }
 
 type PocketSession struct {
-	ID                    int64     `json:"id"`
-	SessionKey            string    `json:"sessionKey"`
-	SessionHeight         int32     `json:"sessionHeight"`
-	ProtocolApplicationID string    `json:"protocolApplicationID"`
-	ProtocolPublicKey     string    `json:"protocolPublicKey"`
-	CreatedAt             time.Time `json:"createdAt"`
-	UpdatedAt             time.Time `json:"updatedAt"`
+	ID                int64     `json:"id"`
+	SessionKey        string    `json:"sessionKey"`
+	SessionHeight     int32     `json:"sessionHeight"`
+	ProtocolPublicKey string    `json:"protocolPublicKey"`
+	CreatedAt         time.Time `json:"createdAt"`
+	UpdatedAt         time.Time `json:"updatedAt"`
 }
 
 type PortalRegion struct {
-	PortalRegionID   int32     `json:"portalRegionID"`
 	PortalRegionName string    `json:"portalRegionName"`
 	CreatedAt        time.Time `json:"createdAt"`
 	UpdatedAt        time.Time `json:"updatedAt"`
@@ -72,7 +70,6 @@ type PortalRegion struct {
 
 type Relay struct {
 	ID                       int64                `json:"id"`
-	RelayID                  string               `json:"relayID"`
 	PoktChainID              string               `json:"poktChainID"`
 	EndpointID               string               `json:"endpointID"`
 	SessionKey               string               `json:"sessionKey"`
@@ -94,7 +91,7 @@ type Relay struct {
 	RelayPortalTripTime      int32                `json:"relayPortalTripTime"`
 	RelayNodeTripTime        int32                `json:"relayNodeTripTime"`
 	RelayUrlIsPublicEndpoint bool                 `json:"relayUrlIsPublicEndpoint"`
-	PortalOriginRegionID     int32                `json:"portalOriginRegionID"`
+	PortalRegionName         string               `json:"portalRegionName"`
 	IsAltruistRelay          bool                 `json:"isAltruistRelay"`
 	IsUserRelay              bool                 `json:"isUserRelay"`
 	RequestID                string               `json:"requestID"`

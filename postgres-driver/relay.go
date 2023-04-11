@@ -11,7 +11,6 @@ import (
 )
 
 const insertRelays = `INSERT INTO relay (
-	relay_id,
 	pokt_chain_id,
 	endpoint_id,
 	session_key,
@@ -33,7 +32,7 @@ const insertRelays = `INSERT INTO relay (
 	relay_portal_trip_time,
 	relay_node_trip_time,
 	relay_url_is_public_endpoint,
-	portal_origin_region_id,
+	portal_region_name,
 	is_altruist_relay,
 	is_user_relay,
 	request_id,
@@ -44,35 +43,33 @@ const insertRelays = `INSERT INTO relay (
   SELECT * FROM unnest(
 	$1::varchar[],
 	$2::varchar[],
-	$3::varchar[],
+	$3::char(44)[],
 	$4::varchar[],
-	$5::varchar[],
+	$5::char(40)[],
 	$6::varchar[],
-	$7::varchar[],
-	$8::varchar[],
+	$7::char(64)[],
+	$8::date[],
 	$9::date[],
-	$10::date[],
-	$11::boolean[],
-	$12::integer[],
+	$10::boolean[],
+	$11::integer[],
+	$12::varchar[],
 	$13::varchar[],
-	$14::varchar[],
-	$15::error_sources_enum[],
-	$16::varchar[],
-	$17::integer[],
-	$18::varchar[],
+	$14::error_sources_enum[],
+	$15::varchar[],
+	$16::integer[],
+	$17::varchar[],
+	$18::integer[],
 	$19::integer[],
 	$20::integer[],
-	$21::integer[],
-	$22::boolean[],
-	$23::integer[],
+	$21::boolean[],
+	$22::varchar[],
+	$23::boolean[],
 	$24::boolean[],
-	$25::boolean[],
+	$25::varchar[],
 	$26::varchar[],
-	$27::varchar[],
-	$28::date[],
-	$29::date[]
+	$27::date[],
+	$28::date[]
   ) AS t(
-	relay_id,
 	pokt_chain_id,
 	endpoint_id,
 	session_key,
@@ -94,7 +91,7 @@ const insertRelays = `INSERT INTO relay (
 	relay_portal_trip_time,
 	relay_node_trip_time,
 	relay_url_is_public_endpoint,
-	portal_origin_region_id,
+	portal_region_name,
 	is_altruist_relay,
 	is_user_relay,
 	request_id,
@@ -109,7 +106,6 @@ func (d *PostgresDriver) WriteRelay(ctx context.Context, relay types.Relay) erro
 	now := time.Now()
 
 	return d.InsertRelay(ctx, InsertRelayParams{
-		RelayID:                  relay.RelayID,
 		PoktChainID:              relay.PoktChainID,
 		EndpointID:               relay.EndpointID,
 		SessionKey:               relay.SessionKey,
@@ -131,7 +127,7 @@ func (d *PostgresDriver) WriteRelay(ctx context.Context, relay types.Relay) erro
 		RelayPortalTripTime:      int32(relay.RelayPortalTripTime),
 		RelayNodeTripTime:        int32(relay.RelayNodeTripTime),
 		RelayUrlIsPublicEndpoint: relay.RelayURLIsPublicEndpoint,
-		PortalOriginRegionID:     int32(relay.PortalOriginRegionID),
+		PortalRegionName:         relay.PortalRegionName,
 		IsAltruistRelay:          relay.IsAltruistRelay,
 		RequestID:                relay.RequestID,
 		PoktTxID:                 relay.PoktTxID,
@@ -145,7 +141,6 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 	now := time.Now()
 
 	var (
-		relayIDs                  []string
 		poktChainIDs              []string
 		endpointIDs               []string
 		sessionKeys               []string
@@ -167,7 +162,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		relayPortalTripTimes      []int32
 		relayNodeTripTimes        []int32
 		relayURLIsPublicEndpoints []bool
-		portalOriginRegionIDs     []int32
+		portalRegionNames         []string
 		isAltruistRelays          []bool
 		isUserRelays              []bool
 		requestIDs                []string
@@ -177,7 +172,6 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 	)
 
 	for _, relay := range relays {
-		relayIDs = append(relayIDs, relay.RelayID)
 		poktChainIDs = append(poktChainIDs, relay.PoktChainID)
 		endpointIDs = append(endpointIDs, relay.EndpointID)
 		sessionKeys = append(sessionKeys, relay.SessionKey)
@@ -199,7 +193,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		relayPortalTripTimes = append(relayPortalTripTimes, int32(relay.RelayPortalTripTime))
 		relayNodeTripTimes = append(relayNodeTripTimes, int32(relay.RelayNodeTripTime))
 		relayURLIsPublicEndpoints = append(relayURLIsPublicEndpoints, relay.RelayURLIsPublicEndpoint)
-		portalOriginRegionIDs = append(portalOriginRegionIDs, int32(relay.PortalOriginRegionID))
+		portalRegionNames = append(portalRegionNames, relay.PortalRegionName)
 		isAltruistRelays = append(isAltruistRelays, relay.IsAltruistRelay)
 		isUserRelays = append(isUserRelays, relay.IsUserRelay)
 		requestIDs = append(requestIDs, relay.RequestID)
@@ -208,8 +202,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		updatedTimes = append(updatedTimes, now)
 	}
 
-	_, err := d.db.Exec(insertRelays, pq.StringArray(relayIDs),
-		pq.StringArray(poktChainIDs),
+	_, err := d.db.Exec(insertRelays, pq.StringArray(poktChainIDs),
 		pq.StringArray(endpointIDs),
 		pq.StringArray(sessionKeys),
 		pq.StringArray(relaySourceURLs),
@@ -230,7 +223,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		pq.Int32Array(relayPortalTripTimes),
 		pq.Int32Array(relayNodeTripTimes),
 		pq.BoolArray(relayURLIsPublicEndpoints),
-		pq.Int32Array(portalOriginRegionIDs),
+		pq.StringArray(portalRegionNames),
 		pq.BoolArray(isAltruistRelays),
 		pq.BoolArray(isUserRelays),
 		pq.StringArray(requestIDs),
@@ -244,14 +237,13 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 	return nil
 }
 
-func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID string) (types.Relay, error) {
-	relay, err := d.SelectRelay(ctx, relayID)
+func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID int) (types.Relay, error) {
+	relay, err := d.SelectRelay(ctx, int64(relayID))
 	if err != nil {
 		return types.Relay{}, err
 	}
 
 	return types.Relay{
-		RelayID:                  relay.RelayID,
 		PoktChainID:              relay.PoktChainID,
 		EndpointID:               relay.EndpointID,
 		SessionKey:               relay.SessionKey,
@@ -273,7 +265,7 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID string) (types.R
 		RelayPortalTripTime:      int(relay.RelayPortalTripTime),
 		RelayNodeTripTime:        int(relay.RelayNodeTripTime),
 		RelayURLIsPublicEndpoint: relay.RelayUrlIsPublicEndpoint,
-		PortalOriginRegionID:     int(relay.PortalOriginRegionID),
+		PortalRegionName:         relay.PortalRegionName,
 		IsAltruistRelay:          relay.IsAltruistRelay,
 		RequestID:                relay.RequestID,
 		IsUserRelay:              relay.IsUserRelay,
@@ -281,12 +273,11 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID string) (types.R
 		CreatedAt:                relay.CreatedAt,
 		UpdatedAt:                relay.UpdatedAt,
 		Session: types.PocketSession{
-			SessionKey:            relay.SessionKey,
-			SessionHeight:         int(relay.SessionHeight),
-			ProtocolApplicationID: relay.ProtocolApplicationID,
-			ProtocolPublicKey:     relay.ProtocolPublicKey,
-			CreatedAt:             relay.CreatedAt_2,
-			UpdatedAt:             relay.UpdatedAt_2,
+			SessionKey:        relay.SessionKey,
+			SessionHeight:     int(relay.SessionHeight),
+			ProtocolPublicKey: relay.ProtocolPublicKey,
+			CreatedAt:         relay.CreatedAt_2,
+			UpdatedAt:         relay.UpdatedAt_2,
 		},
 		Region: types.PortalRegion{
 			PortalRegionName: relay.PortalRegionName,
