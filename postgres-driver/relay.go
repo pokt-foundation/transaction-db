@@ -244,6 +244,7 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID int) (types.Rela
 	}
 
 	return types.Relay{
+		RelayID:                  int(relay.ID),
 		PoktChainID:              relay.PoktChainID,
 		EndpointID:               relay.EndpointID,
 		SessionKey:               relay.SessionKey,

@@ -107,7 +107,7 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_ReadRelay() {
 	}{
 		{
 			name:     "Success",
-			relayID:  1,
+			relayID:  ts.firstRelay.RelayID,
 			expRelay: ts.firstRelay,
 			err:      nil,
 		},

@@ -16,6 +16,7 @@ const (
 var (
 	// this fields shpould be empty because they are set after db record is created
 	shouldBeEmptyField = map[string]bool{
+		"RelayID":   true,
 		"Session":   true,
 		"Region":    true,
 		"CreatedAt": true,
@@ -37,6 +38,7 @@ var (
 )
 
 type Relay struct {
+	RelayID                  int           `json:"relayID"`
 	PoktChainID              string        `json:"poktChainID"`
 	EndpointID               string        `json:"endpointID"`
 	SessionKey               string        `json:"sessionKey"`
