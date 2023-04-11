@@ -48,18 +48,18 @@ type Relay struct {
 	RelayStartDatetime       time.Time     `json:"relayStartDatetime"`
 	RelayReturnDatetime      time.Time     `json:"relayReturnDatetime"`
 	IsError                  bool          `json:"isError"` // this field must be before the other error fields for validation to work
-	ErrorCode                int32         `json:"errorCode,omitempty"`
+	ErrorCode                int           `json:"errorCode,omitempty"`
 	ErrorName                string        `json:"errorName,omitempty"`
 	ErrorMessage             string        `json:"errorMessage,omitempty"`
 	ErrorType                string        `json:"errorType,omitempty"`
 	ErrorSource              ErrorSource   `json:"errorSource,omitempty"`
-	RelayRoundtripTime       int32         `json:"relayRoundtripTime"`
+	RelayRoundtripTime       int           `json:"relayRoundtripTime"`
 	RelayChainMethodIDs      []string      `json:"relayChainMethodID"`
-	RelayDataSize            int32         `json:"relayDataSize"`
-	RelayPortalTripTime      int32         `json:"relayPortalTripTime"`
-	RelayNodeTripTime        int32         `json:"relayNodeTripTime"`
+	RelayDataSize            int           `json:"relayDataSize"`
+	RelayPortalTripTime      int           `json:"relayPortalTripTime"`
+	RelayNodeTripTime        int           `json:"relayNodeTripTime"`
 	RelayURLIsPublicEndpoint bool          `json:"relayUrlIsPublicEndpoint"`
-	PortalOriginRegionID     int32         `json:"portalOriginRegionID"`
+	PortalOriginRegionID     int           `json:"portalOriginRegionID"`
 	IsAltruistRelay          bool          `json:"isAltruistRelay"`
 	IsUserRelay              bool          `json:"isUserRelay"`
 	RequestID                string        `json:"requestID"`

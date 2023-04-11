@@ -120,18 +120,18 @@ func (d *PostgresDriver) WriteRelay(ctx context.Context, relay types.Relay) erro
 		RelayStartDatetime:       relay.RelayStartDatetime,
 		RelayReturnDatetime:      relay.RelayReturnDatetime,
 		IsError:                  relay.IsError,
-		ErrorCode:                newSQLNullInt32(relay.ErrorCode),
+		ErrorCode:                newSQLNullInt32(int32(relay.ErrorCode)),
 		ErrorName:                newSQLNullString(relay.ErrorName),
 		ErrorMessage:             newSQLNullString(relay.ErrorMessage),
 		ErrorType:                newSQLNullString(relay.ErrorType),
 		ErrorSource:              newSQLNullErrorSource(ErrorSourcesEnum(relay.ErrorSource)),
-		RelayRoundtripTime:       relay.RelayRoundtripTime,
+		RelayRoundtripTime:       int32(relay.RelayRoundtripTime),
 		RelayChainMethodIds:      strings.Join(relay.RelayChainMethodIDs, chainMethodIDSeparator),
-		RelayDataSize:            relay.RelayDataSize,
-		RelayPortalTripTime:      relay.RelayPortalTripTime,
-		RelayNodeTripTime:        relay.RelayNodeTripTime,
+		RelayDataSize:            int32(relay.RelayDataSize),
+		RelayPortalTripTime:      int32(relay.RelayPortalTripTime),
+		RelayNodeTripTime:        int32(relay.RelayNodeTripTime),
 		RelayUrlIsPublicEndpoint: relay.RelayURLIsPublicEndpoint,
-		PortalOriginRegionID:     relay.PortalOriginRegionID,
+		PortalOriginRegionID:     int32(relay.PortalOriginRegionID),
 		IsAltruistRelay:          relay.IsAltruistRelay,
 		RequestID:                relay.RequestID,
 		PoktTxID:                 relay.PoktTxID,
@@ -188,18 +188,18 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		relayStartDatetimes = append(relayStartDatetimes, relay.RelayStartDatetime)
 		relayReturnDatetimes = append(relayReturnDatetimes, relay.RelayReturnDatetime)
 		isErrors = append(isErrors, relay.IsError)
-		errorCodes = append(errorCodes, newSQLNullInt32(relay.ErrorCode))
+		errorCodes = append(errorCodes, newSQLNullInt32(int32(relay.ErrorCode)))
 		errorNames = append(errorNames, newSQLNullString(relay.ErrorName))
 		errorMessages = append(errorMessages, newSQLNullString(relay.ErrorMessage))
 		errorTypes = append(errorTypes, newSQLNullString(relay.ErrorType))
 		errorSources = append(errorSources, newSQLNullErrorSource(ErrorSourcesEnum(relay.ErrorSource)))
-		relayRoundtripTimes = append(relayRoundtripTimes, relay.RelayRoundtripTime)
+		relayRoundtripTimes = append(relayRoundtripTimes, int32(relay.RelayRoundtripTime))
 		relayChainMethodIDs = append(relayChainMethodIDs, strings.Join(relay.RelayChainMethodIDs, chainMethodIDSeparator))
-		relayDataSizes = append(relayDataSizes, relay.RelayDataSize)
-		relayPortalTripTimes = append(relayPortalTripTimes, relay.RelayPortalTripTime)
-		relayNodeTripTimes = append(relayNodeTripTimes, relay.RelayNodeTripTime)
+		relayDataSizes = append(relayDataSizes, int32(relay.RelayDataSize))
+		relayPortalTripTimes = append(relayPortalTripTimes, int32(relay.RelayPortalTripTime))
+		relayNodeTripTimes = append(relayNodeTripTimes, int32(relay.RelayNodeTripTime))
 		relayURLIsPublicEndpoints = append(relayURLIsPublicEndpoints, relay.RelayURLIsPublicEndpoint)
-		portalOriginRegionIDs = append(portalOriginRegionIDs, relay.PortalOriginRegionID)
+		portalOriginRegionIDs = append(portalOriginRegionIDs, int32(relay.PortalOriginRegionID))
 		isAltruistRelays = append(isAltruistRelays, relay.IsAltruistRelay)
 		isUserRelays = append(isUserRelays, relay.IsUserRelay)
 		requestIDs = append(requestIDs, relay.RequestID)
@@ -262,18 +262,18 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID string) (types.R
 		RelayStartDatetime:       relay.RelayStartDatetime,
 		RelayReturnDatetime:      relay.RelayReturnDatetime,
 		IsError:                  relay.IsError,
-		ErrorCode:                relay.ErrorCode.Int32,
+		ErrorCode:                int(relay.ErrorCode.Int32),
 		ErrorName:                relay.ErrorName.String,
 		ErrorMessage:             relay.ErrorMessage.String,
 		ErrorType:                relay.ErrorType.String,
 		ErrorSource:              types.ErrorSource(relay.ErrorSource.ErrorSourcesEnum),
-		RelayRoundtripTime:       relay.RelayRoundtripTime,
+		RelayRoundtripTime:       int(relay.RelayRoundtripTime),
 		RelayChainMethodIDs:      strings.Split(relay.RelayChainMethodIds, ","),
-		RelayDataSize:            relay.RelayDataSize,
-		RelayPortalTripTime:      relay.RelayPortalTripTime,
-		RelayNodeTripTime:        relay.RelayNodeTripTime,
+		RelayDataSize:            int(relay.RelayDataSize),
+		RelayPortalTripTime:      int(relay.RelayPortalTripTime),
+		RelayNodeTripTime:        int(relay.RelayNodeTripTime),
 		RelayURLIsPublicEndpoint: relay.RelayUrlIsPublicEndpoint,
-		PortalOriginRegionID:     relay.PortalOriginRegionID,
+		PortalOriginRegionID:     int(relay.PortalOriginRegionID),
 		IsAltruistRelay:          relay.IsAltruistRelay,
 		RequestID:                relay.RequestID,
 		IsUserRelay:              relay.IsUserRelay,
@@ -282,7 +282,7 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID string) (types.R
 		UpdatedAt:                relay.UpdatedAt,
 		Session: types.PocketSession{
 			SessionKey:            relay.SessionKey,
-			SessionHeight:         relay.SessionHeight,
+			SessionHeight:         int(relay.SessionHeight),
 			ProtocolApplicationID: relay.ProtocolApplicationID,
 			ProtocolPublicKey:     relay.ProtocolPublicKey,
 			CreatedAt:             relay.CreatedAt_2,
