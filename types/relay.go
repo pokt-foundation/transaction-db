@@ -15,7 +15,7 @@ const (
 
 var (
 	// this fields shpould be empty because they are set after db record is created
-	shouldBeEmptyField = map[string]bool{
+	shouldBeEmptyRelayField = map[string]bool{
 		"RelayID":   true,
 		"Session":   true,
 		"Region":    true,
@@ -23,7 +23,7 @@ var (
 		"UpdatedAt": true,
 	}
 
-	errorField = map[string]bool{
+	relayErrorField = map[string]bool{
 		"ErrorCode":    true,
 		"ErrorName":    true,
 		"ErrorMessage": true,
@@ -94,7 +94,7 @@ func (r Relay) Validate() (err error) {
 
 			// shouldBeEmptyFields should never be set
 			// error fields shoould just be set if is an error relay
-			if shouldBeEmptyField[fieldName] || (!isError && errorField[fieldName]) {
+			if shouldBeEmptyRelayField[fieldName] || (!isError && relayErrorField[fieldName]) {
 				return fmt.Errorf("%s should not be set", fieldName)
 			}
 
@@ -108,7 +108,7 @@ func (r Relay) Validate() (err error) {
 			// shouldBeEmptyField can be empty
 			// bools zero value is false which is a valid value
 			// error fields can be empty if it is an error relay
-			if shouldBeEmptyField[fieldName] || field.Kind() == reflect.Bool || (!isError && errorField[fieldName]) {
+			if shouldBeEmptyRelayField[fieldName] || field.Kind() == reflect.Bool || (!isError && relayErrorField[fieldName]) {
 				continue
 			}
 

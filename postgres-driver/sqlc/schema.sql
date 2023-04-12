@@ -50,7 +50,30 @@ CREATE  TABLE relay (
 	CONSTRAINT pk_relay PRIMARY KEY ( id )
  );
 
+CREATE TABLE service_record (
+    id bigint  NOT NULL GENERATED ALWAYS AS IDENTITY  ,
+    session_key char(44) NOT NULL,
+    request_id varchar NOT NULL,
+    portal_region_name varchar NOT NULL,
+    latency float NOT NULL,
+    tickets integer NOT NULL,
+    result varchar NOT NULL,
+    available boolean NOT NULL,
+    successes integer NOT NULL,
+    failures integer NOT NULL,
+    p90_success_latency float NOT NULL,
+    median_success_latency float NOT NULL,
+    weighted_success_latency float NOT NULL,
+    success_rate float NOT NULL,
+	created_at date     NOT NULL  ,
+	updated_at date     NOT NULL  ,
+	CONSTRAINT pk_service_record PRIMARY KEY ( id )
+);
 
 ALTER TABLE relay ADD CONSTRAINT fk_relay_portal_region FOREIGN KEY ( portal_region_name ) REFERENCES portal_region( portal_region_name );
 
 ALTER TABLE relay ADD CONSTRAINT fk_relay_session FOREIGN KEY ( session_key ) REFERENCES pocket_session( session_key );
+
+ALTER TABLE service_record ADD CONSTRAINT fk_service_region_portal_region FOREIGN KEY ( portal_region_name ) REFERENCES portal_region( portal_region_name );
+
+ALTER TABLE service_record ADD CONSTRAINT fk_service_record_session FOREIGN KEY ( session_key ) REFERENCES pocket_session( session_key );
