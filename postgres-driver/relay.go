@@ -42,7 +42,7 @@ const insertRelays = `INSERT INTO relay (
 	updated_at
   )
   SELECT * FROM unnest(
-	$1::varchar[],
+	$1::char(4)[],
 	$2::varchar[],
 	$3::char(44)[],
 	$4::char(64)[],
