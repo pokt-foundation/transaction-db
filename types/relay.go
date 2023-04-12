@@ -6,12 +6,11 @@ import (
 	"time"
 )
 
-type ErrorType string
+type ErrorSource string
 
 const (
-	ErrorTypeSyncCheck  ErrorType = "sync_check"
-	ErrorTypeChainCheck ErrorType = "chain_check"
-	ErrorTypeRelay      ErrorType = "relay"
+	ErrorSourceInternal ErrorSource = "internal"
+	ErrorSourceExternal ErrorSource = "external"
 )
 
 var (
@@ -29,36 +28,43 @@ var (
 		"ErrorName":    true,
 		"ErrorMessage": true,
 		"ErrorType":    true,
+		"ErrorSource":  true,
 	}
 
-	validErrorTypes = map[string]bool{
-		string(ErrorTypeSyncCheck):  true,
-		string(ErrorTypeChainCheck): true,
-		string(ErrorTypeRelay):      true,
+	validErrorSources = map[string]bool{
+		string(ErrorSourceExternal): true,
+		string(ErrorSourceInternal): true,
 	}
 )
 
 type Relay struct {
-	RelayID                  int64         `json:"relayID"`
-	ChainID                  int32         `json:"chainID"`
-	EndpointID               int32         `json:"endpointID"`
+	RelayID                  int           `json:"relayID"`
+	PoktChainID              string        `json:"poktChainID"`
+	EndpointID               string        `json:"endpointID"`
 	SessionKey               string        `json:"sessionKey"`
+	RelaySourceURL           string        `json:"relaySourceUrl"`
 	PoktNodeAddress          string        `json:"poktNodeAddress"`
+	PoktNodeDomain           string        `json:"poktNodeDomain"`
+	PoktNodePublicKey        string        `json:"poktNodePublicKey"`
 	RelayStartDatetime       time.Time     `json:"relayStartDatetime"`
 	RelayReturnDatetime      time.Time     `json:"relayReturnDatetime"`
 	IsError                  bool          `json:"isError"` // this field must be before the other error fields for validation to work
-	ErrorCode                int32         `json:"errorCode,omitempty"`
+	ErrorCode                int           `json:"errorCode,omitempty"`
 	ErrorName                string        `json:"errorName,omitempty"`
 	ErrorMessage             string        `json:"errorMessage,omitempty"`
-	ErrorType                ErrorType     `json:"errorType,omitempty"`
-	RelayRoundtripTime       int32         `json:"relayRoundtripTime"`
-	RelayChainMethodID       int32         `json:"relayChainMethodID"`
-	RelayDataSize            int32         `json:"relayDataSize"`
-	RelayPortalTripTime      int32         `json:"relayPortalTripTime"`
-	RelayNodeTripTime        int32         `json:"relayNodeTripTime"`
+	ErrorType                string        `json:"errorType,omitempty"`
+	ErrorSource              ErrorSource   `json:"errorSource,omitempty"`
+	RelayRoundtripTime       int           `json:"relayRoundtripTime"`
+	RelayChainMethodIDs      []string      `json:"relayChainMethodID"`
+	RelayDataSize            int           `json:"relayDataSize"`
+	RelayPortalTripTime      int           `json:"relayPortalTripTime"`
+	RelayNodeTripTime        int           `json:"relayNodeTripTime"`
 	RelayURLIsPublicEndpoint bool          `json:"relayUrlIsPublicEndpoint"`
-	PortalOriginRegionID     int32         `json:"portalOriginRegionID"`
+	PortalRegionName         string        `json:"portalRegionName"`
 	IsAltruistRelay          bool          `json:"isAltruistRelay"`
+	IsUserRelay              bool          `json:"isUserRelay"`
+	RequestID                string        `json:"requestID"`
+	PoktTxID                 string        `json:"poktTxID"`
 	Session                  PocketSession `json:"session"`
 	Region                   PortalRegion  `json:"region"`
 	CreatedAt                time.Time     `json:"createdAt"`
@@ -92,8 +98,8 @@ func (r Relay) Validate() (err error) {
 				return fmt.Errorf("%s should not be set", fieldName)
 			}
 
-			// errorType field just has some valid error types
-			if fieldName == "ErrorType" && !validErrorTypes[field.String()] {
+			// errorSource field just has some valid error sources
+			if fieldName == "ErrorSource" && !validErrorSources[field.String()] {
 				return fmt.Errorf("%s is not valid", fieldName)
 			}
 		}
