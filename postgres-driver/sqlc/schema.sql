@@ -4,7 +4,6 @@ CREATE  TABLE pocket_session (
 	id    				 bigint  NOT NULL  GENERATED ALWAYS AS IDENTITY  ,
 	session_key          char(44)  NOT NULL  UNIQUE,
 	session_height       integer  NOT NULL  ,
-	protocol_public_key	 char(64) NOT NULL ,
 	created_at			 date     NOT NULL  ,
 	updated_at			 date     NOT NULL  ,
 	CONSTRAINT pk_tbl_0 PRIMARY KEY ( id )
@@ -22,6 +21,7 @@ CREATE  TABLE relay (
 	pokt_chain_id       varchar  NOT NULL  ,
 	endpoint_id          varchar  NOT NULL  ,
 	session_key   		char(44)  NOT NULL  ,
+	protocol_app_public_key	 char(64) NOT NULL ,
 	relay_source_url 	varchar  NOT NULL  ,
 	pokt_node_address    char(40)  NOT NULL  ,
 	pokt_node_domain 	varchar   NOT NULL ,

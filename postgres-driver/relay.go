@@ -14,6 +14,7 @@ const insertRelays = `INSERT INTO relay (
 	pokt_chain_id,
 	endpoint_id,
 	session_key,
+	protocol_app_public_key,
 	relay_source_url,
 	pokt_node_address,
 	pokt_node_domain,
@@ -44,35 +45,37 @@ const insertRelays = `INSERT INTO relay (
 	$1::varchar[],
 	$2::varchar[],
 	$3::char(44)[],
-	$4::varchar[],
-	$5::char(40)[],
-	$6::varchar[],
-	$7::char(64)[],
-	$8::date[],
+	$4::char(64)[],
+	$5::varchar[],
+	$6::char(40)[],
+	$7::varchar[],
+	$8::char(64)[],
 	$9::date[],
-	$10::boolean[],
-	$11::integer[],
-	$12::varchar[],
+	$10::date[],
+	$11::boolean[],
+	$12::integer[],
 	$13::varchar[],
-	$14::error_sources_enum[],
-	$15::varchar[],
-	$16::integer[],
-	$17::varchar[],
-	$18::integer[],
+	$14::varchar[],
+	$15::error_sources_enum[],
+	$16::varchar[],
+	$17::integer[],
+	$18::varchar[],
 	$19::integer[],
 	$20::integer[],
-	$21::boolean[],
-	$22::varchar[],
-	$23::boolean[],
+	$21::integer[],
+	$22::boolean[],
+	$23::varchar[],
 	$24::boolean[],
-	$25::varchar[],
+	$25::boolean[],
 	$26::varchar[],
-	$27::date[],
-	$28::date[]
+	$27::varchar[],
+	$28::date[],
+	$29::date[]
   ) AS t(
 	pokt_chain_id,
 	endpoint_id,
 	session_key,
+	protocol_app_public_key,
 	relay_source_url,
 	pokt_node_address,
 	pokt_node_domain,
@@ -109,6 +112,7 @@ func (d *PostgresDriver) WriteRelay(ctx context.Context, relay types.Relay) erro
 		PoktChainID:              relay.PoktChainID,
 		EndpointID:               relay.EndpointID,
 		SessionKey:               relay.SessionKey,
+		ProtocolAppPublicKey:     relay.ProtocolAppPublicKey,
 		RelaySourceUrl:           relay.RelaySourceURL,
 		PoktNodeAddress:          relay.PoktNodeAddress,
 		PoktNodeDomain:           relay.PoktNodeDomain,
@@ -144,6 +148,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		poktChainIDs              []string
 		endpointIDs               []string
 		sessionKeys               []string
+		protocolAppPublicKeys     []string
 		relaySourceURLs           []string
 		poktNodeAddresses         []string
 		poktNodeDomains           []string
@@ -175,6 +180,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		poktChainIDs = append(poktChainIDs, relay.PoktChainID)
 		endpointIDs = append(endpointIDs, relay.EndpointID)
 		sessionKeys = append(sessionKeys, relay.SessionKey)
+		protocolAppPublicKeys = append(protocolAppPublicKeys, relay.ProtocolAppPublicKey)
 		relaySourceURLs = append(relaySourceURLs, relay.RelaySourceURL)
 		poktNodeAddresses = append(poktNodeAddresses, relay.PoktNodeAddress)
 		poktNodeDomains = append(poktNodeDomains, relay.PoktNodeDomain)
@@ -205,6 +211,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 	_, err := d.db.Exec(insertRelays, pq.StringArray(poktChainIDs),
 		pq.StringArray(endpointIDs),
 		pq.StringArray(sessionKeys),
+		pq.StringArray(protocolAppPublicKeys),
 		pq.StringArray(relaySourceURLs),
 		pq.StringArray(poktNodeAddresses),
 		pq.StringArray(poktNodeDomains),
@@ -248,6 +255,7 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID int) (types.Rela
 		PoktChainID:              relay.PoktChainID,
 		EndpointID:               relay.EndpointID,
 		SessionKey:               relay.SessionKey,
+		ProtocolAppPublicKey:     relay.ProtocolAppPublicKey,
 		RelaySourceURL:           relay.RelaySourceUrl,
 		PoktNodeAddress:          relay.PoktNodeAddress,
 		PoktNodeDomain:           relay.PoktNodeDomain,
@@ -274,11 +282,10 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID int) (types.Rela
 		CreatedAt:                relay.CreatedAt,
 		UpdatedAt:                relay.UpdatedAt,
 		Session: types.PocketSession{
-			SessionKey:        relay.SessionKey,
-			SessionHeight:     int(relay.SessionHeight),
-			ProtocolPublicKey: relay.ProtocolPublicKey,
-			CreatedAt:         relay.CreatedAt_2,
-			UpdatedAt:         relay.UpdatedAt_2,
+			SessionKey:    relay.SessionKey,
+			SessionHeight: int(relay.SessionHeight),
+			CreatedAt:     relay.CreatedAt_2,
+			UpdatedAt:     relay.UpdatedAt_2,
 		},
 		Region: types.PortalRegion{
 			PortalRegionName: relay.PortalRegionName,

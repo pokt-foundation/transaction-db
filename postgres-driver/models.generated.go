@@ -54,12 +54,11 @@ func (ns NullErrorSourcesEnum) Value() (driver.Value, error) {
 }
 
 type PocketSession struct {
-	ID                int64     `json:"id"`
-	SessionKey        string    `json:"sessionKey"`
-	SessionHeight     int32     `json:"sessionHeight"`
-	ProtocolPublicKey string    `json:"protocolPublicKey"`
-	CreatedAt         time.Time `json:"createdAt"`
-	UpdatedAt         time.Time `json:"updatedAt"`
+	ID            int64     `json:"id"`
+	SessionKey    string    `json:"sessionKey"`
+	SessionHeight int32     `json:"sessionHeight"`
+	CreatedAt     time.Time `json:"createdAt"`
+	UpdatedAt     time.Time `json:"updatedAt"`
 }
 
 type PortalRegion struct {
@@ -73,6 +72,7 @@ type Relay struct {
 	PoktChainID              string               `json:"poktChainID"`
 	EndpointID               string               `json:"endpointID"`
 	SessionKey               string               `json:"sessionKey"`
+	ProtocolAppPublicKey     string               `json:"protocolAppPublicKey"`
 	RelaySourceUrl           string               `json:"relaySourceUrl"`
 	PoktNodeAddress          string               `json:"poktNodeAddress"`
 	PoktNodeDomain           string               `json:"poktNodeDomain"`
