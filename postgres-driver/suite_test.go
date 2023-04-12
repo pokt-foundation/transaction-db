@@ -20,7 +20,8 @@ type PGDriverTestSuite struct {
 	driver           *PostgresDriver
 
 	// Records inserted on setup for testing purposes
-	firstRelay types.Relay
+	firstRelay         types.Relay
+	firstServiceRecord types.ServiceRecord
 }
 
 func Test_RunPGDriverSuite(t *testing.T) {
@@ -66,10 +67,32 @@ func (ts *PGDriverTestSuite) SetupSuite() {
 		RequestID:                "21",
 	}))
 
+	ts.NoError(ts.driver.WriteServiceRecord(context.Background(), types.ServiceRecord{
+		NodePublicKey:          "21",
+		PoktChainID:            "21",
+		SessionKey:             "22",
+		RequestID:              "21",
+		PortalRegionName:       "La Colombia",
+		Latency:                21.07,
+		Tickets:                2,
+		Result:                 "a",
+		Available:              true,
+		Successes:              21,
+		Failures:               7,
+		P90SuccessLatency:      21.07,
+		MedianSuccessLatency:   21.07,
+		WeightedSuccessLatency: 21.07,
+		SuccessRate:            21,
+	}))
+
 	firstRelay, err := ts.driver.ReadRelay(context.Background(), 1)
 	ts.NoError(err)
 
+	firstServiceRecord, err := ts.driver.ReadServiceRecord(context.Background(), 1)
+	ts.NoError(err)
+
 	ts.firstRelay = firstRelay
+	ts.firstServiceRecord = firstServiceRecord
 }
 
 // Initializes a real instance of the Postgres driver that connects to the test Postgres Docker container

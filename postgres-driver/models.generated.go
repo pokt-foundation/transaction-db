@@ -99,3 +99,24 @@ type Relay struct {
 	CreatedAt                time.Time            `json:"createdAt"`
 	UpdatedAt                time.Time            `json:"updatedAt"`
 }
+
+type ServiceRecord struct {
+	ID                     int64     `json:"id"`
+	NodePublicKey          string    `json:"nodePublicKey"`
+	PoktChainID            string    `json:"poktChainID"`
+	SessionKey             string    `json:"sessionKey"`
+	RequestID              string    `json:"requestID"`
+	PortalRegionName       string    `json:"portalRegionName"`
+	Latency                float64   `json:"latency"`
+	Tickets                int32     `json:"tickets"`
+	Result                 string    `json:"result"`
+	Available              bool      `json:"available"`
+	Successes              int32     `json:"successes"`
+	Failures               int32     `json:"failures"`
+	P90SuccessLatency      float64   `json:"p90SuccessLatency"`
+	MedianSuccessLatency   float64   `json:"medianSuccessLatency"`
+	WeightedSuccessLatency float64   `json:"weightedSuccessLatency"`
+	SuccessRate            float64   `json:"successRate"`
+	CreatedAt              time.Time `json:"createdAt"`
+	UpdatedAt              time.Time `json:"updatedAt"`
+}
