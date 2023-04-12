@@ -10,6 +10,8 @@ import (
 
 const insertServiceRecords = `
 INSERT INTO service_record (
+	node_public_key,
+	pokt_chain_id,
 	session_key,
 	request_id,
 	portal_region_name,
@@ -27,21 +29,23 @@ INSERT INTO service_record (
 	updated_at
 	)
 	SELECT * FROM unnest(
-	$1::char(44)[],
-	$2::varchar[],
-	$3::varchar[],
-	$4::float[],
-	$5::integer[],
-	$6::varchar[],
-	$7::boolean[],
-	$8::integer[],
-	$9::integer[],
-	$10::float[],
-	$11::float[],
+	$1::char(64)[],
+	$2::char(4)[],
+	$3::char(44)[],
+	$4::varchar[],
+	$5::varchar[],
+	$6::float[],
+	$7::integer[],
+	$8::varchar[],
+	$9::boolean[],
+	$10::integer[],
+	$11::integer[],
 	$12::float[],
 	$13::float[],
-	$14::date[],
-	$15::date[]
+	$14::float[],
+	$15::float[],
+	$16::date[],
+	$17::date[]
 	) AS t(
 	session_key,
 	request_id,
@@ -64,6 +68,8 @@ func (d *PostgresDriver) WriteServiceRecord(ctx context.Context, serviceRecord t
 	now := time.Now()
 
 	return d.InsertServiceRecord(ctx, InsertServiceRecordParams{
+		NodePublicKey:          serviceRecord.NodePublicKey,
+		PoktChainID:            serviceRecord.PoktChainID,
 		SessionKey:             serviceRecord.SessionKey,
 		RequestID:              serviceRecord.RequestID,
 		PortalRegionName:       serviceRecord.PortalRegionName,
@@ -86,6 +92,8 @@ func (d *PostgresDriver) WriteServiceRecords(ctx context.Context, serviceRecords
 	now := time.Now()
 
 	var (
+		nodePublicKeys           []string
+		poktChainIDs             []string
 		sessionKeys              []string
 		requestIDs               []string
 		portalRegionNames        []string
@@ -104,6 +112,8 @@ func (d *PostgresDriver) WriteServiceRecords(ctx context.Context, serviceRecords
 	)
 
 	for _, serviceRecord := range serviceRecords {
+		nodePublicKeys = append(nodePublicKeys, serviceRecord.NodePublicKey)
+		poktChainIDs = append(poktChainIDs, serviceRecord.PoktChainID)
 		sessionKeys = append(sessionKeys, serviceRecord.SessionKey)
 		requestIDs = append(requestIDs, serviceRecord.RequestID)
 		portalRegionNames = append(portalRegionNames, serviceRecord.PortalRegionName)
@@ -121,7 +131,9 @@ func (d *PostgresDriver) WriteServiceRecords(ctx context.Context, serviceRecords
 		updatedTimes = append(updatedTimes, now)
 	}
 
-	_, err := d.db.Exec(insertServiceRecords, pq.StringArray(sessionKeys),
+	_, err := d.db.Exec(insertServiceRecords, pq.StringArray(nodePublicKeys),
+		pq.StringArray(poktChainIDs),
+		pq.StringArray(sessionKeys),
 		pq.StringArray(requestIDs),
 		pq.StringArray(portalRegionNames),
 		pq.Float64Array(latencies),
@@ -150,6 +162,8 @@ func (d *PostgresDriver) ReadServiceRecord(ctx context.Context, serviceRecordID 
 	}
 
 	return types.ServiceRecord{
+		NodePublicKey:          serviceRecord.NodePublicKey,
+		PoktChainID:            serviceRecord.PoktChainID,
 		ServiceRecordID:        int(serviceRecord.ID),
 		SessionKey:             serviceRecord.SessionKey,
 		RequestID:              serviceRecord.RequestID,

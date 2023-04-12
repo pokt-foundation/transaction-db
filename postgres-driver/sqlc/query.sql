@@ -34,6 +34,8 @@ INSERT INTO relay (
 );
 -- name: InsertServiceRecord :exec
 INSERT INTO service_record (
+    node_public_key,
+    pokt_chain_id,
     session_key,
     request_id,
     portal_region_name,
@@ -50,7 +52,7 @@ INSERT INTO service_record (
     created_at,
     updated_at
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
+    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17
 );
 -- name: InsertPocketSession :exec
 INSERT INTO pocket_session (session_key, session_height, created_at, updated_at)
@@ -65,6 +67,6 @@ FROM relay r
 	INNER JOIN portal_region pr ON pr.portal_region_name = r.portal_region_name
 WHERE r.id = $1;
 -- name: SelectServiceRecord :one
-SELECT id, session_key, request_id, portal_region_name, latency, tickets, result, available, successes, failures, p90_success_latency, median_success_latency, weighted_success_latency, success_rate, created_at, updated_at
+SELECT id, node_public_key, pokt_chain_id, session_key, request_id, portal_region_name, latency, tickets, result, available, successes, failures, p90_success_latency, median_success_latency, weighted_success_latency, success_rate, created_at, updated_at
 FROM service_record
 WHERE id = $1;

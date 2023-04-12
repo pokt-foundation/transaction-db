@@ -19,6 +19,8 @@ func TestServiceRecord_ValidateStruct(t *testing.T) {
 			name: "Success service record",
 			serviceRecord: ServiceRecord{
 				SessionKey:             "21",
+				NodePublicKey:          "21",
+				PoktChainID:            "21",
 				RequestID:              "21",
 				PortalRegionName:       "La Colombia",
 				Latency:                21.07,
@@ -39,6 +41,8 @@ func TestServiceRecord_ValidateStruct(t *testing.T) {
 			serviceRecord: ServiceRecord{
 				ServiceRecordID:        21,
 				SessionKey:             "21",
+				NodePublicKey:          "21",
+				PoktChainID:            "21",
 				RequestID:              "21",
 				PortalRegionName:       "La Colombia",
 				Latency:                21.07,
@@ -57,6 +61,8 @@ func TestServiceRecord_ValidateStruct(t *testing.T) {
 		{
 			name: "Failure service record field not set",
 			serviceRecord: ServiceRecord{
+				NodePublicKey:          "21",
+				PoktChainID:            "21",
 				RequestID:              "21",
 				PortalRegionName:       "La Colombia",
 				Latency:                21.07,

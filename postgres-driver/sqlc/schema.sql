@@ -52,6 +52,8 @@ CREATE  TABLE relay (
 
 CREATE TABLE service_record (
     id bigint  NOT NULL GENERATED ALWAYS AS IDENTITY  ,
+	node_public_key char(64) NOT NULL ,
+	pokt_chain_id  char(4)  NOT NULL  ,
     session_key char(44) NOT NULL,
     request_id varchar NOT NULL,
     portal_region_name varchar NOT NULL,

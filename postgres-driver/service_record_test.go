@@ -15,6 +15,8 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteServiceRecord() {
 		{
 			name: "Success",
 			serviceRecord: types.ServiceRecord{
+				NodePublicKey:          "21",
+				PoktChainID:            "21",
 				SessionKey:             ts.firstServiceRecord.SessionKey,
 				RequestID:              "21",
 				PortalRegionName:       ts.firstServiceRecord.PortalRegionName,
@@ -41,6 +43,8 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteServiceRecords() {
 	var serviceRecords []types.ServiceRecord
 	for i := 0; i < 1000; i++ {
 		serviceRecords = append(serviceRecords, types.ServiceRecord{
+			NodePublicKey:          "21",
+			PoktChainID:            "21",
 			SessionKey:             ts.firstServiceRecord.SessionKey,
 			RequestID:              "21",
 			PortalRegionName:       ts.firstServiceRecord.PortalRegionName,

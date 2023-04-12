@@ -17,6 +17,8 @@ var (
 
 type ServiceRecord struct {
 	ServiceRecordID        int       `json:"serviceRecordID"`
+	NodePublicKey          string    `json:"nodePublicKey"`
+	PoktChainID            string    `json:"poktChainID"`
 	SessionKey             string    `json:"sessionKey"`
 	RequestID              string    `json:"requestID"`
 	PortalRegionName       string    `json:"portalRegionName"`

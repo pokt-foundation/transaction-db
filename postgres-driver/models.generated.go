@@ -102,6 +102,8 @@ type Relay struct {
 
 type ServiceRecord struct {
 	ID                     int64     `json:"id"`
+	NodePublicKey          string    `json:"nodePublicKey"`
+	PoktChainID            string    `json:"poktChainID"`
 	SessionKey             string    `json:"sessionKey"`
 	RequestID              string    `json:"requestID"`
 	PortalRegionName       string    `json:"portalRegionName"`

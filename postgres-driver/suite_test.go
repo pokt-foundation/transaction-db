@@ -68,6 +68,8 @@ func (ts *PGDriverTestSuite) SetupSuite() {
 	}))
 
 	ts.NoError(ts.driver.WriteServiceRecord(context.Background(), types.ServiceRecord{
+		NodePublicKey:          "21",
+		PoktChainID:            "21",
 		SessionKey:             "22",
 		RequestID:              "21",
 		PortalRegionName:       "La Colombia",

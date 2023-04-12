@@ -154,6 +154,8 @@ func (q *Queries) InsertRelay(ctx context.Context, arg InsertRelayParams) error 
 
 const insertServiceRecord = `-- name: InsertServiceRecord :exec
 INSERT INTO service_record (
+    node_public_key,
+    pokt_chain_id,
     session_key,
     request_id,
     portal_region_name,
@@ -170,11 +172,13 @@ INSERT INTO service_record (
     created_at,
     updated_at
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
+    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17
 )
 `
 
 type InsertServiceRecordParams struct {
+	NodePublicKey          string    `json:"nodePublicKey"`
+	PoktChainID            string    `json:"poktChainID"`
 	SessionKey             string    `json:"sessionKey"`
 	RequestID              string    `json:"requestID"`
 	PortalRegionName       string    `json:"portalRegionName"`
@@ -194,6 +198,8 @@ type InsertServiceRecordParams struct {
 
 func (q *Queries) InsertServiceRecord(ctx context.Context, arg InsertServiceRecordParams) error {
 	_, err := q.db.ExecContext(ctx, insertServiceRecord,
+		arg.NodePublicKey,
+		arg.PoktChainID,
 		arg.SessionKey,
 		arg.RequestID,
 		arg.PortalRegionName,
@@ -305,7 +311,7 @@ func (q *Queries) SelectRelay(ctx context.Context, id int64) (SelectRelayRow, er
 }
 
 const selectServiceRecord = `-- name: SelectServiceRecord :one
-SELECT id, session_key, request_id, portal_region_name, latency, tickets, result, available, successes, failures, p90_success_latency, median_success_latency, weighted_success_latency, success_rate, created_at, updated_at
+SELECT id, node_public_key, pokt_chain_id, session_key, request_id, portal_region_name, latency, tickets, result, available, successes, failures, p90_success_latency, median_success_latency, weighted_success_latency, success_rate, created_at, updated_at
 FROM service_record
 WHERE id = $1
 `
@@ -315,6 +321,8 @@ func (q *Queries) SelectServiceRecord(ctx context.Context, id int64) (ServiceRec
 	var i ServiceRecord
 	err := row.Scan(
 		&i.ID,
+		&i.NodePublicKey,
+		&i.PoktChainID,
 		&i.SessionKey,
 		&i.RequestID,
 		&i.PortalRegionName,
