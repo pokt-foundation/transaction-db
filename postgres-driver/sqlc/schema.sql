@@ -18,7 +18,7 @@ CREATE  TABLE portal_region (
 
 CREATE  TABLE relay (
 	id             		bigint  NOT NULL GENERATED ALWAYS AS IDENTITY  ,
-	pokt_chain_id       varchar  NOT NULL  ,
+	pokt_chain_id       char(4)  NOT NULL  ,
 	endpoint_id          varchar  NOT NULL  ,
 	session_key   		char(44)  NOT NULL  ,
 	protocol_app_public_key	 char(64) NOT NULL ,
