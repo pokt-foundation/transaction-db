@@ -42,6 +42,7 @@ type Relay struct {
 	PoktChainID              string        `json:"poktChainID"`
 	EndpointID               string        `json:"endpointID"`
 	SessionKey               string        `json:"sessionKey"`
+	ProtocolAppPublicKey     string        `json:"protocolAppPublicKey"`
 	RelaySourceURL           string        `json:"relaySourceUrl"`
 	PoktNodeAddress          string        `json:"poktNodeAddress"`
 	PoktNodeDomain           string        `json:"poktNodeDomain"`

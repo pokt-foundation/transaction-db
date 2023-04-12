@@ -36,9 +36,8 @@ func (ts *PGDriverTestSuite) SetupSuite() {
 	ts.NoError(ts.initPostgresDriver())
 
 	ts.NoError(ts.driver.WriteSession(context.Background(), types.PocketSession{
-		SessionKey:        "22",
-		SessionHeight:     22,
-		ProtocolPublicKey: "222",
+		SessionKey:    "22",
+		SessionHeight: 22,
 	}))
 
 	ts.NoError(ts.driver.WriteRegion(context.Background(), types.PortalRegion{
@@ -49,6 +48,7 @@ func (ts *PGDriverTestSuite) SetupSuite() {
 		PoktChainID:              "21",
 		EndpointID:               "21",
 		SessionKey:               "22",
+		ProtocolAppPublicKey:     "21",
 		RelaySourceURL:           "pablo.com",
 		PoktNodeAddress:          "21",
 		PoktNodeDomain:           "pablos.com",

@@ -11,10 +11,9 @@ func (d *PostgresDriver) WriteSession(ctx context.Context, session types.PocketS
 	now := time.Now()
 
 	return d.InsertPocketSession(ctx, InsertPocketSessionParams{
-		SessionKey:        session.SessionKey,
-		SessionHeight:     int32(session.SessionHeight),
-		ProtocolPublicKey: session.ProtocolPublicKey,
-		CreatedAt:         now,
-		UpdatedAt:         now,
+		SessionKey:    session.SessionKey,
+		SessionHeight: int32(session.SessionHeight),
+		CreatedAt:     now,
+		UpdatedAt:     now,
 	})
 }
