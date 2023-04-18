@@ -4,9 +4,10 @@ CREATE  TABLE pocket_session (
 	id    				 bigint  NOT NULL  GENERATED ALWAYS AS IDENTITY  ,
 	session_key          char(44)  NOT NULL  UNIQUE,
 	session_height       integer  NOT NULL  ,
+	portal_region_name   varchar NOT NULL,
 	created_at			 date     NOT NULL  ,
 	updated_at			 date     NOT NULL  ,
-	CONSTRAINT pk_tbl_0 PRIMARY KEY ( id )
+	CONSTRAINT pk_tbl_0 PRIMARY KEY ( id , portal_region_name)
  );
 
 CREATE  TABLE portal_region (
@@ -47,7 +48,7 @@ CREATE  TABLE relay (
 	pokt_tx_id 			varchar	  NOT NULL  ,
 	created_at			 date     NOT NULL  ,
 	updated_at			 date     NOT NULL  ,
-	CONSTRAINT pk_relay PRIMARY KEY ( id )
+	CONSTRAINT pk_relay PRIMARY KEY ( id , portal_region_name )
  );
 
 CREATE TABLE service_record (
@@ -69,7 +70,7 @@ CREATE TABLE service_record (
     success_rate float NOT NULL,
 	created_at date     NOT NULL  ,
 	updated_at date     NOT NULL  ,
-	CONSTRAINT pk_service_record PRIMARY KEY ( id )
+	CONSTRAINT pk_service_record PRIMARY KEY ( id , portal_region_name )
 );
 
 ALTER TABLE relay ADD CONSTRAINT fk_relay_portal_region FOREIGN KEY ( portal_region_name ) REFERENCES portal_region( portal_region_name );
@@ -79,3 +80,5 @@ ALTER TABLE relay ADD CONSTRAINT fk_relay_session FOREIGN KEY ( session_key ) RE
 ALTER TABLE service_record ADD CONSTRAINT fk_service_region_portal_region FOREIGN KEY ( portal_region_name ) REFERENCES portal_region( portal_region_name );
 
 ALTER TABLE service_record ADD CONSTRAINT fk_service_record_session FOREIGN KEY ( session_key ) REFERENCES pocket_session( session_key );
+
+ALTER TABLE pocket_session ADD CONSTRAINT fk_pocket_session_portal_region FOREIGN KEY ( portal_region_name ) REFERENCES portal_region( portal_region_name );

@@ -54,11 +54,12 @@ func (ns NullErrorSourcesEnum) Value() (driver.Value, error) {
 }
 
 type PocketSession struct {
-	ID            int64     `json:"id"`
-	SessionKey    string    `json:"sessionKey"`
-	SessionHeight int32     `json:"sessionHeight"`
-	CreatedAt     time.Time `json:"createdAt"`
-	UpdatedAt     time.Time `json:"updatedAt"`
+	ID               int64     `json:"id"`
+	SessionKey       string    `json:"sessionKey"`
+	SessionHeight    int32     `json:"sessionHeight"`
+	PortalRegionName string    `json:"portalRegionName"`
+	CreatedAt        time.Time `json:"createdAt"`
+	UpdatedAt        time.Time `json:"updatedAt"`
 }
 
 type PortalRegion struct {
