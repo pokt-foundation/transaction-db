@@ -152,6 +152,36 @@ func (q *Queries) InsertRelay(ctx context.Context, arg InsertRelayParams) error 
 	return err
 }
 
+const insertRelayCount = `-- name: InsertRelayCount :exec
+INSERT INTO relay_count (app_public_key, day, success, error, created_at, updated_at)
+VALUES ($1, $2, $3, $4, $5, $6)
+ON CONFLICT (app_public_key, day) DO UPDATE
+    SET success = relay_count.success + excluded.success,
+        error = relay_count.error + excluded.error,
+        updated_at = $6
+`
+
+type InsertRelayCountParams struct {
+	AppPublicKey string    `json:"appPublicKey"`
+	Day          time.Time `json:"day"`
+	Success      int32     `json:"success"`
+	Error        int32     `json:"error"`
+	CreatedAt    time.Time `json:"createdAt"`
+	UpdatedAt    time.Time `json:"updatedAt"`
+}
+
+func (q *Queries) InsertRelayCount(ctx context.Context, arg InsertRelayCountParams) error {
+	_, err := q.db.ExecContext(ctx, insertRelayCount,
+		arg.AppPublicKey,
+		arg.Day,
+		arg.Success,
+		arg.Error,
+		arg.CreatedAt,
+		arg.UpdatedAt,
+	)
+	return err
+}
+
 const insertServiceRecord = `-- name: InsertServiceRecord :exec
 INSERT INTO service_record (
     node_public_key,
@@ -308,6 +338,47 @@ func (q *Queries) SelectRelay(ctx context.Context, id int64) (SelectRelayRow, er
 		&i.UpdatedAt_3,
 	)
 	return i, err
+}
+
+const selectRelayCounts = `-- name: SelectRelayCounts :many
+SELECT app_public_key, day, success, error, created_at, updated_at
+FROM relay_count
+WHERE day BETWEEN $1 AND $2
+`
+
+type SelectRelayCountsParams struct {
+	Day   time.Time `json:"day"`
+	Day_2 time.Time `json:"day2"`
+}
+
+func (q *Queries) SelectRelayCounts(ctx context.Context, arg SelectRelayCountsParams) ([]RelayCount, error) {
+	rows, err := q.db.QueryContext(ctx, selectRelayCounts, arg.Day, arg.Day_2)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []RelayCount
+	for rows.Next() {
+		var i RelayCount
+		if err := rows.Scan(
+			&i.AppPublicKey,
+			&i.Day,
+			&i.Success,
+			&i.Error,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const selectServiceRecord = `-- name: SelectServiceRecord :one

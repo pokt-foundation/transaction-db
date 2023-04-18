@@ -100,6 +100,15 @@ type Relay struct {
 	UpdatedAt                time.Time            `json:"updatedAt"`
 }
 
+type RelayCount struct {
+	AppPublicKey string    `json:"appPublicKey"`
+	Day          time.Time `json:"day"`
+	Success      int32     `json:"success"`
+	Error        int32     `json:"error"`
+	CreatedAt    time.Time `json:"createdAt"`
+	UpdatedAt    time.Time `json:"updatedAt"`
+}
+
 type ServiceRecord struct {
 	ID                     int64     `json:"id"`
 	NodePublicKey          string    `json:"nodePublicKey"`

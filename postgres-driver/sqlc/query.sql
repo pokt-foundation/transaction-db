@@ -70,3 +70,14 @@ WHERE r.id = $1;
 SELECT id, node_public_key, pokt_chain_id, session_key, request_id, portal_region_name, latency, tickets, result, available, successes, failures, p90_success_latency, median_success_latency, weighted_success_latency, success_rate, created_at, updated_at
 FROM service_record
 WHERE id = $1;
+-- name: InsertRelayCount :exec
+INSERT INTO relay_count (app_public_key, day, success, error, created_at, updated_at)
+VALUES ($1, $2, $3, $4, $5, $6)
+ON CONFLICT (app_public_key, day) DO UPDATE
+    SET success = relay_count.success + excluded.success,
+        error = relay_count.error + excluded.error,
+        updated_at = $6;
+-- name: SelectRelayCounts :many
+SELECT app_public_key, day, success, error, created_at, updated_at
+FROM relay_count
+WHERE day BETWEEN $1 AND $2;
