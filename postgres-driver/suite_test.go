@@ -35,12 +35,13 @@ func Test_RunPGDriverSuite(t *testing.T) {
 func (ts *PGDriverTestSuite) SetupSuite() {
 	ts.NoError(ts.initPostgresDriver())
 
-	ts.NoError(ts.driver.WriteSession(context.Background(), types.PocketSession{
-		SessionKey:    "22",
-		SessionHeight: 22,
+	ts.NoError(ts.driver.WriteRegion(context.Background(), types.PortalRegion{
+		PortalRegionName: "La Colombia",
 	}))
 
-	ts.NoError(ts.driver.WriteRegion(context.Background(), types.PortalRegion{
+	ts.NoError(ts.driver.WriteSession(context.Background(), types.PocketSession{
+		SessionKey:       "22",
+		SessionHeight:    22,
 		PortalRegionName: "La Colombia",
 	}))
 

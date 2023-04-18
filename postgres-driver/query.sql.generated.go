@@ -12,21 +12,23 @@ import (
 )
 
 const insertPocketSession = `-- name: InsertPocketSession :exec
-INSERT INTO pocket_session (session_key, session_height, created_at, updated_at)
-VALUES ($1, $2, $3, $4)
+INSERT INTO pocket_session (session_key, session_height, portal_region_name, created_at, updated_at)
+VALUES ($1, $2, $3, $4, $5)
 `
 
 type InsertPocketSessionParams struct {
-	SessionKey    string    `json:"sessionKey"`
-	SessionHeight int32     `json:"sessionHeight"`
-	CreatedAt     time.Time `json:"createdAt"`
-	UpdatedAt     time.Time `json:"updatedAt"`
+	SessionKey       string    `json:"sessionKey"`
+	SessionHeight    int32     `json:"sessionHeight"`
+	PortalRegionName string    `json:"portalRegionName"`
+	CreatedAt        time.Time `json:"createdAt"`
+	UpdatedAt        time.Time `json:"updatedAt"`
 }
 
 func (q *Queries) InsertPocketSession(ctx context.Context, arg InsertPocketSessionParams) error {
 	_, err := q.db.ExecContext(ctx, insertPocketSession,
 		arg.SessionKey,
 		arg.SessionHeight,
+		arg.PortalRegionName,
 		arg.CreatedAt,
 		arg.UpdatedAt,
 	)

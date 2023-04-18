@@ -55,8 +55,8 @@ INSERT INTO service_record (
     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17
 );
 -- name: InsertPocketSession :exec
-INSERT INTO pocket_session (session_key, session_height, created_at, updated_at)
-VALUES ($1, $2, $3, $4);
+INSERT INTO pocket_session (session_key, session_height, portal_region_name, created_at, updated_at)
+VALUES ($1, $2, $3, $4, $5);
 -- name: InsertPortalRegion :exec
 INSERT INTO portal_region (portal_region_name, created_at, updated_at)
 VALUES ($1, $2, $3);
