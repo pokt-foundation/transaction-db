@@ -5,15 +5,15 @@ CREATE  TABLE pocket_session (
 	session_key          char(44)  NOT NULL  UNIQUE,
 	session_height       integer  NOT NULL  ,
 	portal_region_name   varchar NOT NULL,
-	created_at			 date     NOT NULL  ,
-	updated_at			 date     NOT NULL  ,
+	created_at			 timestamp     NOT NULL  ,
+	updated_at			 timestamp     NOT NULL  ,
 	CONSTRAINT pk_tbl_0 PRIMARY KEY ( id , portal_region_name)
  );
 
 CREATE  TABLE portal_region (
 	portal_region_name   varchar  NOT NULL  ,
-	created_at			 date     NOT NULL  ,
-	updated_at			 date     NOT NULL  ,
+	created_at			 timestamp     NOT NULL  ,
+	updated_at			 timestamp     NOT NULL  ,
 	CONSTRAINT pk_portal_region PRIMARY KEY ( portal_region_name )
  );
 
@@ -27,8 +27,8 @@ CREATE  TABLE relay (
 	pokt_node_address    char(40)  NOT NULL  ,
 	pokt_node_domain 	varchar   NOT NULL ,
 	pokt_node_public_key char(64)   NOT NULL ,
-	relay_start_datetime date  NOT NULL  ,
-	relay_return_datetime date  NOT NULL  ,
+	relay_start_datetime timestamp  NOT NULL  ,
+	relay_return_datetime timestamp  NOT NULL  ,
 	is_error             boolean  NOT NULL  ,
 	error_code           integer,
 	error_name           varchar,
@@ -46,8 +46,8 @@ CREATE  TABLE relay (
 	is_user_relay 		boolean NOT NULL ,
 	request_id			varchar   NOT NULL  ,
 	pokt_tx_id 			varchar	  NOT NULL  ,
-	created_at			 date     NOT NULL  ,
-	updated_at			 date     NOT NULL  ,
+	created_at			 timestamp     NOT NULL  ,
+	updated_at			 timestamp     NOT NULL  ,
 	CONSTRAINT pk_relay PRIMARY KEY ( id , portal_region_name )
  );
 
@@ -68,8 +68,8 @@ CREATE TABLE service_record (
     median_success_latency float NOT NULL,
     weighted_success_latency float NOT NULL,
     success_rate float NOT NULL,
-	created_at date     NOT NULL  ,
-	updated_at date     NOT NULL  ,
+	created_at timestamp     NOT NULL  ,
+	updated_at timestamp     NOT NULL  ,
 	CONSTRAINT pk_service_record PRIMARY KEY ( id , portal_region_name )
 );
 

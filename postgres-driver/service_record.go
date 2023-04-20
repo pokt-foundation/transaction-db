@@ -44,8 +44,8 @@ INSERT INTO service_record (
 	$13::float[],
 	$14::float[],
 	$15::float[],
-	$16::date[],
-	$17::date[]
+	$16::timestamp[],
+	$17::timestamp[]
 	) AS t(
 	session_key,
 	request_id,
