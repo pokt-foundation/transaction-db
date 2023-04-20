@@ -50,8 +50,8 @@ const insertRelays = `INSERT INTO relay (
 	$6::char(40)[],
 	$7::varchar[],
 	$8::char(64)[],
-	$9::date[],
-	$10::date[],
+	$9::timestamp[],
+	$10::timestamp[],
 	$11::boolean[],
 	$12::integer[],
 	$13::varchar[],
@@ -69,8 +69,8 @@ const insertRelays = `INSERT INTO relay (
 	$25::boolean[],
 	$26::varchar[],
 	$27::varchar[],
-	$28::date[],
-	$29::date[]
+	$28::timestamp[],
+	$29::timestamp[]
   ) AS t(
 	pokt_chain_id,
 	endpoint_id,
