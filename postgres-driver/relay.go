@@ -114,9 +114,9 @@ func (d *PostgresDriver) WriteRelay(ctx context.Context, relay types.Relay) erro
 		SessionKey:               relay.SessionKey,
 		ProtocolAppPublicKey:     relay.ProtocolAppPublicKey,
 		RelaySourceUrl:           relay.RelaySourceURL,
-		PoktNodeAddress:          relay.PoktNodeAddress,
-		PoktNodeDomain:           relay.PoktNodeDomain,
-		PoktNodePublicKey:        relay.PoktNodePublicKey,
+		PoktNodeAddress:          newSQLNullString(relay.PoktNodeAddress),
+		PoktNodeDomain:           newSQLNullString(relay.PoktNodeDomain),
+		PoktNodePublicKey:        newSQLNullString(relay.PoktNodePublicKey),
 		RelayStartDatetime:       relay.RelayStartDatetime,
 		RelayReturnDatetime:      relay.RelayReturnDatetime,
 		IsError:                  relay.IsError,
@@ -134,7 +134,7 @@ func (d *PostgresDriver) WriteRelay(ctx context.Context, relay types.Relay) erro
 		PortalRegionName:         relay.PortalRegionName,
 		IsAltruistRelay:          relay.IsAltruistRelay,
 		RequestID:                relay.RequestID,
-		PoktTxID:                 relay.PoktTxID,
+		PoktTxID:                 newSQLNullString(relay.PoktTxID),
 		IsUserRelay:              relay.IsUserRelay,
 		CreatedAt:                now,
 		UpdatedAt:                now,
@@ -150,9 +150,9 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		sessionKeys               []string
 		protocolAppPublicKeys     []string
 		relaySourceURLs           []string
-		poktNodeAddresses         []string
-		poktNodeDomains           []string
-		poktNodePublicKeys        []string
+		poktNodeAddresses         []sql.NullString
+		poktNodeDomains           []sql.NullString
+		poktNodePublicKeys        []sql.NullString
 		relayStartDatetimes       []time.Time
 		relayReturnDatetimes      []time.Time
 		isErrors                  []bool
@@ -171,7 +171,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		isAltruistRelays          []bool
 		isUserRelays              []bool
 		requestIDs                []string
-		poktTxIDs                 []string
+		poktTxIDs                 []sql.NullString
 		createdTimes              []time.Time
 		updatedTimes              []time.Time
 	)
@@ -182,9 +182,9 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		sessionKeys = append(sessionKeys, relay.SessionKey)
 		protocolAppPublicKeys = append(protocolAppPublicKeys, relay.ProtocolAppPublicKey)
 		relaySourceURLs = append(relaySourceURLs, relay.RelaySourceURL)
-		poktNodeAddresses = append(poktNodeAddresses, relay.PoktNodeAddress)
-		poktNodeDomains = append(poktNodeDomains, relay.PoktNodeDomain)
-		poktNodePublicKeys = append(poktNodePublicKeys, relay.PoktNodePublicKey)
+		poktNodeAddresses = append(poktNodeAddresses, newSQLNullString(relay.PoktNodeAddress))
+		poktNodeDomains = append(poktNodeDomains, newSQLNullString(relay.PoktNodeDomain))
+		poktNodePublicKeys = append(poktNodePublicKeys, newSQLNullString(relay.PoktNodePublicKey))
 		relayStartDatetimes = append(relayStartDatetimes, relay.RelayStartDatetime)
 		relayReturnDatetimes = append(relayReturnDatetimes, relay.RelayReturnDatetime)
 		isErrors = append(isErrors, relay.IsError)
@@ -203,7 +203,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		isAltruistRelays = append(isAltruistRelays, relay.IsAltruistRelay)
 		isUserRelays = append(isUserRelays, relay.IsUserRelay)
 		requestIDs = append(requestIDs, relay.RequestID)
-		poktTxIDs = append(poktTxIDs, relay.PoktTxID)
+		poktTxIDs = append(poktTxIDs, newSQLNullString(relay.PoktTxID))
 		createdTimes = append(createdTimes, now)
 		updatedTimes = append(updatedTimes, now)
 	}
@@ -213,9 +213,9 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		pq.StringArray(sessionKeys),
 		pq.StringArray(protocolAppPublicKeys),
 		pq.StringArray(relaySourceURLs),
-		pq.StringArray(poktNodeAddresses),
-		pq.StringArray(poktNodeDomains),
-		pq.StringArray(poktNodePublicKeys),
+		pq.Array(poktNodeAddresses),
+		pq.Array(poktNodeDomains),
+		pq.Array(poktNodePublicKeys),
 		pq.Array(relayStartDatetimes),
 		pq.Array(relayReturnDatetimes),
 		pq.BoolArray(isErrors),
@@ -234,7 +234,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		pq.BoolArray(isAltruistRelays),
 		pq.BoolArray(isUserRelays),
 		pq.StringArray(requestIDs),
-		pq.StringArray(poktTxIDs),
+		pq.Array(poktTxIDs),
 		pq.Array(createdTimes),
 		pq.Array(updatedTimes))
 	if err != nil {
@@ -257,9 +257,9 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID int) (types.Rela
 		SessionKey:               relay.SessionKey,
 		ProtocolAppPublicKey:     relay.ProtocolAppPublicKey,
 		RelaySourceURL:           relay.RelaySourceUrl,
-		PoktNodeAddress:          relay.PoktNodeAddress,
-		PoktNodeDomain:           relay.PoktNodeDomain,
-		PoktNodePublicKey:        relay.PoktNodePublicKey,
+		PoktNodeAddress:          relay.PoktNodeAddress.String,
+		PoktNodeDomain:           relay.PoktNodeDomain.String,
+		PoktNodePublicKey:        relay.PoktNodePublicKey.String,
 		RelayStartDatetime:       relay.RelayStartDatetime,
 		RelayReturnDatetime:      relay.RelayReturnDatetime,
 		IsError:                  relay.IsError,
@@ -278,7 +278,7 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID int) (types.Rela
 		IsAltruistRelay:          relay.IsAltruistRelay,
 		RequestID:                relay.RequestID,
 		IsUserRelay:              relay.IsUserRelay,
-		PoktTxID:                 relay.PoktTxID,
+		PoktTxID:                 relay.PoktTxID.String,
 		CreatedAt:                relay.CreatedAt,
 		UpdatedAt:                relay.UpdatedAt,
 		Session: types.PocketSession{

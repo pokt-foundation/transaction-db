@@ -93,9 +93,9 @@ type InsertRelayParams struct {
 	SessionKey               string               `json:"sessionKey"`
 	ProtocolAppPublicKey     string               `json:"protocolAppPublicKey"`
 	RelaySourceUrl           string               `json:"relaySourceUrl"`
-	PoktNodeAddress          string               `json:"poktNodeAddress"`
-	PoktNodeDomain           string               `json:"poktNodeDomain"`
-	PoktNodePublicKey        string               `json:"poktNodePublicKey"`
+	PoktNodeAddress          sql.NullString       `json:"poktNodeAddress"`
+	PoktNodeDomain           sql.NullString       `json:"poktNodeDomain"`
+	PoktNodePublicKey        sql.NullString       `json:"poktNodePublicKey"`
 	RelayStartDatetime       time.Time            `json:"relayStartDatetime"`
 	RelayReturnDatetime      time.Time            `json:"relayReturnDatetime"`
 	IsError                  bool                 `json:"isError"`
@@ -114,7 +114,7 @@ type InsertRelayParams struct {
 	IsAltruistRelay          bool                 `json:"isAltruistRelay"`
 	IsUserRelay              bool                 `json:"isUserRelay"`
 	RequestID                string               `json:"requestID"`
-	PoktTxID                 string               `json:"poktTxID"`
+	PoktTxID                 sql.NullString       `json:"poktTxID"`
 	CreatedAt                time.Time            `json:"createdAt"`
 	UpdatedAt                time.Time            `json:"updatedAt"`
 }
@@ -236,9 +236,9 @@ type SelectRelayRow struct {
 	SessionKey               string               `json:"sessionKey"`
 	ProtocolAppPublicKey     string               `json:"protocolAppPublicKey"`
 	RelaySourceUrl           string               `json:"relaySourceUrl"`
-	PoktNodeAddress          string               `json:"poktNodeAddress"`
-	PoktNodeDomain           string               `json:"poktNodeDomain"`
-	PoktNodePublicKey        string               `json:"poktNodePublicKey"`
+	PoktNodeAddress          sql.NullString       `json:"poktNodeAddress"`
+	PoktNodeDomain           sql.NullString       `json:"poktNodeDomain"`
+	PoktNodePublicKey        sql.NullString       `json:"poktNodePublicKey"`
 	RelayStartDatetime       time.Time            `json:"relayStartDatetime"`
 	RelayReturnDatetime      time.Time            `json:"relayReturnDatetime"`
 	IsError                  bool                 `json:"isError"`
@@ -256,7 +256,7 @@ type SelectRelayRow struct {
 	IsAltruistRelay          bool                 `json:"isAltruistRelay"`
 	IsUserRelay              bool                 `json:"isUserRelay"`
 	RequestID                string               `json:"requestID"`
-	PoktTxID                 string               `json:"poktTxID"`
+	PoktTxID                 sql.NullString       `json:"poktTxID"`
 	CreatedAt                time.Time            `json:"createdAt"`
 	UpdatedAt                time.Time            `json:"updatedAt"`
 	SessionKey_2             string               `json:"sessionKey2"`
