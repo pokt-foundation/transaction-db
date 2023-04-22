@@ -23,6 +23,13 @@ var (
 		"UpdatedAt": true,
 	}
 
+	shouldBeEmptyAltruist = map[string]bool{
+		"PoktNodeAddress":   true,
+		"PoktNodeDomain":    true,
+		"PoktNodePublicKey": true,
+		"PoktTxID":          true,
+	}
+
 	relayErrorField = map[string]bool{
 		"ErrorCode":    true,
 		"ErrorName":    true,
@@ -49,7 +56,7 @@ type Relay struct {
 	PoktNodePublicKey        string        `json:"poktNodePublicKey"`
 	RelayStartDatetime       time.Time     `json:"relayStartDatetime"`
 	RelayReturnDatetime      time.Time     `json:"relayReturnDatetime"`
-	IsError                  bool          `json:"isError"` // this field must be before the other error fields for validation to work
+	IsError                  bool          `json:"isError"`
 	ErrorCode                int           `json:"errorCode,omitempty"`
 	ErrorName                string        `json:"errorName,omitempty"`
 	ErrorMessage             string        `json:"errorMessage,omitempty"`
@@ -77,8 +84,6 @@ func (r Relay) Validate() (err error) {
 	structVal := reflect.ValueOf(r)
 	fieldNum := structVal.NumField()
 
-	var isError bool
-
 	// fields are in the order they are declared on the struct
 	for i := 0; i < fieldNum; i++ {
 		field := structVal.Field(i)
@@ -87,15 +92,11 @@ func (r Relay) Validate() (err error) {
 		isSet := field.IsValid() && !field.IsZero()
 
 		if isSet {
-			// if isError is set it means it's true so it is an error relay
-			if fieldName == "IsError" {
-				isError = true
-				continue
-			}
-
 			// shouldBeEmptyFields should never be set
 			// error fields shoould just be set if is an error relay
-			if shouldBeEmptyRelayField[fieldName] || (!isError && relayErrorField[fieldName]) {
+			if shouldBeEmptyRelayField[fieldName] ||
+				(!r.IsError && relayErrorField[fieldName]) ||
+				(r.IsAltruistRelay && shouldBeEmptyAltruist[fieldName]) {
 				return fmt.Errorf("%s should not be set", fieldName)
 			}
 
@@ -109,7 +110,10 @@ func (r Relay) Validate() (err error) {
 			// shouldBeEmptyField can be empty
 			// bools zero value is false which is a valid value
 			// error fields can be empty if it is an error relay
-			if shouldBeEmptyRelayField[fieldName] || field.Kind() == reflect.Bool || (!isError && relayErrorField[fieldName]) {
+			if shouldBeEmptyRelayField[fieldName] ||
+				field.Kind() == reflect.Bool ||
+				(!r.IsError && relayErrorField[fieldName]) ||
+				(r.IsAltruistRelay && shouldBeEmptyAltruist[fieldName]) {
 				continue
 			}
 

@@ -13,6 +13,13 @@ var (
 		"CreatedAt":       true,
 		"UpdatedAt":       true,
 	}
+
+	optionalFields = map[string]bool{
+		"Latency":   true,
+		"Result":    true,
+		"Successes": true,
+		"Failures":  true,
+	}
 )
 
 type ServiceRecord struct {
@@ -58,7 +65,9 @@ func (sr ServiceRecord) Validate() (err error) {
 		if !isSet {
 			// shouldBeEmptyField can be empty
 			// bools zero value is false which is a valid value
-			if shouldBeEmptyServiceRecordField[fieldName] || field.Kind() == reflect.Bool {
+			if shouldBeEmptyServiceRecordField[fieldName] ||
+				field.Kind() == reflect.Bool ||
+				optionalFields[fieldName] {
 				continue
 			}
 

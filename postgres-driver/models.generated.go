@@ -75,9 +75,9 @@ type Relay struct {
 	SessionKey               string               `json:"sessionKey"`
 	ProtocolAppPublicKey     string               `json:"protocolAppPublicKey"`
 	RelaySourceUrl           string               `json:"relaySourceUrl"`
-	PoktNodeAddress          string               `json:"poktNodeAddress"`
-	PoktNodeDomain           string               `json:"poktNodeDomain"`
-	PoktNodePublicKey        string               `json:"poktNodePublicKey"`
+	PoktNodeAddress          sql.NullString       `json:"poktNodeAddress"`
+	PoktNodeDomain           sql.NullString       `json:"poktNodeDomain"`
+	PoktNodePublicKey        sql.NullString       `json:"poktNodePublicKey"`
 	RelayStartDatetime       time.Time            `json:"relayStartDatetime"`
 	RelayReturnDatetime      time.Time            `json:"relayReturnDatetime"`
 	IsError                  bool                 `json:"isError"`
@@ -96,7 +96,7 @@ type Relay struct {
 	IsAltruistRelay          bool                 `json:"isAltruistRelay"`
 	IsUserRelay              bool                 `json:"isUserRelay"`
 	RequestID                string               `json:"requestID"`
-	PoktTxID                 string               `json:"poktTxID"`
+	PoktTxID                 sql.NullString       `json:"poktTxID"`
 	CreatedAt                time.Time            `json:"createdAt"`
 	UpdatedAt                time.Time            `json:"updatedAt"`
 }

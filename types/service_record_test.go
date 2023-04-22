@@ -37,6 +37,23 @@ func TestServiceRecord_ValidateStruct(t *testing.T) {
 			err: nil,
 		},
 		{
+			name: "Success service record without optional fields",
+			serviceRecord: ServiceRecord{
+				SessionKey:             "21",
+				NodePublicKey:          "21",
+				PoktChainID:            "21",
+				RequestID:              "21",
+				PortalRegionName:       "La Colombia",
+				Tickets:                2,
+				Available:              true,
+				P90SuccessLatency:      21.07,
+				MedianSuccessLatency:   21.07,
+				WeightedSuccessLatency: 21.07,
+				SuccessRate:            21,
+			},
+			err: nil,
+		},
+		{
 			name: "Failure service record id set",
 			serviceRecord: ServiceRecord{
 				ServiceRecordID:        21,
