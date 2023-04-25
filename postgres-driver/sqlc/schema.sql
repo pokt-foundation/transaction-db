@@ -12,8 +12,6 @@ CREATE  TABLE pocket_session (
 
 CREATE  TABLE portal_region (
 	portal_region_name   varchar  NOT NULL  ,
-	created_at			 timestamp     NOT NULL  ,
-	updated_at			 timestamp     NOT NULL  ,
 	CONSTRAINT pk_portal_region PRIMARY KEY ( portal_region_name )
  );
 
@@ -82,3 +80,21 @@ ALTER TABLE service_record ADD CONSTRAINT fk_service_region_portal_region FOREIG
 ALTER TABLE service_record ADD CONSTRAINT fk_service_record_session FOREIGN KEY ( session_key ) REFERENCES pocket_session( session_key );
 
 ALTER TABLE pocket_session ADD CONSTRAINT fk_pocket_session_portal_region FOREIGN KEY ( portal_region_name ) REFERENCES portal_region( portal_region_name );
+
+INSERT INTO portal_region (portal_region_name)
+VALUES ('europe-west3'),
+       ('europe-north1'),
+       ('europe-west8'),
+       ('europe-southwest1'),
+       ('europe-west2'),
+	   ('europe-west9'),
+	   ('us-east4'),
+	   ('us-east5'),
+	   ('us-west2'),
+	   ('us-west1'),
+	   ('northamerica-northeast2'),
+	   ('asia-east2'),
+	   ('asia-northeast1'),
+	   ('asia-south1'),
+	   ('asia-southeast1'),
+	   ('australia-southeast1');

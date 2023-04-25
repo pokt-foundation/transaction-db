@@ -17,7 +17,7 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteSession() {
 			session: types.PocketSession{
 				SessionKey:       "21",
 				SessionHeight:    21,
-				PortalRegionName: "La Colombia",
+				PortalRegionName: "europe-southwest1",
 			},
 			err: nil,
 		},
