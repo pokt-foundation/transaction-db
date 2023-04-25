@@ -289,8 +289,6 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID int) (types.Rela
 		},
 		Region: types.PortalRegion{
 			PortalRegionName: relay.PortalRegionName,
-			CreatedAt:        relay.CreatedAt_3,
-			UpdatedAt:        relay.UpdatedAt_3,
 		},
 	}, nil
 }
