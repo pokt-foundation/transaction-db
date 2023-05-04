@@ -113,7 +113,7 @@ func (d *PostgresDriver) WriteRelay(ctx context.Context, relay types.Relay) erro
 		EndpointID:               relay.EndpointID,
 		SessionKey:               relay.SessionKey,
 		ProtocolAppPublicKey:     relay.ProtocolAppPublicKey,
-		RelaySourceUrl:           relay.RelaySourceURL,
+		RelaySourceUrl:           newSQLNullString(relay.RelaySourceURL),
 		PoktNodeAddress:          newSQLNullString(relay.PoktNodeAddress),
 		PoktNodeDomain:           newSQLNullString(relay.PoktNodeDomain),
 		PoktNodePublicKey:        newSQLNullString(relay.PoktNodePublicKey),
@@ -149,7 +149,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		endpointIDs               []string
 		sessionKeys               []string
 		protocolAppPublicKeys     []string
-		relaySourceURLs           []string
+		relaySourceURLs           []sql.NullString
 		poktNodeAddresses         []sql.NullString
 		poktNodeDomains           []sql.NullString
 		poktNodePublicKeys        []sql.NullString
@@ -181,7 +181,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		endpointIDs = append(endpointIDs, relay.EndpointID)
 		sessionKeys = append(sessionKeys, relay.SessionKey)
 		protocolAppPublicKeys = append(protocolAppPublicKeys, relay.ProtocolAppPublicKey)
-		relaySourceURLs = append(relaySourceURLs, relay.RelaySourceURL)
+		relaySourceURLs = append(relaySourceURLs, newSQLNullString(relay.RelaySourceURL))
 		poktNodeAddresses = append(poktNodeAddresses, newSQLNullString(relay.PoktNodeAddress))
 		poktNodeDomains = append(poktNodeDomains, newSQLNullString(relay.PoktNodeDomain))
 		poktNodePublicKeys = append(poktNodePublicKeys, newSQLNullString(relay.PoktNodePublicKey))
@@ -212,7 +212,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		pq.StringArray(endpointIDs),
 		pq.StringArray(sessionKeys),
 		pq.StringArray(protocolAppPublicKeys),
-		pq.StringArray(relaySourceURLs),
+		pq.Array(relaySourceURLs),
 		pq.Array(poktNodeAddresses),
 		pq.Array(poktNodeDomains),
 		pq.Array(poktNodePublicKeys),
@@ -256,7 +256,7 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID int) (types.Rela
 		EndpointID:               relay.EndpointID,
 		SessionKey:               relay.SessionKey,
 		ProtocolAppPublicKey:     relay.ProtocolAppPublicKey,
-		RelaySourceURL:           relay.RelaySourceUrl,
+		RelaySourceURL:           relay.RelaySourceUrl.String,
 		PoktNodeAddress:          relay.PoktNodeAddress.String,
 		PoktNodeDomain:           relay.PoktNodeDomain.String,
 		PoktNodePublicKey:        relay.PoktNodePublicKey.String,

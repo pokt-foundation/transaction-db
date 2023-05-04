@@ -14,7 +14,7 @@ var (
 		"UpdatedAt":       true,
 	}
 
-	optionalFields = map[string]bool{
+	serviceRecordOptionalFields = map[string]bool{
 		"Latency":   true,
 		"Result":    true,
 		"Successes": true,
@@ -67,7 +67,7 @@ func (sr ServiceRecord) Validate() (err error) {
 			// bools zero value is false which is a valid value
 			if shouldBeEmptyServiceRecordField[fieldName] ||
 				field.Kind() == reflect.Bool ||
-				optionalFields[fieldName] {
+				serviceRecordOptionalFields[fieldName] {
 				continue
 			}
 

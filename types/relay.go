@@ -38,6 +38,10 @@ var (
 		"ErrorSource":  true,
 	}
 
+	relayOptionalFields = map[string]bool{
+		"RelaySourceURL": true,
+	}
+
 	validErrorSources = map[string]bool{
 		string(ErrorSourceExternal): true,
 		string(ErrorSourceInternal): true,
@@ -113,7 +117,8 @@ func (r Relay) Validate() (err error) {
 			if shouldBeEmptyRelayField[fieldName] ||
 				field.Kind() == reflect.Bool ||
 				(!r.IsError && relayErrorField[fieldName]) ||
-				(r.IsAltruistRelay && shouldBeEmptyAltruist[fieldName]) {
+				(r.IsAltruistRelay && shouldBeEmptyAltruist[fieldName]) ||
+				relayOptionalFields[fieldName] {
 				continue
 			}
 
