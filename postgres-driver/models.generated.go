@@ -72,7 +72,7 @@ type Relay struct {
 	EndpointID               string               `json:"endpointID"`
 	SessionKey               string               `json:"sessionKey"`
 	ProtocolAppPublicKey     string               `json:"protocolAppPublicKey"`
-	RelaySourceUrl           string               `json:"relaySourceUrl"`
+	RelaySourceUrl           sql.NullString       `json:"relaySourceUrl"`
 	PoktNodeAddress          sql.NullString       `json:"poktNodeAddress"`
 	PoktNodeDomain           sql.NullString       `json:"poktNodeDomain"`
 	PoktNodePublicKey        sql.NullString       `json:"poktNodePublicKey"`
