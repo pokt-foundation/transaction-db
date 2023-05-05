@@ -24,5 +24,6 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteSession() {
 	}
 	for _, tt := range tests {
 		ts.Equal(ts.driver.WriteSession(context.Background(), tt.session), tt.err)
+		ts.Equal(ts.driver.WriteSession(context.Background(), tt.session), ErrRepeatedSessionKey)
 	}
 }

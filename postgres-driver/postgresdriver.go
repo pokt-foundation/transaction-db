@@ -109,3 +109,12 @@ func newSQLNullErrorSource(value ErrorSourcesEnum) NullErrorSourcesEnum {
 		Valid:            true,
 	}
 }
+
+func isSpecifiedPqError(errMessage string, err error) bool {
+	pqErr, ok := err.(*pq.Error)
+	if !ok {
+		return false
+	}
+
+	return pqErr.Message == errMessage
+}
