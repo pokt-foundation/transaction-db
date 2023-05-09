@@ -44,7 +44,7 @@ func (ps PocketSession) Validate() error {
 		if !isSet {
 			// shouldBeEmptyField can be empty
 			// bools zero value is false which is a valid value
-			if shouldBeEmptySession[fieldName] || field.Kind() == reflect.Bool {
+			if shouldBeEmptySession[fieldName] {
 				continue
 			}
 
