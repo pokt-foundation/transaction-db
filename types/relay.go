@@ -39,8 +39,7 @@ var (
 	}
 
 	relayOptionalFields = map[string]bool{
-		"RelaySourceURL":      true,
-		"RelayPortalTripTime": true,
+		"RelaySourceURL": true,
 	}
 
 	validErrorSources = map[string]bool{
@@ -67,11 +66,11 @@ type Relay struct {
 	ErrorMessage             string        `json:"errorMessage,omitempty"`
 	ErrorType                string        `json:"errorType,omitempty"`
 	ErrorSource              ErrorSource   `json:"errorSource,omitempty"`
-	RelayRoundtripTime       int           `json:"relayRoundtripTime"`
+	RelayRoundtripTime       float64       `json:"relayRoundtripTime"`
 	RelayChainMethodIDs      []string      `json:"relayChainMethodID"`
 	RelayDataSize            int           `json:"relayDataSize"`
-	RelayPortalTripTime      int           `json:"relayPortalTripTime"`
-	RelayNodeTripTime        int           `json:"relayNodeTripTime"`
+	RelayPortalTripTime      float64       `json:"relayPortalTripTime"`
+	RelayNodeTripTime        float64       `json:"relayNodeTripTime"`
 	RelayURLIsPublicEndpoint bool          `json:"relayUrlIsPublicEndpoint"`
 	PortalRegionName         string        `json:"portalRegionName"`
 	IsAltruistRelay          bool          `json:"isAltruistRelay"`
