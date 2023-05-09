@@ -39,7 +39,8 @@ var (
 	}
 
 	relayOptionalFields = map[string]bool{
-		"RelaySourceURL": true,
+		"RelaySourceURL":      true,
+		"RelayPortalTripTime": true,
 	}
 
 	validErrorSources = map[string]bool{
