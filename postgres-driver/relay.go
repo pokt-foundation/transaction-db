@@ -58,11 +58,11 @@ const insertRelays = `INSERT INTO relay (
 	$14::varchar[],
 	$15::error_sources_enum[],
 	$16::varchar[],
-	$17::integer[],
+	$17::float[],
 	$18::varchar[],
 	$19::integer[],
-	$20::integer[],
-	$21::integer[],
+	$20::float[],
+	$21::float[],
 	$22::boolean[],
 	$23::varchar[],
 	$24::boolean[],
@@ -125,11 +125,11 @@ func (d *PostgresDriver) WriteRelay(ctx context.Context, relay types.Relay) erro
 		ErrorMessage:             newSQLNullString(relay.ErrorMessage),
 		ErrorType:                newSQLNullString(relay.ErrorType),
 		ErrorSource:              newSQLNullErrorSource(ErrorSourcesEnum(relay.ErrorSource)),
-		RelayRoundtripTime:       int32(relay.RelayRoundtripTime),
+		RelayRoundtripTime:       relay.RelayRoundtripTime,
 		RelayChainMethodIds:      strings.Join(relay.RelayChainMethodIDs, chainMethodIDSeparator),
 		RelayDataSize:            int32(relay.RelayDataSize),
-		RelayPortalTripTime:      int32(relay.RelayPortalTripTime),
-		RelayNodeTripTime:        int32(relay.RelayNodeTripTime),
+		RelayPortalTripTime:      relay.RelayPortalTripTime,
+		RelayNodeTripTime:        relay.RelayNodeTripTime,
 		RelayUrlIsPublicEndpoint: relay.RelayURLIsPublicEndpoint,
 		PortalRegionName:         relay.PortalRegionName,
 		IsAltruistRelay:          relay.IsAltruistRelay,
@@ -161,11 +161,11 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		errorMessages             []sql.NullString
 		errorTypes                []sql.NullString
 		errorSources              []NullErrorSourcesEnum
-		relayRoundtripTimes       []int32
+		relayRoundtripTimes       []float64
 		relayChainMethodIDs       []string
 		relayDataSizes            []int32
-		relayPortalTripTimes      []int32
-		relayNodeTripTimes        []int32
+		relayPortalTripTimes      []float64
+		relayNodeTripTimes        []float64
 		relayURLIsPublicEndpoints []bool
 		portalRegionNames         []string
 		isAltruistRelays          []bool
@@ -193,11 +193,11 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		errorMessages = append(errorMessages, newSQLNullString(relay.ErrorMessage))
 		errorTypes = append(errorTypes, newSQLNullString(relay.ErrorType))
 		errorSources = append(errorSources, newSQLNullErrorSource(ErrorSourcesEnum(relay.ErrorSource)))
-		relayRoundtripTimes = append(relayRoundtripTimes, int32(relay.RelayRoundtripTime))
+		relayRoundtripTimes = append(relayRoundtripTimes, relay.RelayRoundtripTime)
 		relayChainMethodIDs = append(relayChainMethodIDs, strings.Join(relay.RelayChainMethodIDs, chainMethodIDSeparator))
 		relayDataSizes = append(relayDataSizes, int32(relay.RelayDataSize))
-		relayPortalTripTimes = append(relayPortalTripTimes, int32(relay.RelayPortalTripTime))
-		relayNodeTripTimes = append(relayNodeTripTimes, int32(relay.RelayNodeTripTime))
+		relayPortalTripTimes = append(relayPortalTripTimes, relay.RelayPortalTripTime)
+		relayNodeTripTimes = append(relayNodeTripTimes, relay.RelayNodeTripTime)
 		relayURLIsPublicEndpoints = append(relayURLIsPublicEndpoints, relay.RelayURLIsPublicEndpoint)
 		portalRegionNames = append(portalRegionNames, relay.PortalRegionName)
 		isAltruistRelays = append(isAltruistRelays, relay.IsAltruistRelay)
@@ -224,11 +224,11 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		pq.Array(errorMessages),
 		pq.Array(errorSources),
 		pq.Array(errorTypes),
-		pq.Int32Array(relayRoundtripTimes),
+		pq.Float64Array(relayRoundtripTimes),
 		pq.StringArray(relayChainMethodIDs),
 		pq.Int32Array(relayDataSizes),
-		pq.Int32Array(relayPortalTripTimes),
-		pq.Int32Array(relayNodeTripTimes),
+		pq.Float64Array(relayPortalTripTimes),
+		pq.Float64Array(relayNodeTripTimes),
 		pq.BoolArray(relayURLIsPublicEndpoints),
 		pq.StringArray(portalRegionNames),
 		pq.BoolArray(isAltruistRelays),
@@ -268,11 +268,11 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID int) (types.Rela
 		ErrorMessage:             relay.ErrorMessage.String,
 		ErrorType:                relay.ErrorType.String,
 		ErrorSource:              types.ErrorSource(relay.ErrorSource.ErrorSourcesEnum),
-		RelayRoundtripTime:       int(relay.RelayRoundtripTime),
+		RelayRoundtripTime:       relay.RelayRoundtripTime,
 		RelayChainMethodIDs:      strings.Split(relay.RelayChainMethodIds, ","),
 		RelayDataSize:            int(relay.RelayDataSize),
-		RelayPortalTripTime:      int(relay.RelayPortalTripTime),
-		RelayNodeTripTime:        int(relay.RelayNodeTripTime),
+		RelayPortalTripTime:      relay.RelayPortalTripTime,
+		RelayNodeTripTime:        relay.RelayNodeTripTime,
 		RelayURLIsPublicEndpoint: relay.RelayUrlIsPublicEndpoint,
 		PortalRegionName:         relay.PortalRegionName,
 		IsAltruistRelay:          relay.IsAltruistRelay,

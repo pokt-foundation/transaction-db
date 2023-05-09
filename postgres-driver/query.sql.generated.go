@@ -98,11 +98,11 @@ type InsertRelayParams struct {
 	ErrorMessage             sql.NullString       `json:"errorMessage"`
 	ErrorSource              NullErrorSourcesEnum `json:"errorSource"`
 	ErrorType                sql.NullString       `json:"errorType"`
-	RelayRoundtripTime       int32                `json:"relayRoundtripTime"`
+	RelayRoundtripTime       float64              `json:"relayRoundtripTime"`
 	RelayChainMethodIds      string               `json:"relayChainMethodIds"`
 	RelayDataSize            int32                `json:"relayDataSize"`
-	RelayPortalTripTime      int32                `json:"relayPortalTripTime"`
-	RelayNodeTripTime        int32                `json:"relayNodeTripTime"`
+	RelayPortalTripTime      float64              `json:"relayPortalTripTime"`
+	RelayNodeTripTime        float64              `json:"relayNodeTripTime"`
 	RelayUrlIsPublicEndpoint bool                 `json:"relayUrlIsPublicEndpoint"`
 	PortalRegionName         string               `json:"portalRegionName"`
 	IsAltruistRelay          bool                 `json:"isAltruistRelay"`
@@ -241,11 +241,11 @@ type SelectRelayRow struct {
 	ErrorMessage             sql.NullString       `json:"errorMessage"`
 	ErrorSource              NullErrorSourcesEnum `json:"errorSource"`
 	ErrorType                sql.NullString       `json:"errorType"`
-	RelayRoundtripTime       int32                `json:"relayRoundtripTime"`
+	RelayRoundtripTime       float64              `json:"relayRoundtripTime"`
 	RelayChainMethodIds      string               `json:"relayChainMethodIds"`
 	RelayDataSize            int32                `json:"relayDataSize"`
-	RelayPortalTripTime      int32                `json:"relayPortalTripTime"`
-	RelayNodeTripTime        int32                `json:"relayNodeTripTime"`
+	RelayPortalTripTime      float64              `json:"relayPortalTripTime"`
+	RelayNodeTripTime        float64              `json:"relayNodeTripTime"`
 	RelayUrlIsPublicEndpoint bool                 `json:"relayUrlIsPublicEndpoint"`
 	IsAltruistRelay          bool                 `json:"isAltruistRelay"`
 	IsUserRelay              bool                 `json:"isUserRelay"`
