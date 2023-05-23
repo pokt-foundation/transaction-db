@@ -55,8 +55,6 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				RelayStartDatetime:       time.Now(),
 				RelayReturnDatetime:      time.Now(),
 				RelayRoundtripTime:       1,
-				RelayChainMethodIDs:      []string{"get_height"},
-				RelayDataSize:            21,
 				RelayPortalTripTime:      21,
 				RelayNodeTripTime:        21,
 				RelayURLIsPublicEndpoint: false,
