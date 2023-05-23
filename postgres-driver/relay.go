@@ -38,6 +38,7 @@ const insertRelays = `INSERT INTO relay (
 	is_user_relay,
 	request_id,
 	pokt_tx_id,
+	gigastake_app_id,
 	created_at,
 	updated_at
   )
@@ -69,8 +70,9 @@ const insertRelays = `INSERT INTO relay (
 	$25::boolean[],
 	$26::varchar[],
 	$27::varchar[],
-	$28::timestamp[],
-	$29::timestamp[]
+	$28::varchar[],
+	$29::timestamp[],
+	$30::timestamp[]
   ) AS t(
 	pokt_chain_id,
 	endpoint_id,
@@ -99,6 +101,7 @@ const insertRelays = `INSERT INTO relay (
 	is_user_relay,
 	request_id,
 	pokt_tx_id,
+	gigastake_app_id,
 	created_at,
 	updated_at
   )`
@@ -136,6 +139,7 @@ func (d *PostgresDriver) WriteRelay(ctx context.Context, relay types.Relay) erro
 		RequestID:                relay.RequestID,
 		PoktTxID:                 newSQLNullString(relay.PoktTxID),
 		IsUserRelay:              relay.IsUserRelay,
+		GigastakeAppID:           newSQLNullString(relay.GigastakeAppID),
 		CreatedAt:                now,
 		UpdatedAt:                now,
 	})
@@ -172,6 +176,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		isUserRelays              []bool
 		requestIDs                []string
 		poktTxIDs                 []sql.NullString
+		gigastakeAppIDs           []sql.NullString
 		createdTimes              []time.Time
 		updatedTimes              []time.Time
 	)
@@ -204,6 +209,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		isUserRelays = append(isUserRelays, relay.IsUserRelay)
 		requestIDs = append(requestIDs, relay.RequestID)
 		poktTxIDs = append(poktTxIDs, newSQLNullString(relay.PoktTxID))
+		gigastakeAppIDs = append(gigastakeAppIDs, newSQLNullString(relay.GigastakeAppID))
 		createdTimes = append(createdTimes, now)
 		updatedTimes = append(updatedTimes, now)
 	}
@@ -235,6 +241,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) 
 		pq.BoolArray(isUserRelays),
 		pq.StringArray(requestIDs),
 		pq.Array(poktTxIDs),
+		pq.Array(gigastakeAppIDs),
 		pq.Array(createdTimes),
 		pq.Array(updatedTimes))
 	if err != nil {
@@ -279,6 +286,7 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID int) (types.Rela
 		RequestID:                relay.RequestID,
 		IsUserRelay:              relay.IsUserRelay,
 		PoktTxID:                 relay.PoktTxID.String,
+		GigastakeAppID:           relay.GigastakeAppID.String,
 		CreatedAt:                relay.CreatedAt,
 		UpdatedAt:                relay.UpdatedAt,
 		Session: types.PocketSession{

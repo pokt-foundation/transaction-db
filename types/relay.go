@@ -24,8 +24,6 @@ var (
 	}
 
 	shouldBeEmptyAltruist = map[string]bool{
-		"PoktNodeAddress":   true,
-		"PoktNodeDomain":    true,
 		"PoktNodePublicKey": true,
 		"PoktTxID":          true,
 	}
@@ -39,7 +37,10 @@ var (
 	}
 
 	relayOptionalFields = map[string]bool{
-		"RelaySourceURL": true,
+		"RelaySourceURL":  true,
+		"PoktNodeAddress": true,
+		"PoktNodeDomain":  true,
+		"GigastakeAppID":  true,
 	}
 
 	validErrorSources = map[string]bool{
@@ -77,6 +78,7 @@ type Relay struct {
 	IsUserRelay              bool          `json:"isUserRelay"`
 	RequestID                string        `json:"requestID"`
 	PoktTxID                 string        `json:"poktTxID"`
+	GigastakeAppID           string        `json:"gigastakeAppID"`
 	Session                  PocketSession `json:"session"`
 	Region                   PortalRegion  `json:"region"`
 	CreatedAt                time.Time     `json:"createdAt"`

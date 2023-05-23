@@ -44,6 +44,7 @@ CREATE  TABLE relay (
 	is_user_relay 		boolean NOT NULL ,
 	request_id			varchar   NOT NULL  ,
 	pokt_tx_id 			varchar ,
+	gigastake_app_id	varchar ,
 	created_at			 timestamp     NOT NULL  ,
 	updated_at			 timestamp     NOT NULL  ,
 	CONSTRAINT pk_relay PRIMARY KEY ( id , portal_region_name )
