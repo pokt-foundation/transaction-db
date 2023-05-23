@@ -37,10 +37,12 @@ var (
 	}
 
 	relayOptionalFields = map[string]bool{
-		"RelaySourceURL":  true,
-		"PoktNodeAddress": true,
-		"PoktNodeDomain":  true,
-		"GigastakeAppID":  true,
+		"RelaySourceURL":      true,
+		"PoktNodeAddress":     true,
+		"PoktNodeDomain":      true,
+		"GigastakeAppID":      true,
+		"RelayChainMethodIDs": true,
+		"RelayDataSize":       true,
 	}
 
 	validErrorSources = map[string]bool{
