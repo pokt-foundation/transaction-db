@@ -40,6 +40,7 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				IsUserRelay:              false,
 				RequestID:                "21",
 				PoktTxID:                 "21",
+				GigastakeAppID:           "21",
 			},
 			err: nil,
 		},
@@ -50,8 +51,6 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				EndpointID:               "21",
 				SessionKey:               "21",
 				ProtocolAppPublicKey:     "21",
-				PoktNodeAddress:          "21",
-				PoktNodeDomain:           "pablos.com",
 				PoktNodePublicKey:        "aaa",
 				RelayStartDatetime:       time.Now(),
 				RelayReturnDatetime:      time.Now(),
@@ -302,7 +301,7 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				RequestID:                "21",
 				PoktTxID:                 "21",
 			},
-			err: errors.New("PoktNodeAddress should not be set"),
+			err: errors.New("PoktNodePublicKey should not be set"),
 		},
 	}
 

@@ -95,6 +95,7 @@ type Relay struct {
 	IsUserRelay              bool                 `json:"isUserRelay"`
 	RequestID                string               `json:"requestID"`
 	PoktTxID                 sql.NullString       `json:"poktTxID"`
+	GigastakeAppID           sql.NullString       `json:"gigastakeAppID"`
 	CreatedAt                time.Time            `json:"createdAt"`
 	UpdatedAt                time.Time            `json:"updatedAt"`
 }
