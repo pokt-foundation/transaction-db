@@ -23,9 +23,10 @@ var (
 		"UpdatedAt": true,
 	}
 
+	// TODO: add fields here after discussion
 	shouldBeEmptyAltruist = map[string]bool{
-		"PoktNodePublicKey": true,
-		"PoktTxID":          true,
+		// "PoktNodePublicKey": true,
+		// "PoktTxID":          true,
 	}
 
 	relayErrorField = map[string]bool{
@@ -43,6 +44,8 @@ var (
 		"GigastakeAppID":      true,
 		"RelayChainMethodIDs": true,
 		"RelayDataSize":       true,
+		"PoktNodePublicKey":   true,
+		"PoktTxID":            true,
 	}
 
 	validErrorSources = map[string]bool{

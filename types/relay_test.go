@@ -274,33 +274,6 @@ func TestRelay_ValidateStruct(t *testing.T) {
 			},
 			err: nil,
 		},
-		{
-			name: "Failure altruist relay",
-			relay: Relay{
-				PoktChainID:              "21",
-				EndpointID:               "21",
-				SessionKey:               "21",
-				ProtocolAppPublicKey:     "21",
-				RelaySourceURL:           "pablo.com",
-				PoktNodeAddress:          "21",
-				PoktNodeDomain:           "pablos.com",
-				PoktNodePublicKey:        "aaa",
-				RelayStartDatetime:       time.Now(),
-				RelayReturnDatetime:      time.Now(),
-				RelayRoundtripTime:       1,
-				RelayChainMethodIDs:      []string{"get_height"},
-				RelayDataSize:            21,
-				RelayPortalTripTime:      21,
-				RelayNodeTripTime:        21,
-				RelayURLIsPublicEndpoint: false,
-				PortalRegionName:         "La Colombia",
-				IsAltruistRelay:          true,
-				IsUserRelay:              false,
-				RequestID:                "21",
-				PoktTxID:                 "21",
-			},
-			err: errors.New("PoktNodePublicKey should not be set"),
-		},
 	}
 
 	for _, tt := range tests {
