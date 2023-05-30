@@ -121,11 +121,14 @@ func (r Relay) Validate() (err error) {
 			// shouldBeEmptyField can be empty
 			// bools zero value is false which is a valid value
 			// error fields can be empty if it is an error relay
+			// optional fields can or cannot be set
+			// if the relay is an error we should just validate the error fields
 			if shouldBeEmptyRelayField[fieldName] ||
 				field.Kind() == reflect.Bool ||
 				(!r.IsError && relayErrorField[fieldName]) ||
 				(r.IsAltruistRelay && shouldBeEmptyAltruist[fieldName]) ||
-				relayOptionalFields[fieldName] {
+				relayOptionalFields[fieldName] ||
+				(r.IsError && !relayErrorField[fieldName]) {
 				continue
 			}
 
