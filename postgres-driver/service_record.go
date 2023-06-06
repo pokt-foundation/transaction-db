@@ -88,7 +88,7 @@ func (d *PostgresDriver) WriteServiceRecord(ctx context.Context, serviceRecord t
 	})
 }
 
-func (d *PostgresDriver) WriteServiceRecords(ctx context.Context, serviceRecords []types.ServiceRecord) error {
+func (d *PostgresDriver) WriteServiceRecords(ctx context.Context, serviceRecords []*types.ServiceRecord) error {
 	now := time.Now()
 
 	var (

@@ -40,9 +40,9 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteServiceRecord() {
 }
 
 func (ts *PGDriverTestSuite) TestPostgresDriver_WriteServiceRecords() {
-	var serviceRecords []types.ServiceRecord
+	var serviceRecords []*types.ServiceRecord
 	for i := 0; i < 1000; i++ {
-		serviceRecords = append(serviceRecords, types.ServiceRecord{
+		serviceRecords = append(serviceRecords, &types.ServiceRecord{
 			NodePublicKey:          "21",
 			PoktChainID:            "21",
 			SessionKey:             ts.firstServiceRecord.SessionKey,
@@ -63,7 +63,7 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteServiceRecords() {
 
 	tests := []struct {
 		name           string
-		serviceRecords []types.ServiceRecord
+		serviceRecords []*types.ServiceRecord
 		err            error
 	}{
 		{
