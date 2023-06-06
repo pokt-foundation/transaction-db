@@ -23,8 +23,8 @@ type PocketSession struct {
 }
 
 func (ps *PocketSession) Validate() error {
-	structType := reflect.TypeOf(ps)
-	structVal := reflect.ValueOf(ps)
+	structType := reflect.TypeOf(*ps)
+	structVal := reflect.ValueOf(*ps)
 	fieldNum := structVal.NumField()
 
 	// fields are in the order they are declared on the struct

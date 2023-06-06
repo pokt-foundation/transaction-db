@@ -91,8 +91,8 @@ type Relay struct {
 }
 
 func (r *Relay) Validate() (err error) {
-	structType := reflect.TypeOf(r)
-	structVal := reflect.ValueOf(r)
+	structType := reflect.TypeOf(*r)
+	structVal := reflect.ValueOf(*r)
 	fieldNum := structVal.NumField()
 
 	// fields are in the order they are declared on the struct

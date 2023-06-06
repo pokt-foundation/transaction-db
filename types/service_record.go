@@ -44,8 +44,8 @@ type ServiceRecord struct {
 }
 
 func (sr *ServiceRecord) Validate() (err error) {
-	structType := reflect.TypeOf(sr)
-	structVal := reflect.ValueOf(sr)
+	structType := reflect.TypeOf(*sr)
+	structVal := reflect.ValueOf(*sr)
 	fieldNum := structVal.NumField()
 
 	// fields are in the order they are declared on the struct
