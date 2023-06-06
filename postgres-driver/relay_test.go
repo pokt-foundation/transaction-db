@@ -59,9 +59,9 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteRelay() {
 }
 
 func (ts *PGDriverTestSuite) TestPostgresDriver_WriteRelays() {
-	var relays []types.Relay
+	var relays []*types.Relay
 	for i := 0; i < 1000; i++ {
-		relays = append(relays, types.Relay{
+		relays = append(relays, &types.Relay{
 			PoktChainID:              "21",
 			EndpointID:               "21",
 			SessionKey:               ts.firstRelay.SessionKey,
@@ -93,7 +93,7 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteRelays() {
 
 	tests := []struct {
 		name   string
-		relays []types.Relay
+		relays []*types.Relay
 		err    error
 	}{
 		{

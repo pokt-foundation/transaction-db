@@ -145,7 +145,7 @@ func (d *PostgresDriver) WriteRelay(ctx context.Context, relay types.Relay) erro
 	})
 }
 
-func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []types.Relay) error {
+func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []*types.Relay) error {
 	now := time.Now()
 
 	var (
