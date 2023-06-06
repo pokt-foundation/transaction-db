@@ -43,9 +43,9 @@ type ServiceRecord struct {
 	UpdatedAt              time.Time `json:"updatedAt"`
 }
 
-func (sr ServiceRecord) Validate() (err error) {
-	structType := reflect.TypeOf(sr)
-	structVal := reflect.ValueOf(sr)
+func (sr *ServiceRecord) Validate() (err error) {
+	structType := reflect.TypeOf(*sr)
+	structVal := reflect.ValueOf(*sr)
 	fieldNum := structVal.NumField()
 
 	// fields are in the order they are declared on the struct
