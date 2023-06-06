@@ -22,7 +22,7 @@ type PocketSession struct {
 	UpdatedAt        time.Time `json:"updatedAt"`
 }
 
-func (ps PocketSession) Validate() error {
+func (ps *PocketSession) Validate() error {
 	structType := reflect.TypeOf(ps)
 	structVal := reflect.ValueOf(ps)
 	fieldNum := structVal.NumField()

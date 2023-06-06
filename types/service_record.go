@@ -43,7 +43,7 @@ type ServiceRecord struct {
 	UpdatedAt              time.Time `json:"updatedAt"`
 }
 
-func (sr ServiceRecord) Validate() (err error) {
+func (sr *ServiceRecord) Validate() (err error) {
 	structType := reflect.TypeOf(sr)
 	structVal := reflect.ValueOf(sr)
 	fieldNum := structVal.NumField()

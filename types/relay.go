@@ -90,7 +90,7 @@ type Relay struct {
 	UpdatedAt                time.Time     `json:"updatedAt"`
 }
 
-func (r Relay) Validate() (err error) {
+func (r *Relay) Validate() (err error) {
 	structType := reflect.TypeOf(r)
 	structVal := reflect.ValueOf(r)
 	fieldNum := structVal.NumField()
