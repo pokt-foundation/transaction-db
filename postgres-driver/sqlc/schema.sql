@@ -96,6 +96,7 @@ VALUES ('europe-west3'),
 	   ('northamerica-northeast2'),
 	   ('asia-east2'),
 	   ('asia-northeast1'),
+	   ('asia-northeast3'),
 	   ('asia-south1'),
 	   ('asia-southeast1'),
 	   ('australia-southeast1');
