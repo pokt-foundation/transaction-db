@@ -22,9 +22,9 @@ type PocketSession struct {
 	UpdatedAt        time.Time `json:"updatedAt"`
 }
 
-func (ps PocketSession) Validate() error {
-	structType := reflect.TypeOf(ps)
-	structVal := reflect.ValueOf(ps)
+func (ps *PocketSession) Validate() error {
+	structType := reflect.TypeOf(*ps)
+	structVal := reflect.ValueOf(*ps)
 	fieldNum := structVal.NumField()
 
 	// fields are in the order they are declared on the struct
