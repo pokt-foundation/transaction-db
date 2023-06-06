@@ -69,6 +69,19 @@ func TestRelay_ValidateStruct(t *testing.T) {
 		{
 			name: "Success error relay",
 			relay: Relay{
+				IsError:          true,
+				ErrorCode:        21,
+				ErrorName:        "favorite number",
+				ErrorMessage:     "just Pablo can use it",
+				ErrorType:        "chain_check",
+				ErrorSource:      "internal",
+				PortalRegionName: "La Colombia",
+			},
+			err: nil,
+		},
+		{
+			name: "Failure error relay",
+			relay: Relay{
 				IsError:      true,
 				ErrorCode:    21,
 				ErrorName:    "favorite number",
@@ -76,7 +89,7 @@ func TestRelay_ValidateStruct(t *testing.T) {
 				ErrorType:    "chain_check",
 				ErrorSource:  "internal",
 			},
-			err: nil,
+			err: errors.New("PortalRegionName is not set"),
 		},
 		{
 			name: "Failure no erro relay with error fields",

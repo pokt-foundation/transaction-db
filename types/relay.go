@@ -48,6 +48,10 @@ var (
 		"PoktTxID":            true,
 	}
 
+	relayMandatoryFields = map[string]bool{
+		"PortalRegionName": true,
+	}
+
 	validErrorSources = map[string]bool{
 		string(ErrorSourceExternal): true,
 		string(ErrorSourceInternal): true,
@@ -118,6 +122,11 @@ func (r *Relay) Validate() (err error) {
 		}
 
 		if !isSet {
+			// these fields should always be set no matter the special case
+			if relayMandatoryFields[fieldName] {
+				return fmt.Errorf("%s is not set", fieldName)
+			}
+
 			// shouldBeEmptyField can be empty
 			// bools zero value is false which is a valid value
 			// error fields can be empty if it is an error relay

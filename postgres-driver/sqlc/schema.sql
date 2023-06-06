@@ -99,3 +99,8 @@ VALUES ('europe-west3'),
 	   ('asia-south1'),
 	   ('asia-southeast1'),
 	   ('australia-southeast1');
+
+INSERT INTO pocket_session
+(session_key, session_height, portal_region_name, created_at, updated_at)
+VALUES
+('', 1, 'europe-west3', TIMESTAMP '1970-01-01 00:00:00', TIMESTAMP '1970-01-01 00:00:00');
