@@ -1,6 +1,7 @@
 package types
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"time"
@@ -12,6 +13,8 @@ var (
 		"CreatedAt": true,
 		"UpdatedAt": true,
 	}
+
+	ErrRepeatedSessionKey = errors.New("repeated session key")
 )
 
 type PocketSession struct {

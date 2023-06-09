@@ -2,7 +2,6 @@ package postgresdriver
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"github.com/pokt-foundation/transaction-db/types"
@@ -10,10 +9,6 @@ import (
 
 const (
 	errMessageDuplicateSessionKey = `duplicate key value violates unique constraint "pocket_session_session_key_key"`
-)
-
-var (
-	ErrRepeatedSessionKey = errors.New("repeated session key")
 )
 
 func (d *PostgresDriver) WriteSession(ctx context.Context, session types.PocketSession) error {
@@ -28,7 +23,7 @@ func (d *PostgresDriver) WriteSession(ctx context.Context, session types.PocketS
 	})
 	if err != nil {
 		if isSpecifiedPqError(errMessageDuplicateSessionKey, err) {
-			return ErrRepeatedSessionKey
+			return types.ErrRepeatedSessionKey
 		}
 
 		return err
