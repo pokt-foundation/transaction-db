@@ -3,6 +3,7 @@ package postgresdriver
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"strings"
 	"time"
 
@@ -145,7 +146,51 @@ func (d *PostgresDriver) WriteRelay(ctx context.Context, relay types.Relay) erro
 	})
 }
 
+func printRelayInfo(relay *types.Relay) {
+	fmt.Println("panic RelayID: ", relay.RelayID)
+	fmt.Println("panic PoktChainID: ", relay.PoktChainID)
+	fmt.Println("panic EndpointID: ", relay.EndpointID)
+	fmt.Println("panic SessionKey: ", relay.SessionKey)
+	fmt.Println("panic ProtocolAppPublicKey: ", relay.ProtocolAppPublicKey)
+	fmt.Println("panic RelaySourceURL: ", relay.RelaySourceURL)
+	fmt.Println("panic PoktNodeAddress: ", relay.PoktNodeAddress)
+	fmt.Println("panic PoktNodeDomain: ", relay.PoktNodeDomain)
+	fmt.Println("panic PoktNodePublicKey: ", relay.PoktNodePublicKey)
+	fmt.Println("panic RelayStartDatetime: ", relay.RelayStartDatetime)
+	fmt.Println("panic RelayReturnDatetime: ", relay.RelayReturnDatetime)
+	fmt.Println("panic IsError: ", relay.IsError)
+	fmt.Println("panic ErrorCode: ", relay.ErrorCode)
+	fmt.Println("panic ErrorName: ", relay.ErrorName)
+	fmt.Println("panic ErrorMessage: ", relay.ErrorMessage)
+	fmt.Println("panic ErrorType: ", relay.ErrorType)
+	fmt.Println("panic ErrorSource: ", relay.ErrorSource)
+	fmt.Println("panic RelayRoundtripTime: ", relay.RelayRoundtripTime)
+	fmt.Println("panic RelayChainMethodIDs: ", relay.RelayChainMethodIDs)
+	fmt.Println("panic RelayDataSize: ", relay.RelayDataSize)
+	fmt.Println("panic RelayPortalTripTime: ", relay.RelayPortalTripTime)
+	fmt.Println("panic RelayNodeTripTime: ", relay.RelayNodeTripTime)
+	fmt.Println("panic RelayURLIsPublicEndpoint: ", relay.RelayURLIsPublicEndpoint)
+	fmt.Println("panic PortalRegionName: ", relay.PortalRegionName)
+	fmt.Println("panic IsAltruistRelay: ", relay.IsAltruistRelay)
+	fmt.Println("panic IsUserRelay: ", relay.IsUserRelay)
+	fmt.Println("panic RequestID: ", relay.RequestID)
+	fmt.Println("panic PoktTxID: ", relay.PoktTxID)
+	fmt.Println("panic GigastakeAppID: ", relay.GigastakeAppID)
+	fmt.Println("panic CreatedAt: ", relay.CreatedAt)
+	fmt.Println("panic UpdatedAt: ", relay.UpdatedAt)
+}
+
 func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []*types.Relay) error {
+	defer func() {
+		if r := recover(); r != nil {
+			for _, relay := range relays {
+				if relay != nil {
+					printRelayInfo(relay)
+				}
+			}
+		}
+	}()
+
 	now := time.Now()
 
 	var (
