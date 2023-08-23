@@ -46,6 +46,7 @@ var (
 		"RelayDataSize":       true,
 		"PoktNodePublicKey":   true,
 		"PoktTxID":            true,
+		"EndpointID":          true,
 	}
 
 	relayMandatoryFields = map[string]bool{

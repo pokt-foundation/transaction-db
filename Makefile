@@ -1,15 +1,28 @@
+SHELL := /bin/bash
+
 make: gen_sql
 
 gen_sql:
 	sqlc generate -f ./postgres-driver/sqlc/sqlc.yaml
-test_driver: test_env_up run_driver_tests test_env_down
+
+test: test_env_up run_driver_tests test_env_down
+
 test_env_up:
-	docker-compose -f ./docker-compose.test.yml up -d --remove-orphans --build;
-	sleep 2;
+	@echo "🧪 Starting up Transation DB test database ..."
+	@docker-compose -f ./testdata/docker-compose.test.yml up -d --remove-orphans --build
+	@echo "⏳ Waiting for test DB to be ready ..."
+	@attempts=0; while ! pg_isready -h localhost -p 5432 -U postgres -d postgres >/dev/null && [[ $$attempts -lt 5 ]]; do sleep 1; attempts=$$(($$attempts + 1)); done
+	@[[ $$attempts -lt 5 ]] && echo "🐘 Test Transation DB is up ..." || (echo "❌ Test Transation DB failed to start" && make test_env_down >/dev/null && exit 1)
+	@echo "🚀 Test environment is up ..."
 test_env_down:
-	docker-compose -f ./docker-compose.test.yml down --remove-orphans -v
+	@echo "🧪 Shutting down Pocket HTTP DB test environment ..."
+	@docker-compose -f ./testdata/docker-compose.test.yml down --remove-orphans >/dev/null
+	@echo "✅ Test environment is down."
+
 run_driver_tests:
-	-go test ./... -run Test_RunPGDriverSuite -count=1 -v;
+	go test ./... -run Test_RunPGDriverSuite -count=1 || true
+run_driver_tests_ci:
+	go test ./... -run Test_RunPGDriverSuite -count=1
 
 init-pre-commit:
 	wget https://github.com/pre-commit/pre-commit/releases/download/v2.20.0/pre-commit-2.20.0.pyz
