@@ -43,4 +43,4 @@ jobs:
         run: make test_env_up
 
       - name: Run Unit tests
-        run: go test ./...
+        run: make run_driver_tests_ci
