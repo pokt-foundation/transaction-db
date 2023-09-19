@@ -96,56 +96,6 @@ type Relay struct {
 }
 
 func (r *Relay) Validate() (err error) {
-	structType := reflect.TypeOf(*r)
-	structVal := reflect.ValueOf(*r)
-	fieldNum := structVal.NumField()
-
-	// fields are in the order they are declared on the struct
-	for i := 0; i < fieldNum; i++ {
-		field := structVal.Field(i)
-		fieldName := structType.Field(i).Name
-
-		isSet := field.IsValid() && !field.IsZero()
-
-		if isSet {
-			// shouldBeEmptyFields should never be set
-			// error fields shoould just be set if is an error relay
-			if shouldBeEmptyRelayField[fieldName] ||
-				(!r.IsError && relayErrorField[fieldName]) ||
-				(r.IsAltruistRelay && shouldBeEmptyAltruist[fieldName]) {
-				return fmt.Errorf("%s should not be set", fieldName)
-			}
-
-			// errorSource field just has some valid error sources
-			if fieldName == "ErrorSource" && !validErrorSources[field.String()] {
-				return fmt.Errorf("%s is not valid", fieldName)
-			}
-		}
-
-		if !isSet {
-			// these fields should always be set no matter the special case
-			if relayMandatoryFields[fieldName] {
-				return fmt.Errorf("%s is not set", fieldName)
-			}
-
-			// shouldBeEmptyField can be empty
-			// bools zero value is false which is a valid value
-			// error fields can be empty if it is an error relay
-			// optional fields can or cannot be set
-			// if the relay is an error we should just validate the error fields
-			if shouldBeEmptyRelayField[fieldName] ||
-				field.Kind() == reflect.Bool ||
-				(!r.IsError && relayErrorField[fieldName]) ||
-				(r.IsAltruistRelay && shouldBeEmptyAltruist[fieldName]) ||
-				relayOptionalFields[fieldName] ||
-				(r.IsError && !relayErrorField[fieldName]) {
-				continue
-			}
-
-			// if is not set and the field is none of the special cases it is an error
-			return fmt.Errorf("%s is not set", fieldName)
-		}
-	}
-
+	// TODO: remove all calls to Validate from client side. Missing fields should be logged as warning, and fixed in the portal or txdb-reporter.
 	return nil
 }
