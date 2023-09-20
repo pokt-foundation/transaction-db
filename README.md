@@ -1,5 +1,5 @@
 <div align="center">
-    <img src=".github/banner.png" alt="Pocket Network logo" width="600"/>
+    <img src=".github/grove_logo.png" alt="Grove logo" width="600"/>
     <!-- TODO Rename header -->
     <h1>Transaction DB</h1>
     <big>Driver implementation for the Transaction Database</big>
