@@ -11,52 +11,7 @@ const (
 	ErrorSourceExternal ErrorSource = "external"
 )
 
-var (
-	// this fields shpould be empty because they are set after db record is created
-	shouldBeEmptyRelayField = map[string]bool{
-		"RelayID":   true,
-		"Session":   true,
-		"Region":    true,
-		"CreatedAt": true,
-		"UpdatedAt": true,
-	}
-
-	// TODO: add fields here after discussion
-	shouldBeEmptyAltruist = map[string]bool{
-		// "PoktNodePublicKey": true,
-		// "PoktTxID":          true,
-	}
-
-	relayErrorField = map[string]bool{
-		"ErrorCode":    true,
-		"ErrorName":    true,
-		"ErrorMessage": true,
-		"ErrorType":    true,
-		"ErrorSource":  true,
-	}
-
-	relayOptionalFields = map[string]bool{
-		"RelaySourceURL":      true,
-		"PoktNodeAddress":     true,
-		"PoktNodeDomain":      true,
-		"GigastakeAppID":      true,
-		"RelayChainMethodIDs": true,
-		"RelayDataSize":       true,
-		"PoktNodePublicKey":   true,
-		"PoktTxID":            true,
-		"EndpointID":          true,
-	}
-
-	relayMandatoryFields = map[string]bool{
-		"PortalRegionName": true,
-	}
-
-	validErrorSources = map[string]bool{
-		string(ErrorSourceExternal): true,
-		string(ErrorSourceInternal): true,
-	}
-)
-
+// TODO: consider removing this type and use portal types instead
 type Relay struct {
 	RelayID                  int           `json:"relayID"`
 	PoktChainID              string        `json:"poktChainID"`
