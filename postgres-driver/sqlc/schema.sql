@@ -47,6 +47,7 @@ CREATE  TABLE relay (
 	gigastake_app_id	varchar ,
 	created_at			 timestamp     NOT NULL  ,
 	updated_at			 timestamp     NOT NULL  ,
+	blocking_plugin         varchar ,
 	CONSTRAINT pk_relay PRIMARY KEY ( id , portal_region_name )
  );
 

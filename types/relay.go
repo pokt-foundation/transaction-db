@@ -46,6 +46,7 @@ type Relay struct {
 	Region                   PortalRegion  `json:"region"`
 	CreatedAt                time.Time     `json:"createdAt"`
 	UpdatedAt                time.Time     `json:"updatedAt"`
+	BlockingPlugin           string        `json:"blockingPlugin"`
 }
 
 func (r *Relay) Validate() (err error) {
