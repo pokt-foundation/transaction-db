@@ -40,7 +40,8 @@ const insertRelays = `INSERT INTO relay (
 	pokt_tx_id,
 	gigastake_app_id,
 	created_at,
-	updated_at
+	updated_at,
+	blocking_plugin
   )
   SELECT * FROM unnest(
 	$1::char(4)[],
@@ -72,7 +73,8 @@ const insertRelays = `INSERT INTO relay (
 	$27::varchar[],
 	$28::varchar[],
 	$29::timestamp[],
-	$30::timestamp[]
+	$30::timestamp[],
+	$31::varchar[]
   ) AS t(
 	pokt_chain_id,
 	endpoint_id,
@@ -103,7 +105,8 @@ const insertRelays = `INSERT INTO relay (
 	pokt_tx_id,
 	gigastake_app_id,
 	created_at,
-	updated_at
+	updated_at,
+	blocking_plugin
   )`
 
 const chainMethodIDSeparator = ","
@@ -142,6 +145,7 @@ func (d *PostgresDriver) WriteRelay(ctx context.Context, relay types.Relay) erro
 		GigastakeAppID:           newSQLNullString(relay.GigastakeAppID),
 		CreatedAt:                now,
 		UpdatedAt:                now,
+		BlockingPlugin:           newSQLNullString(relay.BlockingPlugin),
 	})
 }
 
@@ -179,6 +183,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []*types.Relay)
 		gigastakeAppIDs           []sql.NullString
 		createdTimes              []time.Time
 		updatedTimes              []time.Time
+		blockingPlugins           []sql.NullString
 	)
 
 	for _, relay := range relays {
@@ -212,6 +217,7 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []*types.Relay)
 		gigastakeAppIDs = append(gigastakeAppIDs, newSQLNullString(relay.GigastakeAppID))
 		createdTimes = append(createdTimes, now)
 		updatedTimes = append(updatedTimes, now)
+		blockingPlugins = append(blockingPlugins, newSQLNullString(relay.BlockingPlugin))
 	}
 
 	_, err := d.db.Exec(insertRelays, pq.StringArray(poktChainIDs),
@@ -243,7 +249,8 @@ func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []*types.Relay)
 		pq.Array(poktTxIDs),
 		pq.Array(gigastakeAppIDs),
 		pq.Array(createdTimes),
-		pq.Array(updatedTimes))
+		pq.Array(updatedTimes),
+		pq.Array(blockingPlugins))
 	if err != nil {
 		return err
 	}
