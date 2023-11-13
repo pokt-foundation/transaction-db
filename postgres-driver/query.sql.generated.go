@@ -12,7 +12,13 @@ import (
 )
 
 const insertPocketSession = `-- name: InsertPocketSession :exec
-INSERT INTO pocket_session (session_key, session_height, portal_region_name, created_at, updated_at)
+INSERT INTO pocket_session (
+    session_key,
+    session_height,
+    portal_region_name,
+    created_at,
+    updated_at
+  )
 VALUES ($1, $2, $3, $4, $5)
 `
 
@@ -47,40 +53,71 @@ func (q *Queries) InsertPortalRegion(ctx context.Context, portalRegionName strin
 
 const insertRelay = `-- name: InsertRelay :exec
 INSERT INTO relay (
-  pokt_chain_id,
-  endpoint_id,
-  session_key,
-  protocol_app_public_key,
-  relay_source_url,
-  pokt_node_address,
-  pokt_node_domain,
-  pokt_node_public_key,
-  relay_start_datetime,
-  relay_return_datetime,
-  is_error,
-  error_code,
-  error_name,
-  error_message,
-  error_source,
-  error_type,
-  relay_roundtrip_time,
-  relay_chain_method_ids,
-  relay_data_size,
-  relay_portal_trip_time,
-  relay_node_trip_time,
-  relay_url_is_public_endpoint,
-  portal_region_name,
-  is_altruist_relay,
-  is_user_relay,
-  request_id,
-  pokt_tx_id,
-  gigastake_app_id,
-  created_at,
-  updated_at,
-  blocking_plugin
-) VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31
-)
+    pokt_chain_id,
+    endpoint_id,
+    session_key,
+    protocol_app_public_key,
+    relay_source_url,
+    pokt_node_address,
+    pokt_node_domain,
+    pokt_node_public_key,
+    relay_start_datetime,
+    relay_return_datetime,
+    is_error,
+    error_code,
+    error_name,
+    error_message,
+    error_source,
+    error_type,
+    relay_roundtrip_time,
+    relay_chain_method_ids,
+    relay_data_size,
+    relay_portal_trip_time,
+    relay_node_trip_time,
+    relay_url_is_public_endpoint,
+    portal_region_name,
+    is_altruist_relay,
+    is_user_relay,
+    request_id,
+    pokt_tx_id,
+    gigastake_app_id,
+    created_at,
+    updated_at,
+    blocking_plugin
+  )
+VALUES (
+    $1,
+    $2,
+    $3,
+    $4,
+    $5,
+    $6,
+    $7,
+    $8,
+    $9,
+    $10,
+    $11,
+    $12,
+    $13,
+    $14,
+    $15,
+    $16,
+    $17,
+    $18,
+    $19,
+    $20,
+    $21,
+    $22,
+    $23,
+    $24,
+    $25,
+    $26,
+    $27,
+    $28,
+    $29,
+    $30,
+    $31
+  )
 `
 
 type InsertRelayParams struct {
@@ -154,31 +191,7 @@ func (q *Queries) InsertRelay(ctx context.Context, arg InsertRelayParams) error 
 	return err
 }
 
-const insertServiceRecord = `-- name: InsertServiceRecord :exec
-INSERT INTO service_record (
-    node_public_key,
-    pokt_chain_id,
-    session_key,
-    request_id,
-    portal_region_name,
-    latency,
-    tickets,
-    result,
-    available,
-    successes,
-    failures,
-    p90_success_latency,
-    median_success_latency,
-    weighted_success_latency,
-    success_rate,
-    created_at,
-    updated_at
-) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17
-)
-`
-
-type InsertServiceRecordParams struct {
+type InsertServiceRecordsParams struct {
 	NodePublicKey          string           `json:"nodePublicKey"`
 	PoktChainID            string           `json:"poktChainId"`
 	SessionKey             string           `json:"sessionKey"`
@@ -198,34 +211,46 @@ type InsertServiceRecordParams struct {
 	UpdatedAt              pgtype.Timestamp `json:"updatedAt"`
 }
 
-func (q *Queries) InsertServiceRecord(ctx context.Context, arg InsertServiceRecordParams) error {
-	_, err := q.db.Exec(ctx, insertServiceRecord,
-		arg.NodePublicKey,
-		arg.PoktChainID,
-		arg.SessionKey,
-		arg.RequestID,
-		arg.PortalRegionName,
-		arg.Latency,
-		arg.Tickets,
-		arg.Result,
-		arg.Available,
-		arg.Successes,
-		arg.Failures,
-		arg.P90SuccessLatency,
-		arg.MedianSuccessLatency,
-		arg.WeightedSuccessLatency,
-		arg.SuccessRate,
-		arg.CreatedAt,
-		arg.UpdatedAt,
-	)
-	return err
-}
-
 const selectRelay = `-- name: SelectRelay :one
-SELECT r.id, r.pokt_chain_id, r.endpoint_id, r.session_key, r.protocol_app_public_key, r.relay_source_url, r.pokt_node_address, r.pokt_node_domain, r.pokt_node_public_key, r.relay_start_datetime, r.relay_return_datetime, r.is_error, r.error_code, r.error_name, r.error_message, r.error_source, r.error_type, r.relay_roundtrip_time, r.relay_chain_method_ids, r.relay_data_size, r.relay_portal_trip_time, r.relay_node_trip_time, r.relay_url_is_public_endpoint, r.is_altruist_relay, r.is_user_relay, r.request_id, r.pokt_tx_id, r.gigastake_app_id, r.created_at, r.updated_at, r.blocking_plugin, ps.session_key, ps.session_height, ps.created_at, ps.updated_at, pr.portal_region_name
+SELECT r.id,
+  r.pokt_chain_id,
+  r.endpoint_id,
+  r.session_key,
+  r.protocol_app_public_key,
+  r.relay_source_url,
+  r.pokt_node_address,
+  r.pokt_node_domain,
+  r.pokt_node_public_key,
+  r.relay_start_datetime,
+  r.relay_return_datetime,
+  r.is_error,
+  r.error_code,
+  r.error_name,
+  r.error_message,
+  r.error_source,
+  r.error_type,
+  r.relay_roundtrip_time,
+  r.relay_chain_method_ids,
+  r.relay_data_size,
+  r.relay_portal_trip_time,
+  r.relay_node_trip_time,
+  r.relay_url_is_public_endpoint,
+  r.is_altruist_relay,
+  r.is_user_relay,
+  r.request_id,
+  r.pokt_tx_id,
+  r.gigastake_app_id,
+  r.created_at,
+  r.updated_at,
+  r.blocking_plugin,
+  ps.session_key,
+  ps.session_height,
+  ps.created_at,
+  ps.updated_at,
+  pr.portal_region_name
 FROM relay r
-	INNER JOIN pocket_session ps ON ps.session_key = r.session_key
-	INNER JOIN portal_region pr ON pr.portal_region_name = r.portal_region_name
+  INNER JOIN pocket_session ps ON ps.session_key = r.session_key
+  INNER JOIN portal_region pr ON pr.portal_region_name = r.portal_region_name
 WHERE r.id = $1
 `
 
@@ -313,7 +338,24 @@ func (q *Queries) SelectRelay(ctx context.Context, id int64) (SelectRelayRow, er
 }
 
 const selectServiceRecord = `-- name: SelectServiceRecord :one
-SELECT id, node_public_key, pokt_chain_id, session_key, request_id, portal_region_name, latency, tickets, result, available, successes, failures, p90_success_latency, median_success_latency, weighted_success_latency, success_rate, created_at, updated_at
+SELECT id,
+  node_public_key,
+  pokt_chain_id,
+  session_key,
+  request_id,
+  portal_region_name,
+  latency,
+  tickets,
+  result,
+  available,
+  successes,
+  failures,
+  p90_success_latency,
+  median_success_latency,
+  weighted_success_latency,
+  success_rate,
+  created_at,
+  updated_at
 FROM service_record
 WHERE id = $1
 `

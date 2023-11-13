@@ -15,21 +15,10 @@ import (
 )
 
 // The PostgresDriver struct satisfies the Driver interface which defines all database driver methods
-type (
-	PostgresDriver struct {
-		*Queries
-		db *pgxpool.Pool
-	}
-
-	CloudSQLConfig struct {
-		DBUser                 string
-		DBPassword             string
-		DBName                 string
-		InstanceConnectionName string
-		PublicIP               string
-		PrivateIP              string
-	}
-)
+type PostgresDriver struct {
+	*Queries
+	db *pgxpool.Pool
+}
 
 /* ---------- Postgres Connection Funcs ---------- */
 

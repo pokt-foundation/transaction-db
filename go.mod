@@ -4,7 +4,6 @@ go 1.20
 
 require (
 	github.com/jackc/pgx/v5 v5.4.3
-	github.com/lib/pq v1.10.9
 	github.com/stretchr/testify v1.8.1
 	google.golang.org/grpc v1.59.0
 )
