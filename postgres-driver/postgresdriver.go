@@ -2,11 +2,14 @@ package postgresdriver
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"net"
 	"time"
 
 	// PQ import is required
 
+	"cloud.google.com/go/cloudsqlconn"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -31,9 +34,67 @@ type (
 	}
 )
 
+var (
+	errCantSetPrivateandPublicIP error = errors.New("cannot set both private and public IP; must set one or the other")
+)
+
 /* ---------- Postgres Connection Funcs ---------- */
 
 /* <--------- PGX Pool Connection ---------> */
+
+/*
+NewCloudSQLPostgresDriver
+- Creates a pool of connections to a Cloud SQL instance using the provided CloudSQLConfig.
+- Uses the Cloud SQL Connector for Go and pgx for the connections.
+- Establishes a dialer with the desired options (like using private IP).
+- For each acquired connection from the pool, custom enum types are registered..
+- It is important to note that this function will return an error if both PublicIP and PrivateIP are provided in the CloudSQLConfig.
+*/
+func NewCloudSQLPostgresDriver(options CloudSQLConfig) (*PostgresDriver, func() error, error) {
+	if options.PublicIP != "" && options.PrivateIP != "" {
+		return nil, nil, errCantSetPrivateandPublicIP
+	}
+
+	dsn := fmt.Sprintf("user=%s password=%s dbname=%s", options.DBUser, options.DBPassword, options.DBName)
+
+	config, err := pgxpool.ParseConfig(dsn)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var opts []cloudsqlconn.Option
+	if options.PublicIP != "" {
+		opts = append(opts, cloudsqlconn.WithDefaultDialOptions(cloudsqlconn.WithPublicIP()))
+	}
+	if options.PrivateIP != "" {
+		opts = append(opts, cloudsqlconn.WithDefaultDialOptions(cloudsqlconn.WithPrivateIP()))
+	}
+
+	d, err := cloudsqlconn.NewDialer(context.Background(), opts...)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	config.ConnConfig.DialFunc = func(ctx context.Context, _, _ string) (net.Conn, error) {
+		return d.Dial(ctx, options.InstanceConnectionName)
+	}
+	pool, err := createAndConfigurePool(config)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	cleanup := func() error {
+		pool.Close()
+		return d.Close()
+	}
+
+	driver := &PostgresDriver{
+		Queries: New(pool),
+		db:      pool,
+	}
+
+	return driver, cleanup, nil
+}
 
 /*
 NewPostgresDriver
