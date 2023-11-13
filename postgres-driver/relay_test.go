@@ -42,19 +42,23 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteRelay() {
 		{
 			name: "Success error relay",
 			relay: types.Relay{
-				IsError:          true,
-				ErrorCode:        21,
-				ErrorName:        "favorite number",
-				ErrorMessage:     "just Pablo can use it",
-				ErrorType:        "chain_check",
-				ErrorSource:      "internal",
-				PortalRegionName: ts.firstRelay.PortalRegionName,
+				IsError:             true,
+				ErrorCode:           21,
+				ErrorName:           "favorite number",
+				ErrorMessage:        "just Pablo can use it",
+				ErrorType:           "chain_check",
+				ErrorSource:         "internal",
+				PortalRegionName:    ts.firstRelay.PortalRegionName,
+				RelayStartDatetime:  time.Now(),
+				RelayReturnDatetime: time.Now(),
 			},
 			err: nil,
 		},
 	}
 	for _, tt := range tests {
-		ts.Equal(ts.driver.WriteRelay(context.Background(), tt.relay), tt.err)
+		ts.Run(tt.name, func() {
+			ts.Equal(ts.driver.WriteRelay(context.Background(), tt.relay), tt.err)
+		})
 	}
 }
 
@@ -103,7 +107,9 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_WriteRelays() {
 		},
 	}
 	for _, tt := range tests {
-		ts.Equal(ts.driver.WriteRelays(context.Background(), tt.relays), tt.err)
+		ts.Run(tt.name, func() {
+			ts.Equal(ts.driver.WriteRelays(context.Background(), tt.relays), tt.err)
+		})
 	}
 }
 
@@ -122,8 +128,10 @@ func (ts *PGDriverTestSuite) TestPostgresDriver_ReadRelay() {
 		},
 	}
 	for _, tt := range tests {
-		relay, err := ts.driver.ReadRelay(context.Background(), tt.relayID)
-		ts.Equal(err, tt.err)
-		ts.Equal(relay, tt.expRelay)
+		ts.Run(tt.name, func() {
+			relay, err := ts.driver.ReadRelay(context.Background(), tt.relayID)
+			ts.Equal(err, tt.err)
+			ts.Equal(relay, tt.expRelay)
+		})
 	}
 }

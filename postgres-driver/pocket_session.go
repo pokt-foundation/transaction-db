@@ -2,6 +2,7 @@ package postgresdriver
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/pokt-foundation/transaction-db/types"
@@ -18,11 +19,11 @@ func (d *PostgresDriver) WriteSession(ctx context.Context, session types.PocketS
 		SessionKey:       session.SessionKey,
 		SessionHeight:    int32(session.SessionHeight),
 		PortalRegionName: session.PortalRegionName,
-		CreatedAt:        now,
-		UpdatedAt:        now,
+		CreatedAt:        newTimestamp(now),
+		UpdatedAt:        newTimestamp(now),
 	})
 	if err != nil {
-		if isSpecifiedPqError(errMessageDuplicateSessionKey, err) {
+		if strings.Contains(err.Error(), errMessageDuplicateSessionKey) {
 			return types.ErrRepeatedSessionKey
 		}
 

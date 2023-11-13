@@ -8,7 +8,7 @@ gen_sql:
 test: test_env_up run_driver_tests test_env_down
 
 test_env_up:
-	@echo "🧪 Starting up Transation DB test database ..."
+	@echo "🧪 Starting up Transaction DB test database ..."
 	@docker-compose -f ./testdata/docker-compose.test.yml up -d --remove-orphans --build
 	@echo "⏳ Waiting for test DB to be ready ..."
 	@attempts=0; while ! pg_isready -h localhost -p 5432 -U postgres -d postgres >/dev/null && [[ $$attempts -lt 5 ]]; do sleep 1; attempts=$$(($$attempts + 1)); done
@@ -27,7 +27,6 @@ run_driver_tests_ci:
 init-pre-commit:
 	wget https://github.com/pre-commit/pre-commit/releases/download/v2.20.0/pre-commit-2.20.0.pyz
 	python3 pre-commit-2.20.0.pyz install
-	python3 pre-commit-2.20.0.pyz autoupdate
 	go install golang.org/x/tools/cmd/goimports@latest
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	go install -v github.com/go-critic/go-critic/cmd/gocritic@latest
