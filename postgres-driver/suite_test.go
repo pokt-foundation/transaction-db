@@ -103,8 +103,6 @@ func (ts *PGDriverTestSuite) initPostgresDriver() error {
 		return err
 	}
 
-	// defer cleanup()
-
 	ts.driver = driver
 
 	return nil
