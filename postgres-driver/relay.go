@@ -19,18 +19,18 @@ func (d *PostgresDriver) WriteRelay(ctx context.Context, relay types.Relay) erro
 		EndpointID:               relay.EndpointID,
 		SessionKey:               relay.SessionKey,
 		ProtocolAppPublicKey:     relay.ProtocolAppPublicKey,
-		RelaySourceUrl:           newSQLNullString(relay.RelaySourceURL),
-		PoktNodeAddress:          newSQLNullString(relay.PoktNodeAddress),
-		PoktNodeDomain:           newSQLNullString(relay.PoktNodeDomain),
-		PoktNodePublicKey:        newSQLNullString(relay.PoktNodePublicKey),
-		RelayStartDatetime:       relay.RelayStartDatetime,
-		RelayReturnDatetime:      relay.RelayReturnDatetime,
+		RelaySourceUrl:           newText(relay.RelaySourceURL),
+		PoktNodeAddress:          newText(relay.PoktNodeAddress),
+		PoktNodeDomain:           newText(relay.PoktNodeDomain),
+		PoktNodePublicKey:        newText(relay.PoktNodePublicKey),
+		RelayStartDatetime:       newTimestamp(relay.RelayStartDatetime),
+		RelayReturnDatetime:      newTimestamp(relay.RelayReturnDatetime),
 		IsError:                  relay.IsError,
-		ErrorCode:                newSQLNullInt32(int32(relay.ErrorCode)),
-		ErrorName:                newSQLNullString(relay.ErrorName),
-		ErrorMessage:             newSQLNullString(relay.ErrorMessage),
-		ErrorType:                newSQLNullString(relay.ErrorType),
-		ErrorSource:              newSQLNullErrorSource(ErrorSourcesEnum(relay.ErrorSource)),
+		ErrorCode:                newInt4(int32(relay.ErrorCode), false),
+		ErrorName:                newText(relay.ErrorName),
+		ErrorMessage:             newText(relay.ErrorMessage),
+		ErrorType:                newText(relay.ErrorType),
+		ErrorSource:              newNullErrorSourcesEnum(ErrorSourcesEnum(relay.ErrorSource)),
 		RelayRoundtripTime:       relay.RelayRoundtripTime,
 		RelayChainMethodIds:      strings.Join(relay.RelayChainMethodIDs, chainMethodIDSeparator),
 		RelayDataSize:            int32(relay.RelayDataSize),
@@ -40,17 +40,18 @@ func (d *PostgresDriver) WriteRelay(ctx context.Context, relay types.Relay) erro
 		PortalRegionName:         relay.PortalRegionName,
 		IsAltruistRelay:          relay.IsAltruistRelay,
 		RequestID:                relay.RequestID,
-		PoktTxID:                 newSQLNullString(relay.PoktTxID),
+		PoktTxID:                 newText(relay.PoktTxID),
 		IsUserRelay:              relay.IsUserRelay,
-		GigastakeAppID:           newSQLNullString(relay.GigastakeAppID),
-		CreatedAt:                now,
-		UpdatedAt:                now,
-		BlockingPlugin:           newSQLNullString(relay.BlockingPlugin),
+		GigastakeAppID:           newText(relay.GigastakeAppID),
+		CreatedAt:                newTimestamp(now),
+		UpdatedAt:                newTimestamp(now),
+		BlockingPlugin:           newText(relay.BlockingPlugin),
 	})
 }
 
 // TODO: use CopyFrom postgres method to do batch inserts more efficiently.
-// 	https://docs.sqlc.dev/en/stable/howto/insert.html#using-copyfrom
+//
+//	https://docs.sqlc.dev/en/stable/howto/insert.html#using-copyfrom
 func (d *PostgresDriver) WriteRelays(ctx context.Context, relays []*types.Relay) error {
 	var errors []error
 	for _, relay := range relays {
@@ -82,8 +83,8 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID int) (types.Rela
 		PoktNodeAddress:          relay.PoktNodeAddress.String,
 		PoktNodeDomain:           relay.PoktNodeDomain.String,
 		PoktNodePublicKey:        relay.PoktNodePublicKey.String,
-		RelayStartDatetime:       relay.RelayStartDatetime,
-		RelayReturnDatetime:      relay.RelayReturnDatetime,
+		RelayStartDatetime:       relay.RelayStartDatetime.Time,
+		RelayReturnDatetime:      relay.RelayReturnDatetime.Time,
 		IsError:                  relay.IsError,
 		ErrorCode:                int(relay.ErrorCode.Int32),
 		ErrorName:                relay.ErrorName.String,
@@ -102,13 +103,13 @@ func (d *PostgresDriver) ReadRelay(ctx context.Context, relayID int) (types.Rela
 		IsUserRelay:              relay.IsUserRelay,
 		PoktTxID:                 relay.PoktTxID.String,
 		GigastakeAppID:           relay.GigastakeAppID.String,
-		CreatedAt:                relay.CreatedAt,
-		UpdatedAt:                relay.UpdatedAt,
+		CreatedAt:                relay.CreatedAt.Time,
+		UpdatedAt:                relay.UpdatedAt.Time,
 		Session: types.PocketSession{
 			SessionKey:    relay.SessionKey,
 			SessionHeight: int(relay.SessionHeight),
-			CreatedAt:     relay.CreatedAt_2,
-			UpdatedAt:     relay.UpdatedAt_2,
+			CreatedAt:     relay.CreatedAt_2.Time,
+			UpdatedAt:     relay.UpdatedAt_2.Time,
 		},
 		Region: types.PortalRegion{
 			PortalRegionName: relay.PortalRegionName,

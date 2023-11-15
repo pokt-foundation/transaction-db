@@ -83,8 +83,8 @@ func (d *PostgresDriver) WriteServiceRecord(ctx context.Context, serviceRecord t
 		MedianSuccessLatency:   serviceRecord.MedianSuccessLatency,
 		WeightedSuccessLatency: serviceRecord.WeightedSuccessLatency,
 		SuccessRate:            serviceRecord.SuccessRate,
-		CreatedAt:              now,
-		UpdatedAt:              now,
+		CreatedAt:              newTimestamp(now),
+		UpdatedAt:              newTimestamp(now),
 	})
 }
 
@@ -131,7 +131,7 @@ func (d *PostgresDriver) WriteServiceRecords(ctx context.Context, serviceRecords
 		updatedTimes = append(updatedTimes, now)
 	}
 
-	_, err := d.db.Exec(insertServiceRecords, pq.StringArray(nodePublicKeys),
+	_, err := d.db.Exec(context.TODO(), insertServiceRecords, pq.StringArray(nodePublicKeys),
 		pq.StringArray(poktChainIDs),
 		pq.StringArray(sessionKeys),
 		pq.StringArray(requestIDs),
@@ -178,7 +178,7 @@ func (d *PostgresDriver) ReadServiceRecord(ctx context.Context, serviceRecordID 
 		MedianSuccessLatency:   serviceRecord.MedianSuccessLatency,
 		WeightedSuccessLatency: serviceRecord.WeightedSuccessLatency,
 		SuccessRate:            serviceRecord.SuccessRate,
-		CreatedAt:              serviceRecord.CreatedAt,
-		UpdatedAt:              serviceRecord.UpdatedAt,
+		CreatedAt:              serviceRecord.CreatedAt.Time,
+		UpdatedAt:              serviceRecord.UpdatedAt.Time,
 	}, nil
 }

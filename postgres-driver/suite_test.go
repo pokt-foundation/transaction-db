@@ -98,10 +98,11 @@ func (ts *PGDriverTestSuite) SetupSuite() {
 
 // Initializes a real instance of the Postgres driver that connects to the test Postgres Docker container
 func (ts *PGDriverTestSuite) initPostgresDriver() error {
-	driver, err := NewPostgresDriver(ts.connectionString)
+	driver, _, err := NewPostgresDriver(ts.connectionString)
 	if err != nil {
 		return err
 	}
+
 	ts.driver = driver
 
 	return nil
