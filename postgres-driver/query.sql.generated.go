@@ -51,76 +51,7 @@ func (q *Queries) InsertPortalRegion(ctx context.Context, portalRegionName strin
 	return err
 }
 
-const insertRelay = `-- name: InsertRelay :exec
-INSERT INTO relay (
-    pokt_chain_id,
-    endpoint_id,
-    session_key,
-    protocol_app_public_key,
-    relay_source_url,
-    pokt_node_address,
-    pokt_node_domain,
-    pokt_node_public_key,
-    relay_start_datetime,
-    relay_return_datetime,
-    is_error,
-    error_code,
-    error_name,
-    error_message,
-    error_source,
-    error_type,
-    relay_roundtrip_time,
-    relay_chain_method_ids,
-    relay_data_size,
-    relay_portal_trip_time,
-    relay_node_trip_time,
-    relay_url_is_public_endpoint,
-    portal_region_name,
-    is_altruist_relay,
-    is_user_relay,
-    request_id,
-    pokt_tx_id,
-    gigastake_app_id,
-    created_at,
-    updated_at,
-    blocking_plugin
-  )
-VALUES (
-    $1,
-    $2,
-    $3,
-    $4,
-    $5,
-    $6,
-    $7,
-    $8,
-    $9,
-    $10,
-    $11,
-    $12,
-    $13,
-    $14,
-    $15,
-    $16,
-    $17,
-    $18,
-    $19,
-    $20,
-    $21,
-    $22,
-    $23,
-    $24,
-    $25,
-    $26,
-    $27,
-    $28,
-    $29,
-    $30,
-    $31
-  )
-`
-
-type InsertRelayParams struct {
+type InsertRelaysParams struct {
 	PoktChainID              string               `json:"poktChainId"`
 	EndpointID               string               `json:"endpointId"`
 	SessionKey               string               `json:"sessionKey"`
@@ -154,85 +85,7 @@ type InsertRelayParams struct {
 	BlockingPlugin           pgtype.Text          `json:"blockingPlugin"`
 }
 
-func (q *Queries) InsertRelay(ctx context.Context, arg InsertRelayParams) error {
-	_, err := q.db.Exec(ctx, insertRelay,
-		arg.PoktChainID,
-		arg.EndpointID,
-		arg.SessionKey,
-		arg.ProtocolAppPublicKey,
-		arg.RelaySourceUrl,
-		arg.PoktNodeAddress,
-		arg.PoktNodeDomain,
-		arg.PoktNodePublicKey,
-		arg.RelayStartDatetime,
-		arg.RelayReturnDatetime,
-		arg.IsError,
-		arg.ErrorCode,
-		arg.ErrorName,
-		arg.ErrorMessage,
-		arg.ErrorSource,
-		arg.ErrorType,
-		arg.RelayRoundtripTime,
-		arg.RelayChainMethodIds,
-		arg.RelayDataSize,
-		arg.RelayPortalTripTime,
-		arg.RelayNodeTripTime,
-		arg.RelayUrlIsPublicEndpoint,
-		arg.PortalRegionName,
-		arg.IsAltruistRelay,
-		arg.IsUserRelay,
-		arg.RequestID,
-		arg.PoktTxID,
-		arg.GigastakeAppID,
-		arg.CreatedAt,
-		arg.UpdatedAt,
-		arg.BlockingPlugin,
-	)
-	return err
-}
-
-const insertServiceRecord = `-- name: InsertServiceRecord :exec
-INSERT INTO service_record (
-    node_public_key,
-    pokt_chain_id,
-    session_key,
-    request_id,
-    portal_region_name,
-    latency,
-    tickets,
-    result,
-    available,
-    successes,
-    failures,
-    p90_success_latency,
-    median_success_latency,
-    weighted_success_latency,
-    success_rate,
-    created_at,
-    updated_at
-  )
-VALUES (
-    $1,
-    $2,
-    $3,
-    $4,
-    $5,
-    $6,
-    $7,
-    $8,
-    $9,
-    $10,
-    $11,
-    $12,
-    $13,
-    $14,
-    $15,
-    $16,
-    $17
-  )
-`
-
-type InsertServiceRecordParams struct {
+type InsertServiceRecordsParams struct {
 	NodePublicKey          string           `json:"nodePublicKey"`
 	PoktChainID            string           `json:"poktChainId"`
 	SessionKey             string           `json:"sessionKey"`
@@ -250,29 +103,6 @@ type InsertServiceRecordParams struct {
 	SuccessRate            float64          `json:"successRate"`
 	CreatedAt              pgtype.Timestamp `json:"createdAt"`
 	UpdatedAt              pgtype.Timestamp `json:"updatedAt"`
-}
-
-func (q *Queries) InsertServiceRecord(ctx context.Context, arg InsertServiceRecordParams) error {
-	_, err := q.db.Exec(ctx, insertServiceRecord,
-		arg.NodePublicKey,
-		arg.PoktChainID,
-		arg.SessionKey,
-		arg.RequestID,
-		arg.PortalRegionName,
-		arg.Latency,
-		arg.Tickets,
-		arg.Result,
-		arg.Available,
-		arg.Successes,
-		arg.Failures,
-		arg.P90SuccessLatency,
-		arg.MedianSuccessLatency,
-		arg.WeightedSuccessLatency,
-		arg.SuccessRate,
-		arg.CreatedAt,
-		arg.UpdatedAt,
-	)
-	return err
 }
 
 const selectRelay = `-- name: SelectRelay :one

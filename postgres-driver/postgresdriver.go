@@ -7,8 +7,6 @@ import (
 	"net"
 	"time"
 
-	// PQ import is required
-
 	"cloud.google.com/go/cloudsqlconn"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -164,10 +162,10 @@ func createAndConfigurePool(config *pgxpool.Config) (*pgxpool.Pool, error) {
 func getCustomDataTypes(ctx context.Context, pool *pgxpool.Pool) ([]*pgtype.Type, error) {
 	// Get a single connection just to load type information.
 	conn, err := pool.Acquire(ctx)
-	defer conn.Release()
 	if err != nil {
 		return nil, err
 	}
+	defer conn.Release()
 
 	dataTypeNames := []string{
 		"error_sources_enum",

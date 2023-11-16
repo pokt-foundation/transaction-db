@@ -1,4 +1,4 @@
--- name: InsertRelay :exec
+-- name: InsertRelays :copyfrom
 INSERT INTO relay (
     pokt_chain_id,
     endpoint_id,
@@ -65,7 +65,7 @@ VALUES (
     $30,
     $31
   );
--- name: InsertServiceRecord :exec
+-- name: InsertServiceRecords :copyfrom
 INSERT INTO service_record (
     node_public_key,
     pokt_chain_id,
