@@ -19,7 +19,7 @@ CREATE TABLE relay (
 	session_key char(44) NOT NULL,
 	protocol_app_public_key char(64) NOT NULL,
 	relay_source_url varchar,
-	pokt_node_address char(40),
+	pokt_node_address varchar,
 	pokt_node_domain varchar,
 	pokt_node_public_key char(64),
 	relay_start_datetime timestamp NOT NULL,
